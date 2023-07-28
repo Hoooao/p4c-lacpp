@@ -37,8 +37,7 @@ jobs:
              repository: p4lang/p4-dpdk-target
              path: p4sde
              submodules: 'recursive'
-
-      # Will be updated by using the latest version of the recipe
+             
       - name: 'Checkout ipdk-recipe'
         uses: actions/checkout@v3
         with:
@@ -88,7 +87,6 @@ jobs:
         run: |       
              sudo ./make-all.sh --target=dpdk --no-krnlmon --no-ovs -S $SDE_INSTALL -D $DEPEND_INSTALL
 
-      # The following config steps require updates for IPDK recipe --- COMPARE HERE
       - name: 'Run DPDK PTF tests'
         working-directory: p4c/build
         run: |
