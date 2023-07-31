@@ -12,6 +12,7 @@ DEPS="libabsl-dev \
       libgtest-dev=1.11.0-3 \
       nlohmann-json3-dev \
       libprotobuf-dev \
+      protobuf-compiler \
       zlib1g-dev"
 
 sudo apt-get update
