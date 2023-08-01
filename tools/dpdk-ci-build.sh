@@ -84,7 +84,7 @@ P4C_DEPS="bison \
           python3-setuptools \
           tcpdump \
           tcpreplay \
-          python3-netaddr"
+          python3-netaddr libprotobuf-dev"
 
 apt-get update
 apt-get install -y --no-install-recommends  ${P4C_DEPS}
