@@ -66,10 +66,6 @@ jobs:
              make 
              make install
 
-      - name: 'Protoc version before infrap4d'
-        run: |
-             protoc --version
-
       - name: 'Build infrap4d dependencies'
         working-directory: ipdk.recipe
         run: |
