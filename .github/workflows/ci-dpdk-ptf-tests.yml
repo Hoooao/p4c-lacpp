@@ -66,7 +66,7 @@ jobs:
              sudo pip3 install -r requirements.txt
              cd $IPDK_RECIPE/setup
              echo "Build infrap4d dependencies"
-             cmake -B build -DCMAKE_INSTALL_PREFIX="$SDE_INSTALL" -DUSE_SUDO=ON
+             cmake -B build -DCMAKE_INSTALL_PREFIX="$DEPEND_INSTALL" -DUSE_SUDO=ON
              cmake --build build 
 
       - name: 'Build infrap4d'
