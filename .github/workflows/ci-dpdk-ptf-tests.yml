@@ -82,11 +82,6 @@ jobs:
         run: |       
              sudo ./make-all.sh --target=dpdk --no-krnlmon --no-ovs -S $SDE_INSTALL -D $DEPEND_INSTALL
 
-
-      - name: 'Protoc version after infrap4d'
-        run: |
-             protoc --version
-
       - name: Build p4c with only the DPDK backend
         working-directory: p4c
         run: |
