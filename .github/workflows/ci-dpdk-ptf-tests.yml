@@ -66,6 +66,9 @@ jobs:
              make 
              make install
 
+      - name: 'Protoc version '
+        run: |
+             protoc --version
       - name: Build p4c with only the DPDK backend
         working-directory: p4c
         run: |
