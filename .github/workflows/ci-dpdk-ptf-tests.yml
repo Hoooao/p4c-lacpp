@@ -57,6 +57,14 @@ jobs:
               sudo apt update -y
               python install_dep.py
 
+      - name: 'Compile p4sde dpdk target'
+        working-directory: p4sde
+        run: |
+             mkdir ${GITHUB_WORKSPACE}/install
+             ./autogen.sh
+             ./configure --prefix=$SDE_INSTALL
+             make 
+             make install
 
       - name: 'Build infrap4d dependencies'
         working-directory: ipdk.recipe
@@ -74,14 +82,6 @@ jobs:
         run: |       
              sudo ./make-all.sh --target=dpdk --no-krnlmon --no-ovs -S $SDE_INSTALL -D $DEPEND_INSTALL
 
-      - name: 'Compile p4sde dpdk target'
-        working-directory: p4sde
-        run: |
-             mkdir ${GITHUB_WORKSPACE}/install
-             ./autogen.sh
-             ./configure --prefix=$SDE_INSTALL
-             make 
-             make install
 
       - name: Build p4c with only the DPDK backend
         working-directory: p4c
