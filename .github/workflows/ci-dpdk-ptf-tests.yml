@@ -17,9 +17,9 @@ concurrency:
 env:
     SDE: ${{ github.workspace }}
     P4C_DIR: ${{ github.workspace }}/p4c
-    SDE_INSTALL: ${{ github.workspace }}/install
+    SDE_INSTALL: ${{ github.workspace }}/sde_install
     IPDK_RECIPE: ${{ github.workspace }}/ipdk.recipe
-    DEPEND_INSTALL: ${{ github.workspace }}/install
+    DEPEND_INSTALL: ${{ github.workspace }}/dep_install
 
 jobs:
   build_p4dpdk_ubuntu:
@@ -57,19 +57,6 @@ jobs:
               sudo apt update -y
               python install_dep.py
 
-      - name: 'Compile p4sde dpdk target'
-        working-directory: p4sde
-        run: |
-             mkdir ${GITHUB_WORKSPACE}/install
-             ./autogen.sh
-             ./configure --prefix=$SDE_INSTALL
-             make 
-             make install
-
-      - name: Build p4c with only the DPDK backend
-        working-directory: p4c
-        run: |
-          sudo -E tools/dpdk-ci-build.sh $P4C_DIR $IPDK_RECIPE $SDE_INSTALL $DEPEND_INSTALL
 
       - name: 'Build infrap4d dependencies'
         working-directory: ipdk.recipe
@@ -86,6 +73,20 @@ jobs:
         working-directory: ipdk.recipe
         run: |       
              sudo ./make-all.sh --target=dpdk --no-krnlmon --no-ovs -S $SDE_INSTALL -D $DEPEND_INSTALL
+
+      - name: 'Compile p4sde dpdk target'
+        working-directory: p4sde
+        run: |
+             mkdir ${GITHUB_WORKSPACE}/install
+             ./autogen.sh
+             ./configure --prefix=$SDE_INSTALL
+             make 
+             make install
+
+      - name: Build p4c with only the DPDK backend
+        working-directory: p4c
+        run: |
+          sudo -E tools/dpdk-ci-build.sh $P4C_DIR $IPDK_RECIPE $SDE_INSTALL $DEPEND_INSTALL
 
       - name: 'Run DPDK PTF tests'
         working-directory: p4c/build
