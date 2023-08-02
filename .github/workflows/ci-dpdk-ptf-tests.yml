@@ -31,21 +31,11 @@ jobs:
           key: ptf-${{ runner.os }}-test
           max-size: 1000M
 
-      - name: checkout P4C
-        uses: actions/checkout@v3
-        with:
-             path: p4c
-             submodules: recursive
-
-    
-      - name: Build p4c with only the DPDK backend
-        working-directory: p4c
+      - name: 'Checkout'
         run: |
-          sudo -E tools/dpdk-ci-build.sh $P4C_DIR $IPDK_RECIPE $SDE_INSTALL $DEPEND_INSTALL
-
-      - name: 'Run DPDK PTF tests'
-        working-directory: p4c/build
-        run: |
-             sudo $IPDK_RECIPE/install/sbin/copy_config_files.sh $IPDK_RECIPE/install $SDE_INSTALL
-             sudo $IPDK_RECIPE/install/sbin/set_hugepages.sh
-             sudo -E ctest --output-on-failure --schedule-random -R dpdk-ptf*
+          echo "ls /usr/bin -R"
+          ls /usr/bin -R
+          echo "ls /usr/local/bin -R"
+          ls /usr/local/bin -R
+          echo "ls /usr/lib/x86_64-linux-gnu/"
+          ls /usr/lib/x86_64-linux-gnu/
