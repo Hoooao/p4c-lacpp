@@ -82,6 +82,10 @@ jobs:
         run: |       
              sudo ./make-all.sh --target=dpdk --no-krnlmon --no-ovs -S $SDE_INSTALL -D $DEPEND_INSTALL
 
+      - name: 'Show all /usr'
+        run: |
+             ls /usr -R
+
       - name: Build p4c with only the DPDK backend
         working-directory: p4c
         run: |
