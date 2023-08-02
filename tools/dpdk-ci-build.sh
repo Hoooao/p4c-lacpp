@@ -69,6 +69,7 @@ cd $P4C_DIR
 P4C_DEPS="bison \
           build-essential \
           ccache \
+          cmake \
           flex \
           g++ \
           git \
@@ -110,7 +111,7 @@ CMAKE_FLAGS+="
 
 mkdir build
 cd build
-cmake .. ${CMAKE_FLAGS}
+cmake .. ${CMAKE_FLAGS} --debug-find
 make "-j$(nproc)"
 
 set +e
