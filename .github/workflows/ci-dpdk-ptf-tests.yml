@@ -14,12 +14,13 @@ concurrency:
   cancel-in-progress: true
 
 # Envs for infrap4d and dpdk libs
+# DEPEND_INSTALL is put to a default searching directory for visibility of different libs
 env:
     SDE: ${{ github.workspace }}
     P4C_DIR: ${{ github.workspace }}/p4c
     SDE_INSTALL: ${{ github.workspace }}/sde_install
     IPDK_RECIPE: ${{ github.workspace }}/ipdk.recipe
-    DEPEND_INSTALL: ${{ github.workspace }}/dep_install
+    DEPEND_INSTALL: /usr/local/bin
 
 jobs:
   build_p4dpdk_ubuntu:
@@ -81,10 +82,6 @@ jobs:
         working-directory: ipdk.recipe
         run: |       
              sudo ./make-all.sh --target=dpdk --no-krnlmon --no-ovs -S $SDE_INSTALL -D $DEPEND_INSTALL
-
-      - name: 'Show all /usr'
-        run: |
-             ls /usr -R
 
       - name: Build p4c with only the DPDK backend
         working-directory: p4c
