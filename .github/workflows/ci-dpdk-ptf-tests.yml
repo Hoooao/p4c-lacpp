@@ -20,7 +20,7 @@ env:
     P4C_DIR: ${{ github.workspace }}/p4c
     SDE_INSTALL: ${{ github.workspace }}/sde_install
     IPDK_RECIPE: ${{ github.workspace }}/ipdk.recipe
-    DEPEND_INSTALL: /usr/local/bin
+    DEPEND_INSTALL: /usr/local
 
 jobs:
   build_p4dpdk_ubuntu:
