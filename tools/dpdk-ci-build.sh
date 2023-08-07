@@ -5,36 +5,36 @@ set -x  # Make command execution verbose
 
 if [ -z "$1" ]; then
     echo "- Missing mandatory argument: P4C_DIR"
-    echo " - Usage: source setup_env.sh <P4C_DIR> <IPDK_RECIPE_INSTALL> <SDE_INSTALL> <DEPEND_INSTALL>"
+    echo " - Usage: source dpdk-ci-build.sh <P4C_DIR> <IPDK_RECIPE> <SDE_INSTALL> <DEPEND_INSTALL>"
     return 0
 fi
 
 if [ -z "$2" ]; then
-    echo "- Missing mandatory argument: IPDK_RECIPE_INSTALL"
-    echo " - Usage: source setup_env.sh <P4C_DIR> <IPDK_RECIPE_INSTALL> <SDE_INSTALL> <DEPEND_INSTALL>"
+    echo "- Missing mandatory argument: IPDK_RECIPE"
+    echo " - Usage: source dpdk-ci-build.sh <P4C_DIR> <IPDK_RECIPE> <SDE_INSTALL> <DEPEND_INSTALL>"
     return 0
 fi
 
 if [ -z "$3" ]; then
     echo "- Missing mandatory argument: SDE_INSTALL"
-    echo " - Usage: source setup_env.sh <P4C_DIR> <IPDK_RECIPE_INSTALL> <SDE_INSTALL> <DEPEND_INSTALL>"
+    echo " - Usage: source dpdk-ci-build.sh <P4C_DIR> <IPDK_RECIPE> <SDE_INSTALL> <DEPEND_INSTALL>"
     return 0
 fi
 
 if [ -z "$4" ]; then
     echo "- Missing mandatory argument: DEPEND_INSTALL"
-    echo " - Usage: source setup_env.sh <P4C_DIR> <IPDK_RECIPE_INSTALL> <SDE_INSTALL> <DEPEND_INSTALL>"
+    echo " - Usage: source dpdk-ci-build.sh <P4C_DIR> <IPDK_RECIPE> <SDE_INSTALL> <DEPEND_INSTALL>"
     return 0
 fi
 
 export P4C_DIR=$1
-export IPDK_RECIPE_INSTALL=$2
+export IPDK_RECIPE=$2
 export SDE_INSTALL=$3
 export DEPEND_INSTALL=$4
 
 
 
-# Update SDE libraries for infrap4d; commands are copied from  ipdk.recipe/scripts/dpdk/setup_env.sh
+# Update SDE libraries for infrap4d; commands are copied from  ipdk.recipe/scripts/dpdk/dpdk-ci-build.sh
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SDE_INSTALL/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SDE_INSTALL/lib64
 
@@ -44,8 +44,8 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SDE_INSTALL/lib/x86_64-linux-gnu
 
 
 # Update IPDK RECIPE libraries
-export LD_LIBRARY_PATH=$IPDK_RECIPE_INSTALL/install/lib:$IPDK_RECIPE_INSTALL/install/lib64:$LD_LIBRARY_PATH
-export PATH=$IPDK_RECIPE_INSTALL/install/bin:$IPDK_RECIPE_INSTALL/install/sbin:$PATH
+export LD_LIBRARY_PATH=$IPDK_RECIPE/install/lib:$IPDK_RECIPE/install/lib64:$LD_LIBRARY_PATH
+export PATH=$IPDK_RECIPE/install/bin:$IPDK_RECIPE/install/sbin:$PATH
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64

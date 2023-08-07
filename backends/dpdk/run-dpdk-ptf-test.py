@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import random
+import socket
 import subprocess
 import sys
 import tempfile
@@ -79,6 +80,24 @@ GRPC_PORT: int = 9559
 PTF_ADDR: str = "0.0.0.0"
 
 
+# Check if target ports are ready to be connected (make sure infrap4d is on)
+def is_port_alive(host, port) -> bool:
+    try:
+        with socket.create_connection((host, port), timeout=5) as conn:
+            return True
+    except (socket.timeout, ConnectionRefusedError):
+        return False
+
+
+# We want to disable IPv6 to avoid ICMPv6 spam
+def diable_IPv6():
+    testutils.exec_process("sysctl -w net.ipv6.conf.all.disable_ipv6=1")
+    testutils.exec_process("sysctl -w net.ipv6.conf.default.disable_ipv6=1")
+    # Also filter igmp packets, -w is necessary because of a race condition
+    testutils.exec_process("iptables -w -A OUTPUT -p 2 -j DROP")
+    return testutils.SUCCESS
+
+
 class Options:
     """Options for this testing script. Usually correspond to command line inputs."""
 
@@ -107,6 +126,8 @@ class PTFTestEnv:
 
     def __init__(self, options):
         self.options = options
+        # Configure IPv6
+        diable_IPv6()
 
     def __del__(self):
         if self.switch_proc:
@@ -171,7 +192,11 @@ class PTFTestEnv:
             f"-grpc_open_insecure_mode={insecure_mode}"
         )
         self.switch_proc = testutils.open_process(run_infrap4d_cmd, env=proc_env_vars)
-        time.sleep(3)
+        cnt = 1
+        while not is_port_alive(PTF_ADDR, GRPC_PORT) and cnt != 5:
+            time.sleep(2)
+            cnt += 1
+            testutils.log.info("Cannot connect to Infrap4d: " + str(cnt) + " try")
         return self.switch_proc
 
     def build_and_load_pipeline(
