@@ -44,5 +44,6 @@ jobs:
           mkdir test_outputs
           cd ./test_outputs
           ../build/p4testgen --target dpdk --max-tests 10 --out-dir $PWD --test-backend PTF ../testdata/p4_16_samples/pna-dpdk-add_on_miss0.p4
+          cat pna-dpdk-add_on_miss0.py
 
 
