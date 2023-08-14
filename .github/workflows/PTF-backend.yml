@@ -1,0 +1,48 @@
+name: "PTF-backend"
+
+on:
+  push:
+    branches:
+      - ptf_backend
+  pull_request:
+    branches:
+      - ptf_backend
+      
+concurrency:
+  # if workflow for PR or push is already running stop it, and start new one
+  group: p4c_ptf-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+    SDE: ${{ github.workspace }}
+    P4C_DIR: ${{ github.workspace }}/p4c
+
+jobs:
+  build_p4dpdk_ubuntu:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: 'ccache'
+        uses: hendrikmuhs/ccache-action@v1
+        with:
+          key: ptf-${{ runner.os }}-test
+          max-size: 1000M
+
+      - name: checkout P4C
+        uses: actions/checkout@v3
+        with:
+             path: p4c
+             submodules: recursive
+
+      - name: Build p4c with only the DPDK backend and p4tools
+        working-directory: p4c
+        run: |
+          sudo -E tools/dpdk-ci-build.sh $P4C_DIR $IPDK_RECIPE $SDE_INSTALL $DEPEND_INSTALL
+
+      - name: Generate 10 tests
+        working-directory: p4c
+        run: |
+          mkdir test_outputs
+          cd ./test_outputs
+          ../build/p4testgen --target dpdk --max-tests 10 --out-dir $PWD --test-backend PTF ../testdata/p4_16_samples/pna-dpdk-add_on_miss0.p4
+
+
