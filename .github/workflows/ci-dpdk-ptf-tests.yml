@@ -3,10 +3,10 @@ name: "p4c-dpdk-ptf-tests"
 on:
   push:
     branches:
-      - main
+      - ns_added
   pull_request:
     branches:
-      - main
+      - ns_added
       
 concurrency:
   # if workflow for PR or push is already running stop it, and start new one
