@@ -30,7 +30,7 @@
 
 namespace P4Tools::P4Testgen::Pna {
 
-const std::set<std::string> PnaTestBackend::SUPPORTED_BACKENDS = {"METADATA"};
+const std::set<std::string> PnaTestBackend::SUPPORTED_BACKENDS = {"METADATA", "PTF"};
 
 PnaTestBackend::PnaTestBackend(const ProgramInfo &programInfo, SymbolicExecutor &symbex,
                                const std::filesystem::path &testPath)

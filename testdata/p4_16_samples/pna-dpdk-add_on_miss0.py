@@ -17,63 +17,56 @@
 # Andy Fingerhut, andy.fingerhut@gmail.com
 
 import logging
-import pprint
-import queue
 import time
+import sys
+from pathlib import Path
 
-import ptf
 import ptf.testutils as tu
-from ptf.base_tests import BaseTest
 import p4runtime_sh.shell as sh
-import p4runtime_sh.utils as shutils
-import p4runtime_sh.p4runtime as p4rt
 
 
 # Bsed on https://github.com/jafingerhut/p4-guide/blob/master/ipdk/23.01/add_on_miss0/ptf-tests/ptf-test1.py
 
+# The base_test.py path is relative to the test file, this should be improved
+FILE_DIR = Path(__file__).resolve().parent
+BASE_TEST_PATH = FILE_DIR.joinpath("../../backends/dpdk/base_test.py")
+sys.path.append(str(BASE_TEST_PATH))
+import base_test as bt
 
-logger = logging.getLogger(None)
-ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
-# create formatter and add it to the handlers
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-logger.addHandler(ch)
+# This global variable ensure that the forwarding pipeline will only be pushed once in one tes
+pipeline_pushed = False
 
-pp = pprint.PrettyPrinter(indent=4)
-
-
-class AbstractIdleTimeoutTest(BaseTest):
+class AbstractIdleTimeoutTest(bt.P4RuntimeTest):
     def setUp(self):
-        # Setting up PTF dataplane
-        self.dataplane = ptf.dataplane_instance
-        self.dataplane.flush()
-
-        logging.info("AbstractIdleTimeoutTest.setUp()")
-        grpc_addr = tu.test_param_get("grpcaddr")
-        if grpc_addr is None:
-            grpc_addr = 'localhost:9559'
-        certs_dir = '/usr/share/stratum/certs'
-        root_certificate = certs_dir + '/ca.crt'
-        private_key = certs_dir + '/client.key'
-        certificate_chain = certs_dir + '/client.crt'
-        # Default to insecure
-        ssl_opts = p4rt.SSLOptions(True, root_certificate, certificate_chain,
-                                   private_key)
-        sh.setup(device_id=1,
-                 grpc_addr=grpc_addr,
-                 election_id=(0, 1),
-                 ssl_options=ssl_opts)
+        bt.P4RuntimeTest.setUp(self)
+        global pipeline_pushed
+        if not pipeline_pushed:
+            success = bt.P4RuntimeTest.updateConfig(self)
+            assert success
+            pipeline_pushed = True
+        packet_wait_time = tu.test_param_get("packet_wait_time")
+        if not packet_wait_time:
+            self.packet_wait_time = 0.1
+        else:
+            self.packet_wait_time = float(packet_wait_time)
 
     def tearDown(self):
-        logging.info("IdleTimeoutTest.tearDown()")
-        sh.teardown()
+        bt.P4RuntimeTest.tearDown(self)
+
+    def setupCtrlPlane(self):
+        pass
+
+    def sendPacket(self):
+        pass
+
+    def verifyPackets(self):
+        pass
 
     def runTestImpl(self):
         self.setupCtrlPlane()
-        logger.info("Sending Packet ...")
+        bt.testutils.log.info("Sending Packet ...")
         self.sendPacket()
-        logger.info("Verifying Packet ...")
+        bt.testutils.log.info("Verifying Packet ...")
         self.verifyPackets()
 
 #############################################################
@@ -122,7 +115,7 @@ class OneEntryTest(AbstractIdleTimeoutTest):
         pkt_in = tu.simple_tcp_packet(eth_src=in_smac, eth_dst=in_dmac,
                                       ip_src=ip_src_addr, ip_dst=ip_dst_addr,
                                       tcp_sport=sport, tcp_dport=dport)
-        
+
         # Send in a first packet that should experience a miss on
         # table ct_tcp_table, cause a new entry to be added by the
         # data plane with a 30-second expiration time, and be
@@ -157,29 +150,47 @@ class OneEntryTest(AbstractIdleTimeoutTest):
         #                          ip_src=ip_src_addr, ip_dst=ip_dst_addr,
         #                          tcp_sport=sport, tcp_dport=dport)
 
-        
+
         tu.verify_packets(self, exp_pkt_for_miss, [eg_port])
         logging.info("    packet experienced a miss in ct_tcp_table as expected")
 
+
     def setupCtrlPlane(self):
+        # Simple noop that is always called as filler.
+        pass
         ig_port = 0
         eg_port = 1
 
-        ip_src_addr = '1.1.1.1'
-        ip_dst_addr = '2.2.2.2'
+        ip_src_addr = 0x01010101
+        ip_dst_addr = 0x02020202
 
-        logging.info("Attempting to delete all entries in ipv4_host")
-        delete_all_entries('ipv4_host')
-        logging.info("Attempting to add entries to ipv4_host")
-        add_ipv4_host_entry_action_send(ip_src_addr, ig_port)
-        add_ipv4_host_entry_action_send(ip_dst_addr, eg_port)
-        logging.info("Now ipv4_host contains %d entries"
-                     "" % (entry_count('ipv4_host')))
+        self.table_add(
+            ('MainControlImpl.ipv4_host',
+             [
+                 self.Exact('hdr.ipv4.dst_addr', ip_src_addr),
+             ]),
+            ('MainControlImpl.send',
+             [
+                 ('port', ig_port),
+             ])
+            , None
+        )
+
+        self.table_add(
+            ('MainControlImpl.ipv4_host',
+             [
+                 self.Exact('hdr.ipv4.dst_addr', ip_dst_addr),
+             ]),
+            ('MainControlImpl.send',
+             [
+                 ('port', eg_port),
+             ])
+            , None
+        )
 
     def runTest(self):
         self.runTestImpl()
-        
 
-        
-        
-       
+
+
+

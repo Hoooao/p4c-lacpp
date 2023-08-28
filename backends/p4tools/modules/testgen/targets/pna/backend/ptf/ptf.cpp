@@ -191,23 +191,32 @@ void PTF::emitPreamble() {
 # p4testgen seed: {{ default(seed, "none") }}
 
 from enum import Enum
+from pathlib import Path
 
 from ptf.mask import Mask
 
 from ptf.packet import *
 from ptf import testutils as ptfutils
 
-
+# The base_test.py path is relative to the test file, this should be improved
+FILE_DIR = Path(__file__).resolve().parent
+BASE_TEST_PATH = FILE_DIR.joinpath("../../backends/dpdk/base_test.py")
+sys.path.append(str(BASE_TEST_PATH))
 import base_test as bt
 
+# This global variable ensure that the forwarding pipeline will only be pushed once in one tes
+pipeline_pushed = False
 
 class AbstractTest(bt.P4RuntimeTest):
     EnumColor = Enum("EnumColor", ["GREEN", "YELLOW", "RED"], start=0)
 
     def setUp(self):
         bt.P4RuntimeTest.setUp(self)
-        success = bt.P4RuntimeTest.updateConfig(self)
-        assert success
+        global pipeline_pushed
+        if not pipeline_pushed:
+            success = bt.P4RuntimeTest.updateConfig(self)
+            assert success
+            pipeline_pushed = True
         packet_wait_time = ptfutils.test_param_get("packet_wait_time")
         if not packet_wait_time:
             self.packet_wait_time = 0.1
@@ -234,7 +243,8 @@ class AbstractTest(bt.P4RuntimeTest):
         self.sendPacket()
         bt.testutils.log.info("Verifying Packet ...")
         self.verifyPackets()
-
+## if 0
+    # This is a function copied from bmv2's ptf.cpp, could be deleted
     def meter_write_with_predefined_config(self, meter_name, index, value, direct):
         """Since we can not blast the target with packets, we have to carefully craft an artificial scenario where the meter will return the color we want. We do this by setting the meter config in such a way that the meter is forced to assign the desired color. For example, for RED to the lowest threshold values, to force a RED assignment."""
         value = self.EnumColor(value)
@@ -268,6 +278,7 @@ class AbstractTest(bt.P4RuntimeTest):
                 )
             return self.direct_meter_write(meter_config, table_id, table_entry)
         return self.meter_write(meter_name, index, meter_config)
+## endif
 )""");
 
     inja::json dataJson;
@@ -280,7 +291,7 @@ class AbstractTest(bt.P4RuntimeTest):
     ptfFileStream.flush();
 }
 
-// Iteration of meter_values is deleted
+// Iteration of meter_values, from BMv2, is deleted
 std::string PTF::getTestCaseTemplate() {
     static std::string TEST_CASE(
         R"""(
