@@ -19,6 +19,10 @@ FILE_DIR = Path(__file__).resolve().parent
 TOOLS_PATH = FILE_DIR.joinpath("../../tools")
 sys.path.append(str(TOOLS_PATH))
 import testutils
+BRIDGE_PATH = FILE_DIR.joinpath("../ebpf/targets")
+sys.path.append(str(BRIDGE_PATH))
+from ebpfenv import Bridge
+
 
 PARSER = argparse.ArgumentParser()
 PARSER.add_argument("p4c_dir", help="The location of the the compiler source directory")
@@ -81,21 +85,13 @@ PTF_ADDR: str = "0.0.0.0"
 
 
 # Check if target ports are ready to be connected (make sure infrap4d is on)
-def is_port_alive(host, port) -> bool:
-    try:
-        with socket.create_connection((host, port), timeout=5) as conn:
-            return True
-    except (socket.timeout, ConnectionRefusedError):
-        return False
-
-
-# We want to disable IPv6 to avoid ICMPv6 spam
-def diable_IPv6():
-    testutils.exec_process("sysctl -w net.ipv6.conf.all.disable_ipv6=1")
-    testutils.exec_process("sysctl -w net.ipv6.conf.default.disable_ipv6=1")
-    # Also filter igmp packets, -w is necessary because of a race condition
-    testutils.exec_process("iptables -w -A OUTPUT -p 2 -j DROP")
-    return testutils.SUCCESS
+def is_port_alive(ns, port) -> bool:
+    command = f"sudo ip netns exec {ns} netstat -tuln"
+    out, result = testutils.exec_process(command, timeout=10,capture_output=True)
+    print(out)
+    if str(port) in out :
+        return 1
+    return 0
 
 
 class Options:
@@ -126,13 +122,34 @@ class PTFTestEnv:
 
     def __init__(self, options):
         self.options = options
-        # Configure IPv6
-        diable_IPv6()
+        # Create the virtual environment for the test execution.
+        self.bridge = self.create_bridge()
 
     def __del__(self):
         if self.switch_proc:
             # Terminate the switch process and emit its output in case of failure.
             testutils.kill_proc_group(self.switch_proc)
+        if self.bridge:
+            self.bridge.ns_del()
+
+    def create_bridge(self) -> Bridge:
+        """Create a network namespace environment with Bridge."""
+        testutils.log.info(
+            "---------------------- Creating a namespace ----------------------",
+        )
+        random.seed(datetime.now().timestamp())
+        bridge = Bridge(uuid.uuid4())
+        result = bridge.create_virtual_env(0)
+        if result != testutils.SUCCESS:
+            bridge.ns_del()
+            testutils.log.error(
+                "---------------------- Namespace creation failed ----------------------",
+            )
+            raise SystemExit("Unable to create the namespace environment.")
+        testutils.log.info(
+            "---------------------- Namespace successfully created ----------------------"
+        )
+        return bridge
 
     def create_TAPs(self, proc_env_vars: dict, insecure_mode: bool = True) -> int:
         """Create TAPs with gNMI"""
@@ -146,18 +163,18 @@ class PTFTestEnv:
                 f"device:virtual-device,name:{tap_name},pipeline-name:pipe,mempool-name:MEMPOOL0,mtu:1500,port-type:TAP "
                 f"-grpc_use_insecure_mode={insecure_mode}"
             )
-            _, returncode = testutils.exec_process(cmd, env=proc_env_vars)
+            returncode = self.bridge.ns_exec(cmd, env=proc_env_vars)
             if returncode != testutils.SUCCESS:
                 testutils.log.error("Failed to create TAP")
                 return returncode
-            _, returncode = testutils.exec_process(f"ifconfig {tap_name} up")
+            returncode = self.bridge.ns_exec(f"ifconfig {tap_name} up")
             if returncode != testutils.SUCCESS:
                 testutils.log.error("Failed to activate TAP interface")
                 return returncode
         return returncode
 
     def compile_program(
-        self, info_name: Path, bf_rt_schema: Path, context: Path, dpdk_spec: Path
+            self, info_name: Path, bf_rt_schema: Path, context: Path, dpdk_spec: Path
     ) -> int:
         """Create /pipe directory"""
         _, returncode = testutils.exec_process(
@@ -181,7 +198,7 @@ class PTFTestEnv:
         return returncode
 
     def run_infrap4d(
-        self, proc_env_vars: dict, insecure_mode: bool = True
+            self, proc_env_vars: dict, insecure_mode: bool = True
     ) -> testutils.subprocess.Popen:
         """Start infrap4d and return the process handle."""
         testutils.log.info(
@@ -191,16 +208,19 @@ class PTFTestEnv:
             f"{self.options.ipdk_recipe}/install/sbin/infrap4d "
             f"-grpc_open_insecure_mode={insecure_mode}"
         )
-        self.switch_proc = testutils.open_process(run_infrap4d_cmd, env=proc_env_vars)
+        bridge_cmd = self.bridge.get_ns_prefix() + " " + run_infrap4d_cmd
+        self.switch_proc = testutils.open_process(bridge_cmd, env=proc_env_vars)
         cnt = 1
-        while not is_port_alive(PTF_ADDR, GRPC_PORT) and cnt != 5:
+        while not is_port_alive(self.bridge.ns_name, GRPC_PORT) and cnt != 5:
             time.sleep(2)
             cnt += 1
             testutils.log.info("Cannot connect to Infrap4d: " + str(cnt) + " try")
+        if not is_port_alive(self.bridge.ns_name, GRPC_PORT):
+            return testutils.FAILURE
         return self.switch_proc
 
     def build_and_load_pipeline(
-        self, p4c_conf: Path, conf_bin: Path, info_name: Path, proc_env_vars: dict
+            self, p4c_conf: Path, conf_bin: Path, info_name: Path, proc_env_vars: dict
     ) -> int:
         testutils.log.info("---------------------- Build and Load Pipleline ----------------------")
         command = (
@@ -214,38 +234,38 @@ class PTFTestEnv:
             testutils.log.error("Failed to build pipeline")
             return returncode
 
-        # load pipeline
-        command = (
-            f"{self.options.ipdk_recipe}/install/bin/p4rt-ctl "
-            "set-pipe br0 "
-            f"{conf_bin} "
-            f"{info_name} "
-        )
-        _, returncode = testutils.exec_process(command, timeout=30)
-        if returncode != testutils.SUCCESS:
-            testutils.log.error("Failed to load pipeline")
-            return returncode
+        # # load pipeline
+        # command = (
+        #     f"{self.options.ipdk_recipe}/install/bin/p4rt-ctl "
+        #     "set-pipe br0 "
+        #     f"{conf_bin} "
+        #     f"{info_name} "
+        # )
+        # returncode = self.bridge.ns_exec(command, timeout=30)
+        # if returncode != testutils.SUCCESS:
+        #     testutils.log.error("Failed to load pipeline")
+        #     return returncode
         return testutils.SUCCESS
 
-    def run_ptf(self, grpc_port: int) -> int:
+    def run_ptf(self, grpc_port: int,info_name, conf_bin) -> int:
         """Run the PTF test."""
         testutils.log.info("---------------------- Run PTF test ----------------------")
         # Add the file location to the python path.
         pypath = FILE_DIR
         # Show list of the tests
         testListCmd = f"ptf --pypath {pypath} --test-dir {self.options.testdir} --list"
-        _, returncode = testutils.exec_process(testListCmd)
+        returncode = self.bridge.ns_exec(testListCmd)
         if returncode != testutils.SUCCESS:
             return returncode
         taps: str = ""
         for index in range(self.options.num_taps):
             taps += f" -i {index}@TAP{index}"
-        test_params = f"grpcaddr='{PTF_ADDR}:{grpc_port}'"
+        test_params = f"grpcaddr='{PTF_ADDR}:{grpc_port}';p4info='{info_name}';config='{conf_bin}'"
         run_ptf_cmd = (
             f"ptf --pypath {pypath} {taps} --log-file {self.options.testdir.joinpath('ptf.log')} "
             f"--test-params={test_params} --test-dir {self.options.testdir}"
         )
-        _, returncode = testutils.exec_process(run_ptf_cmd)
+        returncode = self.bridge.ns_exec(run_ptf_cmd)
         return returncode
 
 
@@ -292,7 +312,7 @@ def run_test(options: Options) -> int:
         return returncode
 
     # Run the PTF test and retrieve the result.
-    result = testenv.run_ptf(GRPC_PORT)
+    result = testenv.run_ptf(GRPC_PORT, info_name, conf_bin)
     # Delete the test environment and trigger a clean up.
     del testenv
     # Print switch log if the results were not successful.
