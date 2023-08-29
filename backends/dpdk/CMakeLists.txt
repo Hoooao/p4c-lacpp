@@ -132,7 +132,7 @@ set (P4_16_SUITES
 # Add PTF tests for these files.
 set (DPDK_PTF_TEST_SUITES
   #"${P4C_SOURCE_DIR}/testdata/p4_16_samples/pna-dpdk-add_on_miss0.p4"   COMMENTED TEMPORILY
-  "${P4C_SOURCE_DIR}/testdata/p4_16_samples/pna-dpdk-add_on_miss0.p4"
+  "${P4C_SOURCE_DIR}/testdata/p4_16_samples/pna-dpdk-small_sample.p4"
 )
 
 # check for infrap4d
