@@ -90,14 +90,19 @@ jobs:
           sudo -E tools/dpdk-ci-build.sh $P4C_DIR $IPDK_RECIPE $SDE_INSTALL $DEPEND_INSTALL
 
       - name: Generate tests
-        working-directory: p4c/testdata/p4_16_samples
+        working-directory: p4c
         run: |
+          cd ./testdata/p4_16_samples
           ../../build/p4testgen --target dpdk --arch pna --max-tests 0 --out-dir $PWD --test-backend PTF $PWD/pna-dpdk-small_sample.p4
           cat ./pna-dpdk-small_sample.py
 
-      - name: Run DPDK PTF tests
+      - name: 'Run DPDK PTF tests'
         working-directory: p4c/build
         run: |
-          sudo $IPDK_RECIPE/install/sbin/copy_config_files.sh $IPDK_RECIPE/install $SDE_INSTALL
-          sudo $IPDK_RECIPE/install/sbin/set_hugepages.sh
-          sudo -E ctest --output-on-failure --schedule-random -R dpdk-ptf* 
+             sudo $IPDK_RECIPE/install/sbin/copy_config_files.sh $IPDK_RECIPE/install $SDE_INSTALL
+             sudo $IPDK_RECIPE/install/sbin/set_hugepages.sh
+             sudo -E ctest --output-on-failure --schedule-random -R dpdk-ptf*
+
+    
+
+
