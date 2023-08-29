@@ -24,6 +24,7 @@ BRIDGE_PATH = FILE_DIR.joinpath("../ebpf/targets")
 sys.path.append(str(BRIDGE_PATH))
 from ebpfenv import Bridge
 
+
 PARSER = argparse.ArgumentParser()
 PARSER.add_argument("p4c_dir", help="The location of the the compiler source directory")
 PARSER.add_argument("p4_file", help="the p4 file to process")
@@ -233,20 +234,21 @@ class PTFTestEnv:
             testutils.log.error("Failed to build pipeline")
             return returncode
 
-        # load pipeline
-        command = (
-            f"{self.options.ipdk_recipe}/install/bin/p4rt-ctl "
-            "set-pipe br0 "
-            f"{conf_bin} "
-            f"{info_name} "
-        )
-        returncode = self.bridge.ns_exec(command, timeout=30)
-        if returncode != testutils.SUCCESS:
-            testutils.log.error("Failed to load pipeline")
-            return returncode
+        # Not to load pipeline since it will be loaded in each of the individual ptf tests.
+        # Uncomment this if you want to load pipeline here.
+        # command = (
+        #    f"{self.options.ipdk_recipe}/install/bin/p4rt-ctl "
+        #    "set-pipe br0 "
+        #    f"{conf_bin} "
+        #    f"{info_name} "
+        # )
+        # returncode = self.bridge.ns_exec(command, timeout=30)
+        # if returncode != testutils.SUCCESS:
+        #    testutils.log.error("Failed to load pipeline")
+        #    return returncode
         return testutils.SUCCESS
 
-    def run_ptf(self, grpc_port: int) -> int:
+    def run_ptf(self, grpc_port: int, info_name, conf_bin) -> int:
         """Run the PTF test."""
         testutils.log.info("---------------------- Run PTF test ----------------------")
         # Add the file location to the python path.
@@ -259,7 +261,7 @@ class PTFTestEnv:
         taps: str = ""
         for index in range(self.options.num_taps):
             taps += f" -i {index}@TAP{index}"
-        test_params = f"grpcaddr='{PTF_ADDR}:{grpc_port}'"
+        test_params = f"grpcaddr='{PTF_ADDR}:{grpc_port}';p4info='{info_name}';config='{conf_bin}'"
         run_ptf_cmd = (
             f"ptf --pypath {pypath} {taps} --log-file {self.options.testdir.joinpath('ptf.log')} "
             f"--test-params={test_params} --test-dir {self.options.testdir}"
@@ -311,11 +313,14 @@ def run_test(options: Options) -> int:
         return returncode
 
     # Run the PTF test and retrieve the result.
-    result = testenv.run_ptf(GRPC_PORT)
+    result = testenv.run_ptf(GRPC_PORT, info_name, conf_bin)
     # Delete the test environment and trigger a clean up.
     del testenv
     # Print switch log if the results were not successful.
     if result != testutils.SUCCESS:
+        # Get errno
+        errno, _ = testutils.exec_process('echo $?', shell=True, capture_output=True, text=True)
+        testutils.log.error("######## Errno (in case it is a OS error) ######## \n%s", errno)
         if switch_proc.stdout:
             out = switch_proc.stdout.read()
             # Do not bother to print whitespace.

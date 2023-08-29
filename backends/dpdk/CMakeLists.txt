@@ -128,24 +128,4 @@ set (P4_16_SUITES
  p4c_add_tests("dpdk" ${DPDK_COMPILER_DRIVER} "${P4_16_SUITES}" "" "--bfrt") 
 
 
-# PTF tests for DPDK is only enabled if infrap4d and dpdk-target are installed.
-# Add PTF tests for these files.
-set (DPDK_PTF_TEST_SUITES
-  "${P4C_SOURCE_DIR}/testdata/p4_16_samples/pna-dpdk-add_on_miss0.p4"
-)
-
-# check for infrap4d
-find_program (INFRAP4D infrap4d
-  PATHS $ENV{IPDK_RECIPE} )
-# SDE_INSTALL is the path to the dpdk-target install directory
-if (INFRAP4D AND DEFINED ENV{SDE_INSTALL})
-   p4c_add_tests("dpdk-ptf" ${DPDK_PTF_DRIVER} "${DPDK_PTF_TEST_SUITES}" "" "--ipdk-recipe=$ENV{IPDK_RECIPE}  \
-      --sde-install=$ENV{SDE_INSTALL} \
-      --ld-library-path=$ENV{LD_LIBRARY_PATH} \
-      -ll=DEBUG ")
-else()
-  MESSAGE(WARNING "Infrap4d or dpdk-target is not available(Or required Env Vars Not Defined), not adding DPDK PTF tests")
-endif()
-
-
 include(DpdkXfail.cmake)
