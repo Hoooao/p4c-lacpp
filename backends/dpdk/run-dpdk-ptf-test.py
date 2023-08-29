@@ -173,7 +173,7 @@ class PTFTestEnv:
         return returncode
 
     def compile_program(
-        self, info_name: Path, bf_rt_schema: Path, context: Path, dpdk_spec: Path
+            self, info_name: Path, bf_rt_schema: Path, context: Path, dpdk_spec: Path
     ) -> int:
         """Create /pipe directory"""
         _, returncode = testutils.exec_process(
@@ -197,7 +197,7 @@ class PTFTestEnv:
         return returncode
 
     def run_infrap4d(
-        self, proc_env_vars: dict, insecure_mode: bool = True
+            self, proc_env_vars: dict, insecure_mode: bool = True
     ) -> testutils.subprocess.Popen:
         """Start infrap4d and return the process handle."""
         testutils.log.info(
@@ -219,7 +219,7 @@ class PTFTestEnv:
         return self.switch_proc
 
     def build_and_load_pipeline(
-        self, p4c_conf: Path, conf_bin: Path, info_name: Path, proc_env_vars: dict
+            self, p4c_conf: Path, conf_bin: Path, info_name: Path, proc_env_vars: dict
     ) -> int:
         testutils.log.info("---------------------- Build and Load Pipleline ----------------------")
         command = (
@@ -233,20 +233,21 @@ class PTFTestEnv:
             testutils.log.error("Failed to build pipeline")
             return returncode
 
-        # load pipeline
-        command = (
-            f"{self.options.ipdk_recipe}/install/bin/p4rt-ctl "
-            "set-pipe br0 "
-            f"{conf_bin} "
-            f"{info_name} "
-        )
-        returncode = self.bridge.ns_exec(command, timeout=30)
-        if returncode != testutils.SUCCESS:
-            testutils.log.error("Failed to load pipeline")
-            return returncode
+        # Not to load pipeline since it will be loaded in each of the individual ptf tests.
+        # Uncomment this if you want to load pipeline here.
+        # command = (
+        #    f"{self.options.ipdk_recipe}/install/bin/p4rt-ctl "
+        #    "set-pipe br0 "
+        #    f"{conf_bin} "
+        #    f"{info_name} "
+        #)
+        #returncode = self.bridge.ns_exec(command, timeout=30)
+        #if returncode != testutils.SUCCESS:
+        #    testutils.log.error("Failed to load pipeline")
+        #    return returncode
         return testutils.SUCCESS
 
-    def run_ptf(self, grpc_port: int) -> int:
+    def run_ptf(self, grpc_port: int,info_name, conf_bin) -> int:
         """Run the PTF test."""
         testutils.log.info("---------------------- Run PTF test ----------------------")
         # Add the file location to the python path.
@@ -259,7 +260,7 @@ class PTFTestEnv:
         taps: str = ""
         for index in range(self.options.num_taps):
             taps += f" -i {index}@TAP{index}"
-        test_params = f"grpcaddr='{PTF_ADDR}:{grpc_port}'"
+        test_params = f"grpcaddr='{PTF_ADDR}:{grpc_port}';p4info='{info_name}';config='{conf_bin}'"
         run_ptf_cmd = (
             f"ptf --pypath {pypath} {taps} --log-file {self.options.testdir.joinpath('ptf.log')} "
             f"--test-params={test_params} --test-dir {self.options.testdir}"
@@ -311,7 +312,7 @@ def run_test(options: Options) -> int:
         return returncode
 
     # Run the PTF test and retrieve the result.
-    result = testenv.run_ptf(GRPC_PORT)
+    result = testenv.run_ptf(GRPC_PORT, info_name, conf_bin)
     # Delete the test environment and trigger a clean up.
     del testenv
     # Print switch log if the results were not successful.

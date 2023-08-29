@@ -131,6 +131,7 @@ set (P4_16_SUITES
 # PTF tests for DPDK is only enabled if infrap4d and dpdk-target are installed.
 # Add PTF tests for these files.
 set (DPDK_PTF_TEST_SUITES
+  #"${P4C_SOURCE_DIR}/testdata/p4_16_samples/pna-dpdk-add_on_miss0.p4"   COMMENTED TEMPORILY
   "${P4C_SOURCE_DIR}/testdata/p4_16_samples/pna-dpdk-add_on_miss0.p4"
 )
 
