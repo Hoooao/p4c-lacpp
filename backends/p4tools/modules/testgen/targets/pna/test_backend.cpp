@@ -24,6 +24,7 @@
 #include "backends/p4tools/modules/testgen/lib/test_object.h"
 #include "backends/p4tools/modules/testgen/options.h"
 #include "backends/p4tools/modules/testgen/targets/pna/backend/metadata/metadata.h"
+#include "backends/p4tools/modules/testgen/targets/pna/backend/ptf/ptf.h"
 #include "backends/p4tools/modules/testgen/targets/pna/dpdk/program_info.h"
 #include "backends/p4tools/modules/testgen/targets/pna/test_spec.h"
 
@@ -42,10 +43,12 @@ PnaTestBackend::PnaTestBackend(const ProgramInfo &programInfo, SymbolicExecutor 
             Utils::containerToString(SUPPORTED_BACKENDS));
         exit(EXIT_FAILURE);
     }
-
+    auto seed = TestgenOptions::get().seed;
     if (testBackendString == "METADATA") {
         testWriter = new Metadata(testPath.c_str(), TestgenOptions::get().seed);
-    } else {
+    } else if(testBackendString == "PTF"){
+        testWriter = new PTF(testPath.c_str(), seed);
+    }else {
         P4C_UNIMPLEMENTED(
             "Test back end %1% not implemented for this target. Supported back ends are %2%.",
             testBackendString, Utils::containerToString(SUPPORTED_BACKENDS));
@@ -76,7 +79,7 @@ const TestSpec *PnaTestBackend::createTestSpec(const ExecutionState *executionSt
     }
     testSpec = new TestSpec(ingressPacket, egressPacket, testInfo.programTraces);
 
-    // If metadata mode is enabled, gather the user metadata variable form the parser.
+    // If metadata mode is enabled, gather the user metadata variable from the parser.
     // Save the values of all the fields in it and return.
     if (TestgenOptions::get().testBackend == "METADATA") {
         auto *metadataCollection = new MetadataCollection();
