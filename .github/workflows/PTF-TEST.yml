@@ -36,7 +36,7 @@ jobs:
       - name: Build p4c with only the DPDK backend and p4tools
         working-directory: p4c
         run: |
-          sudo -E tools/dpdk-ci-build.sh $P4C_DIR $IPDK_RECIPE $SDE_INSTALL $DEPEND_INSTALL
+          sudo -E tools/dpdk-ci-build.sh $P4C_DIR $P4C_DIR $SDE_INSTALL $DEPEND_INSTALL
       - name: Generate 10 tests
         working-directory: p4c
         run: |
