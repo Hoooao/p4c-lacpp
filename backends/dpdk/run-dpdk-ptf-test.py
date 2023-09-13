@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-from ebpfenv import Bridge
-import testutils
 import argparse
 import json
 import logging
@@ -20,9 +18,12 @@ from pathlib import Path
 FILE_DIR = Path(__file__).resolve().parent
 TOOLS_PATH = FILE_DIR.joinpath("../../tools")
 sys.path.append(str(TOOLS_PATH))
+import testutils
 
 BRIDGE_PATH = FILE_DIR.joinpath("../ebpf/targets")
 sys.path.append(str(BRIDGE_PATH))
+from ebpfenv import Bridge
+
 
 PARSER = argparse.ArgumentParser()
 PARSER.add_argument("p4c_dir", help="The location of the the compiler source directory")
