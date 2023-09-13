@@ -317,6 +317,9 @@ def run_test(options: Options) -> int:
     del testenv
     # Print switch log if the results were not successful.
     if result != testutils.SUCCESS:
+    	# Get errno
+    	errno, _ = testutils.exec_process('echo $?', shell = True, capture_output = True, text = True)
+    	testutils.log.error("######## Errno (in case it is a OS error) ######## \n%s", errno)
         if switch_proc.stdout:
             out = switch_proc.stdout.read()
             # Do not bother to print whitespace.
