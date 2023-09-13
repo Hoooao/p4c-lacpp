@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from ebpfenv import Bridge
+import testutils
 import argparse
 import json
 import logging
@@ -18,11 +20,9 @@ from pathlib import Path
 FILE_DIR = Path(__file__).resolve().parent
 TOOLS_PATH = FILE_DIR.joinpath("../../tools")
 sys.path.append(str(TOOLS_PATH))
-import testutils
 
 BRIDGE_PATH = FILE_DIR.joinpath("../ebpf/targets")
 sys.path.append(str(BRIDGE_PATH))
-from ebpfenv import Bridge
 
 PARSER = argparse.ArgumentParser()
 PARSER.add_argument("p4c_dir", help="The location of the the compiler source directory")
@@ -173,7 +173,7 @@ class PTFTestEnv:
         return returncode
 
     def compile_program(
-            self, info_name: Path, bf_rt_schema: Path, context: Path, dpdk_spec: Path
+        self, info_name: Path, bf_rt_schema: Path, context: Path, dpdk_spec: Path
     ) -> int:
         """Create /pipe directory"""
         _, returncode = testutils.exec_process(
@@ -197,7 +197,7 @@ class PTFTestEnv:
         return returncode
 
     def run_infrap4d(
-            self, proc_env_vars: dict, insecure_mode: bool = True
+        self, proc_env_vars: dict, insecure_mode: bool = True
     ) -> testutils.subprocess.Popen:
         """Start infrap4d and return the process handle."""
         testutils.log.info(
@@ -219,7 +219,7 @@ class PTFTestEnv:
         return self.switch_proc
 
     def build_and_load_pipeline(
-            self, p4c_conf: Path, conf_bin: Path, info_name: Path, proc_env_vars: dict
+        self, p4c_conf: Path, conf_bin: Path, info_name: Path, proc_env_vars: dict
     ) -> int:
         testutils.log.info("---------------------- Build and Load Pipleline ----------------------")
         command = (
@@ -240,14 +240,14 @@ class PTFTestEnv:
         #    "set-pipe br0 "
         #    f"{conf_bin} "
         #    f"{info_name} "
-        #)
-        #returncode = self.bridge.ns_exec(command, timeout=30)
-        #if returncode != testutils.SUCCESS:
+        # )
+        # returncode = self.bridge.ns_exec(command, timeout=30)
+        # if returncode != testutils.SUCCESS:
         #    testutils.log.error("Failed to load pipeline")
         #    return returncode
         return testutils.SUCCESS
 
-    def run_ptf(self, grpc_port: int,info_name, conf_bin) -> int:
+    def run_ptf(self, grpc_port: int, info_name, conf_bin) -> int:
         """Run the PTF test."""
         testutils.log.info("---------------------- Run PTF test ----------------------")
         # Add the file location to the python path.
@@ -317,9 +317,9 @@ def run_test(options: Options) -> int:
     del testenv
     # Print switch log if the results were not successful.
     if result != testutils.SUCCESS:
-    	# Get errno
-    	errno, _ = testutils.exec_process('echo $?', shell = True, capture_output = True, text = True)
-    	testutils.log.error("######## Errno (in case it is a OS error) ######## \n%s", errno)
+        # Get errno
+        errno, _ = testutils.exec_process('echo $?', shell=True, capture_output=True, text=True)
+        testutils.log.error("######## Errno (in case it is a OS error) ######## \n%s", errno)
         if switch_proc.stdout:
             out = switch_proc.stdout.read()
             # Do not bother to print whitespace.
