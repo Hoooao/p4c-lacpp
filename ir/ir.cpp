@@ -278,12 +278,15 @@ const IR::PackageBlock *ToplevelBlock::getMain() const {
         return nullptr;
     }
     if (!main->is<IR::Declaration_Instance>()) {
-        ::error(ErrorType::ERR_INVALID, "%1$: must be a package declaration", main->getNode());
+        ::error(ErrorType::ERR_INVALID, "%1%: must be a package declaration", main->getNode());
         return nullptr;
     }
     auto block = getValue(main->getNode());
     if (block == nullptr) return nullptr;
-    BUG_CHECK(block->is<IR::PackageBlock>(), "%1%: toplevel block is not a package", block);
+    if (!block->is<IR::PackageBlock>()) {
+        ::error(ErrorType::ERR_EXPECTED, "%1%: expected package declaration", block);
+        return nullptr;
+    }
     return block->to<IR::PackageBlock>();
 }
 

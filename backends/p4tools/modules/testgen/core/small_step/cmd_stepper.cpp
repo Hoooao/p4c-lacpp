@@ -11,7 +11,6 @@
 #include <boost/multiprecision/cpp_int.hpp>
 
 #include "backends/p4tools/common/compiler/convert_hs_index.h"
-#include "backends/p4tools/common/core/solver.h"
 #include "backends/p4tools/common/lib/symbolic_env.h"
 #include "backends/p4tools/common/lib/taint.h"
 #include "backends/p4tools/common/lib/trace_event_types.h"
@@ -26,6 +25,7 @@
 #include "lib/exceptions.h"
 #include "lib/log.h"
 #include "lib/null.h"
+#include "lib/solver.h"
 #include "midend/coverage.h"
 
 #include "backends/p4tools/modules/testgen/core/program_info.h"
@@ -318,11 +318,11 @@ bool CmdStepper::preorder(const IR::P4Program * /*program*/) {
         }
     }
 
-    // If this option is active, mandate that all packets conform to a fixed size.
+    // If this option is active, mandate that all packets must be larger than a minimum size.
     auto pktSize = TestgenOptions::get().minPktSize;
     if (pktSize != 0) {
         const auto *fixedSizeEqu =
-            new IR::Equ(ExecutionState::getInputPacketSizeVar(),
+            new IR::Geq(ExecutionState::getInputPacketSizeVar(),
                         IR::getConstant(&PacketVars::PACKET_SIZE_VAR_TYPE, pktSize));
         if (cond == std::nullopt) {
             cond = fixedSizeEqu;
