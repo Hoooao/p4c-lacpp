@@ -17,6 +17,7 @@ limitations under the License.
 #include <core.p4>
 #include <dpdk/pna.p4>
 
+// small_sample
 
 typedef bit<48>  EthernetAddress;
 
@@ -175,4 +176,5 @@ PNA_NIC(
     //, PreParserImpl()
     ) main;
 // END:Package_Instantiation_Example
+
 
