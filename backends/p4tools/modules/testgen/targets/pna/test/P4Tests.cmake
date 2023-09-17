@@ -13,7 +13,6 @@ set(
 )
 p4c_find_tests("${P4TESTS_FOR_PNA}" PNA_TESTS INCLUDE "${PNA_SEARCH_PATTERNS}" EXCLUDE "")
 
-
 # Custom PNA tests, not used yet.
 set(TESTGEN_PNA_P416_TESTS "${CMAKE_CURRENT_LIST_DIR}/p4-programs/*.p4")
 p4c_find_tests("${TESTGEN_PNA_P416_TESTS}" CUSTOM_PNA_TESTS INCLUDE "${PNA_SEARCH_PATTERNS}" EXCLUDE "")
@@ -25,28 +24,32 @@ set(P4C_PNA_TEST_SUITES_P416 ${PNA_TESTS} ${CUSTOM_PNA_TESTS})
 #############################################################################
 # TEST SUITES
 #############################################################################
-option(P4TOOLS_TESTGEN_PNA_TEST_METADATA "Run tests on the Metadata test back end" ON)
+option(P4TOOLS_TESTGEN_PNA_TEST_METADATA "Run tests on the Metadata test back end" OFF)
 
 # check for infrap4d
 find_program (INFRAP4D infrap4d
         PATHS $ENV{IPDK_RECIPE} )
 # SDE_INSTALL is the path to the dpdk-target install directory
-set(DPDK_ENV_SETUP TRUE AND INFRAP4D AND DEFINED ENV{SDE_INSTALL})
-option(P4TOOLS_TESTGEN_PNA_TEST_PTF "Run tests on the PTF test back end" DPDK_ENV_SETUP)
+if(TRUE AND INFRAP4D AND DEFINED ENV{SDE_INSTALL})
+  set(DPDK_ENV_SETUP TRUE)
+else()
+  set(DPDK_ENV_SETUP FALSE)
+endif()
+option(P4TOOLS_TESTGEN_PNA_TEST_PTF "Run tests on the PTF test back end" ${DPDK_ENV_SETUP})
 
 # Test settings.
 set(EXTRA_OPTS "--strict --print-traces --seed 1000 --max-tests 10 ")
 
 # Metadata
 # TODO: I am not sure why setting OFF does not prevent the test from running. So just comment it out.
-#if(P4TOOLS_TESTGEN_PNA_TEST_METADATA)
-#  p4tools_add_tests(
-#    TESTS "${P4C_PNA_TEST_SUITES_P416}"
-#    TAG "testgen-p4c-pna-metadata" DRIVER ${P4TESTGEN_DRIVER}
-#    TARGET "dpdk" ARCH "pna" TEST_ARGS "--test-backend METADATA ${EXTRA_OPTS} "
-#  )
-#  include(${CMAKE_CURRENT_LIST_DIR}/PNAMetadataXfail.cmake)
-#endif()
+if(P4TOOLS_TESTGEN_PNA_TEST_METADATA)
+  p4tools_add_tests(
+    TESTS "${P4C_PNA_TEST_SUITES_P416}"
+    TAG "testgen-p4c-pna-metadata" DRIVER ${P4TESTGEN_DRIVER}
+    TARGET "dpdk" ARCH "pna" TEST_ARGS "--test-backend METADATA ${EXTRA_OPTS} "
+  )
+  include(${CMAKE_CURRENT_LIST_DIR}/PNAMetadataXfail.cmake)
+endif()
 
 # PTF
 # TODO: The PTF test back end currently does not support packet sizes over 12000 bits, so we limit
