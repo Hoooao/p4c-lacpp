@@ -67,11 +67,11 @@ if(P4TOOLS_TESTGEN_PNA_TEST_PTF)
   # Currently, the test back end only support ports 0-8 AT LEAST IN BMV2.
   # TODO: Support the full range of ports.
   # Note: we have a problem on using --port-ranges 0:8, which cause frontend issues.
-  # DPDK SWX does not support too short pkts, so we start from 8
+  # DPDK SWX does not support too short pkts, so we start from 4096
   p4tools_add_tests(
           TESTS "${P4C_PNA_TEST_SUITES_P416_PTF}"
           TAG "testgen-p4c-pna-ptf" DRIVER ${P4TESTGEN_DRIVER}
-          TARGET "dpdk" ARCH "pna" P416_PTF TEST_ARGS "--test-backend PTF --packet-size-range 0:12000 ${EXTRA_OPTS} "
+          TARGET "dpdk" ARCH "pna" P416_PTF TEST_ARGS "--test-backend PTF --packet-size-range 4096:12000 ${EXTRA_OPTS} "
   )
   # include(${CMAKE_CURRENT_LIST_DIR}/PNAPTFXfail.cmake)  // For future use maybe
 endif()
