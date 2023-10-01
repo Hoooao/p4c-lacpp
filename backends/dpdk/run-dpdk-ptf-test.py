@@ -24,7 +24,6 @@ BRIDGE_PATH = FILE_DIR.joinpath("../ebpf/targets")
 sys.path.append(str(BRIDGE_PATH))
 from ebpfenv import Bridge
 
-
 PARSER = argparse.ArgumentParser()
 PARSER.add_argument("p4c_dir", help="The location of the the compiler source directory")
 PARSER.add_argument("p4_file", help="the p4 file to process")

@@ -19,8 +19,6 @@
 #include "backends/p4tools/modules/testgen/lib/test_spec.h"
 #include "backends/p4tools/modules/testgen/lib/tf.h"
 
-
-
 namespace P4Tools::P4Testgen::Pna {
 
 /// Extracts information from the @testSpec to emit a PTF test case.
@@ -84,4 +82,4 @@ class PTF : public TF {
 
 }  // namespace P4Tools::P4Testgen::Pna
 
-#endif /* BACKENDS_P4TOOLS_MODULES_TESTGEN_TARGETS_Pna_BACKEND_PTF_PTF_H_ */
+#endif /* BACKENDS_P4TOOLS_MODULES_TESTGEN_TARGETS_PNA_BACKEND_PTF_PTF_H_ */

@@ -46,9 +46,9 @@ PnaTestBackend::PnaTestBackend(const ProgramInfo &programInfo, SymbolicExecutor 
     auto seed = TestgenOptions::get().seed;
     if (testBackendString == "METADATA") {
         testWriter = new Metadata(testPath.c_str(), TestgenOptions::get().seed);
-    } else if(testBackendString == "PTF"){
+    } else if (testBackendString == "PTF") {
         testWriter = new PTF(testPath.c_str(), seed);
-    }else {
+    } else {
         P4C_UNIMPLEMENTED(
             "Test back end %1% not implemented for this target. Supported back ends are %2%.",
             testBackendString, Utils::containerToString(SUPPORTED_BACKENDS));

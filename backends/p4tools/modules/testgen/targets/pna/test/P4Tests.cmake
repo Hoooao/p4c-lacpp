@@ -69,7 +69,7 @@ if(P4TOOLS_TESTGEN_PNA_TEST_PTF)
   p4tools_add_tests(
           TESTS "${P4C_PNA_TEST_SUITES_P416_PTF}"
           TAG "testgen-p4c-pna-ptf" DRIVER ${P4TESTGEN_DRIVER}
-          TARGET "dpdk" ARCH "pna" P416_PTF TEST_ARGS "--test-backend PTF --packet-size-range 4096:12000 ${EXTRA_OPTS} "
+          TARGET "dpdk" ARCH "pna" P416_PTF TEST_ARGS "--test-backend PTF --port-ranges 0:8 --packet-size-range 4096:12000 ${EXTRA_OPTS} "
   )
   include(${CMAKE_CURRENT_LIST_DIR}/PNAPTFXfail.cmake)
 endif()

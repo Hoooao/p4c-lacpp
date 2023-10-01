@@ -80,8 +80,8 @@ inja::json PTF::getControlPlane(const TestSpec *testSpec) {
         }
 
         // Collect action profiles and selectors associated with the table.
-        checkForTableActionProfile<PnaDpdkActionProfile, PnaDpdkActionSelector>(
-            tblJson, apAsMap, tblConfig);
+        checkForTableActionProfile<PnaDpdkActionProfile, PnaDpdkActionSelector>(tblJson, apAsMap,
+                                                                                tblConfig);
 
         // Check whether the default action is overridden for this table.
         checkForDefaultActionOverride(tblJson, tblConfig);
@@ -417,9 +417,9 @@ void PTF::emitTestcase(const TestSpec *testSpec, cstring selectedBranches, size_
 
     // if (!cloneSpecs.empty()) {
     //    dataJson["clone_specs"] = getClone(cloneSpecs);
-    //}
-    //auto meterValues = testSpec->getTestObjectCategory("meter_values");
-    //dataJson["meter_values"] = getMeter(meterValues);
+    // }
+    // auto meterValues = testSpec->getTestObjectCategory("meter_values");
+    // dataJson["meter_values"] = getMeter(meterValues);
 
     LOG5("PTF backend: emitting testcase:" << std::setw(4) << dataJson);
 

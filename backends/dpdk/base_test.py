@@ -29,7 +29,6 @@ sys.path.append(str(TOOLS_PATH))
 import testutils
 
 
-
 def stringify(n, length=0):
     """Take a non-negative integer 'n' as the first parameter, and a
     non-negative integer 'length' in units of _bytes_ as the second
@@ -771,7 +770,7 @@ class P4RuntimeTest(BaseTest):
         assert len(action_name_and_params) == 2
 
     def make_table_entry(
-            self, table_name_and_key, action_name_and_params, priority=None, options=None
+        self, table_name_and_key, action_name_and_params, priority=None, options=None
     ):
         self.check_table_name_and_key(table_name_and_key)
         table_name = table_name_and_key[0]

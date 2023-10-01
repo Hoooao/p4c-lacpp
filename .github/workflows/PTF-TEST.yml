@@ -1,13 +1,14 @@
 name: "PTF-backend"
 # This is just a temporary workflow to test the PTF backend
 # Will be merged to ci-dpdk-ptf-tests.yml once it is ready
+# Note: Cache is set to 5gb, should be 1gb once the PTF backend is ready
 on:
   push:
     branches:
-      - ptf-test-pr
+      - ptf-test
   pull_request:
     branches:
-      - ptf-test-pr
+      - ptf-test
 
 concurrency:
   # if workflow for PR or push is already running stop it, and start new one
@@ -29,7 +30,7 @@ jobs:
         uses: hendrikmuhs/ccache-action@v1
         with:
           key: ptf-${{ runner.os }}-test
-          max-size: 1000M
+          max-size: 5000M
 
       - name: 'Checkout DPDK-target'
         uses: actions/checkout@v3
@@ -93,8 +94,4 @@ jobs:
           sudo $IPDK_RECIPE/install/sbin/copy_config_files.sh $IPDK_RECIPE/install $SDE_INSTALL
           sudo $IPDK_RECIPE/install/sbin/set_hugepages.sh
           sudo -E ctest --output-on-failure --schedule-random -R testgen-p4c-pna-ptf
-      - name: 'Show the generated test'
-        working-directory: p4c/build/testgen/testgen-p4c-pna-ptf/pna-dpdk-small_sample.out
-        run: |
-          ls -l
-          sudo cat *.py
+
