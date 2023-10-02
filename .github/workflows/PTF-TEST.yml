@@ -5,10 +5,10 @@ name: "PTF-backend"
 on:
   push:
     branches:
-      - ptf-test
+      - ptf-test-pr
   pull_request:
     branches:
-      - ptf-test
+      - ptf-test-pr
 
 concurrency:
   # if workflow for PR or push is already running stop it, and start new one
