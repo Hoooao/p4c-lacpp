@@ -91,6 +91,7 @@ jobs:
       - name: 'Run DPDK PTF tests'
         working-directory: p4c/build
         run: |
+          pip install psutil
           sudo $IPDK_RECIPE/install/sbin/copy_config_files.sh $IPDK_RECIPE/install $SDE_INSTALL
           sudo $IPDK_RECIPE/install/sbin/set_hugepages.sh
           sudo -E ctest --output-on-failure --schedule-random -R testgen-p4c-pna-ptf

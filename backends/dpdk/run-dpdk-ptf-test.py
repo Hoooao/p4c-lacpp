@@ -7,6 +7,7 @@ import os
 import random
 import socket
 import subprocess
+import psutil
 import sys
 import tempfile
 import time
@@ -321,6 +322,8 @@ def run_test(options: Options) -> int:
             'echo $?', shell=True, capture_output=True, text=True)
         testutils.log.error(
             "######## Errno (in case it is a OS error) ######## \n%s", errno)
+        for process in psutil.process_iter(['pid', 'name', 'username']):
+            print(process.info)
         if switch_proc.stdout:
             out = switch_proc.stdout.read()
             # Do not bother to print whitespace.
