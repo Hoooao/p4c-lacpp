@@ -25,7 +25,8 @@ sys.path.append(str(BRIDGE_PATH))
 from ebpfenv import Bridge
 
 PARSER = argparse.ArgumentParser()
-PARSER.add_argument("p4c_dir", help="The location of the the compiler source directory")
+PARSER.add_argument(
+    "p4c_dir", help="The location of the the compiler source directory")
 PARSER.add_argument("p4_file", help="the p4 file to process")
 PARSER.add_argument(
     "-tf",
@@ -87,7 +88,8 @@ PTF_ADDR: str = "0.0.0.0"
 # Check if target ports are ready to be connected (make sure infrap4d is on)
 def is_port_alive(ns, port) -> bool:
     command = f"sudo ip netns exec {ns} netstat -tuln"
-    out, result = testutils.exec_process(command, timeout=10, capture_output=True)
+    out, result = testutils.exec_process(
+        command, timeout=10, capture_output=True)
     if str(port) in out:
         return 1
     return 0
@@ -173,7 +175,7 @@ class PTFTestEnv:
         return returncode
 
     def compile_program(
-        self, info_name: Path, bf_rt_schema: Path, context: Path, dpdk_spec: Path
+            self, info_name: Path, bf_rt_schema: Path, context: Path, dpdk_spec: Path
     ) -> int:
         """Create /pipe directory"""
         _, returncode = testutils.exec_process(
@@ -184,7 +186,8 @@ class PTFTestEnv:
             return returncode
 
         """Compile the input P4 program using p4c-dpdk."""
-        testutils.log.info("---------------------- Compile with p4c-dpdk ----------------------")
+        testutils.log.info(
+            "---------------------- Compile with p4c-dpdk ----------------------")
         compilation_cmd = f"{self.options.p4c_dir}/build/p4c-dpdk --arch pna --target dpdk \
             --p4runtime-files {info_name} \
             --bf-rt-schema {bf_rt_schema} \
@@ -193,11 +196,12 @@ class PTFTestEnv:
             -o {dpdk_spec} {self.options.p4_file}"
         _, returncode = testutils.exec_process(compilation_cmd, timeout=30)
         if returncode != testutils.SUCCESS:
-            testutils.log.error("Failed to compile the P4 program %s.", self.options.p4_file)
+            testutils.log.error(
+                "Failed to compile the P4 program %s.", self.options.p4_file)
         return returncode
 
     def run_infrap4d(
-        self, proc_env_vars: dict, insecure_mode: bool = True
+            self, proc_env_vars: dict, insecure_mode: bool = True
     ) -> testutils.subprocess.Popen:
         """Start infrap4d and return the process handle."""
         testutils.log.info(
@@ -208,27 +212,31 @@ class PTFTestEnv:
             f"-grpc_open_insecure_mode={insecure_mode}"
         )
         bridge_cmd = self.bridge.get_ns_prefix() + " " + run_infrap4d_cmd
-        self.switch_proc = testutils.open_process(bridge_cmd, env=proc_env_vars)
+        self.switch_proc = testutils.open_process(
+            bridge_cmd, env=proc_env_vars)
         cnt = 1
         while not is_port_alive(self.bridge.ns_name, GRPC_PORT) and cnt != 5:
             time.sleep(2)
             cnt += 1
-            testutils.log.info("Cannot connect to Infrap4d: " + str(cnt) + " try")
+            testutils.log.info(
+                "Cannot connect to Infrap4d: " + str(cnt) + " try")
         if not is_port_alive(self.bridge.ns_name, GRPC_PORT):
-            return testutils.FAILURE
+            return self.switch_proc
         return self.switch_proc
 
     def build_and_load_pipeline(
-        self, p4c_conf: Path, conf_bin: Path, info_name: Path, proc_env_vars: dict
+            self, p4c_conf: Path, conf_bin: Path, info_name: Path, proc_env_vars: dict
     ) -> int:
-        testutils.log.info("---------------------- Build and Load Pipleline ----------------------")
+        testutils.log.info(
+            "---------------------- Build and Load Pipleline ----------------------")
         command = (
             f"{self.options.ipdk_recipe}/install/bin/tdi_pipeline_builder "
             f"--p4c_conf_file={p4c_conf} "
             f"--bf_pipeline_config_binary_file={conf_bin}"
         )
 
-        _, returncode = testutils.exec_process(command, timeout=30, env=proc_env_vars)
+        _, returncode = testutils.exec_process(
+            command, timeout=30, env=proc_env_vars)
         if returncode != testutils.SUCCESS:
             testutils.log.error("Failed to build pipeline")
             return returncode
@@ -249,7 +257,8 @@ class PTFTestEnv:
 
     def run_ptf(self, grpc_port: int, info_name, conf_bin) -> int:
         """Run the PTF test."""
-        testutils.log.info("---------------------- Run PTF test ----------------------")
+        testutils.log.info(
+            "---------------------- Run PTF test ----------------------")
         # Add the file location to the python path.
         pypath = FILE_DIR
         # Show list of the tests
@@ -283,7 +292,8 @@ def run_test(options: Options) -> int:
     """ Files needed by the pipeline"""
     context = options.testdir.joinpath("pipe/context.json")
     p4c_conf = options.testdir.joinpath(test_name.with_suffix(".conf"))
-    dpdk_spec = options.testdir.joinpath(f"pipe/{test_name.with_suffix('.spec')}")
+    dpdk_spec = options.testdir.joinpath(
+        f"pipe/{test_name.with_suffix('.spec')}")
 
     # Copy the test file into the test folder so that it can be picked up by PTF.
     testutils.copy_file(options.testfile, options.testdir)
@@ -292,7 +302,8 @@ def run_test(options: Options) -> int:
     testenv = PTFTestEnv(options)
 
     # Compile the P4 program.
-    returncode = testenv.compile_program(info_name, bf_rt_schema, context, dpdk_spec)
+    returncode = testenv.compile_program(
+        info_name, bf_rt_schema, context, dpdk_spec)
     if returncode != testutils.SUCCESS:
         return returncode
 
@@ -304,10 +315,29 @@ def run_test(options: Options) -> int:
     # Create the TAP interfaces.
     returncode = testenv.create_TAPs(proc_env_vars)
     if returncode != testutils.SUCCESS:
+        # Delete the test environment and trigger a clean up.
+        del testenv
+        errno, _ = testutils.exec_process(
+            'echo $?', shell=True, capture_output=True, text=True)
+        testutils.log.error(
+            "######## Errno (in case it is a OS error) ######## \n%s", errno)
+        if switch_proc.stdout:
+            out = switch_proc.stdout.read()
+            # Do not bother to print whitespace.
+            if out.strip():
+                testutils.log.error(
+                    "######## Switch output ######## \n%s", out)
+        if switch_proc.stderr:
+            err = switch_proc.stderr.read()
+            # Do not bother to print whitespace.
+            if err.strip():
+                testutils.log.error(
+                    "######## Switch errors ######## \n%s", err)
         return returncode
 
     # Build and load the pipeline
-    returncode = testenv.build_and_load_pipeline(p4c_conf, conf_bin, info_name, proc_env_vars)
+    returncode = testenv.build_and_load_pipeline(
+        p4c_conf, conf_bin, info_name, proc_env_vars)
     if returncode != testutils.SUCCESS:
         return returncode
 
@@ -317,19 +347,23 @@ def run_test(options: Options) -> int:
     del testenv
     # Print switch log if the results were not successful.
     if result != testutils.SUCCESS:
-        # Get errno
-        errno, _ = testutils.exec_process('echo $?', shell=True, capture_output=True, text=True)
-        testutils.log.error("######## Errno (in case it is a OS error) ######## \n%s", errno)
+        # Get errno, not sure if there is a better way (some package) to get errno
+        errno, _ = testutils.exec_process(
+            'echo $?', shell=True, capture_output=True, text=True)
+        testutils.log.error(
+            "######## Errno (in case it is a OS error) ######## \n%s", errno)
         if switch_proc.stdout:
             out = switch_proc.stdout.read()
             # Do not bother to print whitespace.
             if out.strip():
-                testutils.log.error("######## Switch output ######## \n%s", out)
+                testutils.log.error(
+                    "######## Switch output ######## \n%s", out)
         if switch_proc.stderr:
             err = switch_proc.stderr.read()
             # Do not bother to print whitespace.
             if err.strip():
-                testutils.log.error("######## Switch errors ######## \n%s", err)
+                testutils.log.error(
+                    "######## Switch errors ######## \n%s", err)
     return result
 
 
@@ -339,7 +373,8 @@ def create_options(test_args) -> testutils.Optional[Options]:
     options.p4_file = Path(testutils.check_if_file(test_args.p4_file))
     testfile = test_args.testfile
     if not testfile:
-        testutils.log.info("No test file provided. Checking for file in folder.")
+        testutils.log.info(
+            "No test file provided. Checking for file in folder.")
         testfile = options.p4_file.with_suffix(".py")
     result = testutils.check_if_file(testfile)
     if not result:
@@ -347,7 +382,8 @@ def create_options(test_args) -> testutils.Optional[Options]:
     options.testfile = Path(result)
     testdir = test_args.testdir
     if not testdir:
-        testutils.log.info("No test directory provided. Generating temporary folder.")
+        testutils.log.info(
+            "No test directory provided. Generating temporary folder.")
         testdir = tempfile.mkdtemp(dir=Path(".").absolute())
         # Generous permissions because the program is usually edited by sudo.
         os.chmod(testdir, 0o755)
