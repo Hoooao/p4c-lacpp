@@ -428,4 +428,4 @@ if __name__ == "__main__":
     if not (args.nocleanup or test_result != testutils.SUCCESS):
         testutils.log.info("Removing temporary test directory.")
         testutils.del_dir(test_options.testdir)
-    sys.exit(test_result)
+    sys.exit(-1)
