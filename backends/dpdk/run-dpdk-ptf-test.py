@@ -218,9 +218,6 @@ class PTFTestEnv:
             bridge_cmd, env=proc_env_vars)
         cnt = 1
         while not is_port_alive(self.bridge.ns_name, GRPC_PORT) and cnt != 5:
-            if cnt == 3:
-                for process in psutil.process_iter(['pid', 'name', 'username']):
-                    print(process.info)
             time.sleep(2)
             cnt += 1
             testutils.log.info(
