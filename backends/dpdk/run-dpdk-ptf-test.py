@@ -91,6 +91,7 @@ def is_port_alive(ns, port) -> bool:
     command = f"sudo ip netns exec {ns} netstat -tuln"
     out, result = testutils.exec_process(
         command, timeout=10, capture_output=True)
+    print("result: ", result, "out: ", out, "\n")
     if str(port) in out:
         return 1
     return 0
@@ -350,24 +351,23 @@ def run_test(options: Options) -> int:
     # Delete the test environment and trigger a clean up.
     del testenv
     # Print switch log if the results were not successful.
-    if result != testutils.SUCCESS:
-        # Get errno, not sure if there is a better way (some package) to get errno
-        errno, _ = testutils.exec_process(
-            'echo $?', shell=True, capture_output=True, text=True)
-        testutils.log.error(
-            "######## Errno (in case it is a OS error) ######## \n%s", errno)
-        if switch_proc.stdout:
-            out = switch_proc.stdout.read()
-            # Do not bother to print whitespace.
-            if out.strip():
-                testutils.log.error(
-                    "######## Switch output ######## \n%s", out)
-        if switch_proc.stderr:
-            err = switch_proc.stderr.read()
-            # Do not bother to print whitespace.
-            if err.strip():
-                testutils.log.error(
-                    "######## Switch errors ######## \n%s", err)
+    # Get errno, not sure if there is a better way (some package) to get errno
+    errno, _ = testutils.exec_process(
+        'echo $?', shell=True, capture_output=True, text=True)
+    testutils.log.error(
+        "######## Errno (in case it is a OS error) ######## \n%s", errno)
+    if switch_proc.stdout:
+        out = switch_proc.stdout.read()
+        # Do not bother to print whitespace.
+        if out.strip():
+            testutils.log.error(
+                "######## Switch output ######## \n%s", out)
+    if switch_proc.stderr:
+        err = switch_proc.stderr.read()
+        # Do not bother to print whitespace.
+        if err.strip():
+            testutils.log.error(
+                "######## Switch errors ######## \n%s", err)
     return result
 
 
