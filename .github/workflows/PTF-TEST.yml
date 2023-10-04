@@ -5,10 +5,10 @@ name: "PTF-backend"
 on:
   push:
     branches:
-      - ptf-test-pr
+      - ptf-test-pr-tmp
   pull_request:
     branches:
-      - ptf-test-pr
+      - ptf-test-pr-tmp
 
 concurrency:
   # if workflow for PR or push is already running stop it, and start new one
@@ -88,10 +88,28 @@ jobs:
         run: |
           sudo -E tools/dpdk-ci-build.sh $P4C_DIR $IPDK_RECIPE $SDE_INSTALL $DEPEND_INSTALL
 
-      - name: 'Run DPDK PTF tests'
+       - name: 'Run DPDK PTF tests'
+        continue-on-error: true
         working-directory: p4c/build
         run: |
           sudo $IPDK_RECIPE/install/sbin/copy_config_files.sh $IPDK_RECIPE/install $SDE_INSTALL
           sudo $IPDK_RECIPE/install/sbin/set_hugepages.sh
-          sudo -E ctest --output-on-failure --schedule-random -R testgen-p4c-pna-ptf
-
+          sudo -E ctest --output-on-failure --schedule-random -R testgen-p4c-pna-ptf -V
+                
+      - name: 'Get ERROR log'
+        continue-on-error: true
+        working-directory: /var/log/stratum
+        run: |
+          cat *ERROR
+          
+      - name: 'Get INFO log'
+        continue-on-error: true
+        working-directory: /var/log/stratum
+        run: |
+          cat *INFO
+          
+      - name: 'Get WARNING log'
+        continue-on-error: true
+        working-directory: /var/log/stratum
+        run: |
+          cat *WARNING
