@@ -12,7 +12,7 @@ on:
 
 concurrency:
   # if workflow for PR or push is already running stop it, and start new one
-  group: p4c_ptf-${{ github.ref }}
+  group: p4c_ptf-tmp-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -57,7 +57,6 @@ jobs:
         run: |
           sudo apt update -y
           python install_dep.py
-
       - name: 'Compile p4sde dpdk target'
         working-directory: p4sde
         run: |
@@ -66,7 +65,6 @@ jobs:
           ./configure --prefix=$SDE_INSTALL
           make 
           make install
-
       - name: 'Build infrap4d dependencies'
         working-directory: ipdk.recipe
         run: |
@@ -77,18 +75,15 @@ jobs:
           echo "Build infrap4d dependencies"
           cmake -B build -DCMAKE_INSTALL_PREFIX="$DEPEND_INSTALL" -DUSE_SUDO=ON
           cmake --build build 
-
       - name: 'Build infrap4d'
         working-directory: ipdk.recipe
         run: |
           sudo ./make-all.sh --target=dpdk --no-krnlmon --no-ovs -S $SDE_INSTALL -D $DEPEND_INSTALL
-
       - name: 'Build p4c with only the DPDK backend'
         working-directory: p4c
         run: |
           sudo -E tools/dpdk-ci-build.sh $P4C_DIR $IPDK_RECIPE $SDE_INSTALL $DEPEND_INSTALL
-
-       - name: 'Run DPDK PTF tests'
+      - name: 'Run DPDK PTF tests'
         continue-on-error: true
         working-directory: p4c/build
         run: |
@@ -113,3 +108,4 @@ jobs:
         working-directory: /var/log/stratum
         run: |
           cat *WARNING
+          
