@@ -317,24 +317,6 @@ def run_test(options: Options) -> int:
     # Create the TAP interfaces.
     returncode = testenv.create_TAPs(proc_env_vars)
     if returncode != testutils.SUCCESS:
-        # Delete the test environment and trigger a clean up.
-        del testenv
-        errno, _ = testutils.exec_process(
-            'echo $?', shell=True, capture_output=True, text=True)
-        testutils.log.error(
-            "######## Errno (in case it is a OS error) ######## \n%s", errno)
-        if switch_proc.stdout:
-            out = switch_proc.stdout.read()
-            # Do not bother to print whitespace.
-            if out.strip():
-                testutils.log.error(
-                    "######## Switch output ######## \n%s", out)
-        if switch_proc.stderr:
-            err = switch_proc.stderr.read()
-            # Do not bother to print whitespace.
-            if err.strip():
-                testutils.log.error(
-                    "######## Switch errors ######## \n%s", err)
         return returncode
 
     # Build and load the pipeline
