@@ -7,7 +7,6 @@ import os
 import random
 import socket
 import subprocess
-import psutil
 import sys
 import tempfile
 import time
