@@ -5,14 +5,14 @@ name: "PTF-backend"
 on:
   push:
     branches:
-      - ptf-test-pr
+      - ptf-test-pr-copy
   pull_request:
     branches:
-      - ptf-test-pr
+      - ptf-test-pr-copy
 
 concurrency:
   # if workflow for PR or push is already running stop it, and start new one
-  group: p4c_ptf-${{ github.ref }}
+  group: p4c_ptf-copy-${{ github.ref }}
   cancel-in-progress: true
 
 env:

@@ -91,7 +91,6 @@ def is_port_alive(ns, port) -> bool:
     command = f"sudo ip netns exec {ns} netstat -tuln"
     out, result = testutils.exec_process(
         command, timeout=10, capture_output=True)
-    print("result: ", result, "out: ", out, "\n")
     if str(port) in out:
         return 1
     return 0
