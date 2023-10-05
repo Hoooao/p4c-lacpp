@@ -210,7 +210,7 @@ class PTFTestEnv:
         bridge_cmd = self.bridge.get_ns_prefix() + " " + run_infrap4d_cmd
         self.switch_proc = testutils.open_process(bridge_cmd, env=proc_env_vars)
         cnt = 1
-        while not is_port_alive(self.bridge.ns_name, GRPC_PORT) and cnt != 5:
+        while not is_port_alive(self.bridge.ns_name, GRPC_PORT) and cnt != 7:
             time.sleep(2)
             cnt += 1
             testutils.log.info("Cannot connect to Infrap4d: " + str(cnt) + " try")
