@@ -43,12 +43,12 @@ ENV INSTALL_BMV2="ON"
 ENV INSTALL_EBPF="OFF"
 ENV IMAGE_TYPE="test"
 ENV CTEST_PARALLEL_LEVEL="4"
-ENV CMAKE_FLAGS="-DENABLE_P4TC=OFF -DENABLE_BMV2=OFF -DENABLE_EBPF=OFF -DENABLE_UBPF=OFF -DENABLE_GTESTS=OFF -DENABLE_P4TEST=OFF -DENABLE_P4C_GRAPHS=OFF -DIPDK_INSTALL_DIR=/root/ipdk_install "
+ENV CMAKE_FLAGS="-DENABLE_P4TC=OFF -DENABLE_BMV2=OFF -DENABLE_EBPF=OFF -DENABLE_UBPF=OFF -DENABLE_GTESTS=OFF -DENABLE_P4TEST=OFF -DENABLE_P4C_GRAPHS=OFF -DIPDK_INSTALL_DIR=$IPDK_INSTALL_DIR "
 WORKDIR /root/p4c
 RUN apt-get install python3-dev -y # Required by packges in ci-build, remove after base OS is updated to 22.04
 RUN tools/ci-build.sh 
 
 # Disable github aciton default THP setting
-CMD ["sudo", "hugeadm", "--thp-madvise "]
+# CMD ["sudo", "hugeadm", "--thp-madvise "]
 
 

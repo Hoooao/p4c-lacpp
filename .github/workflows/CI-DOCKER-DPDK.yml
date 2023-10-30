@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   build_p4dpdk_ubuntu:
-    runs-on: macos-latest
+    runs-on: ubuntu-22.04
     steps:
     # TODO: Cache for container
       - name: ccache
@@ -29,6 +29,11 @@ jobs:
         with:
              path: p4c
              submodules: recursive
+
+      - name: Install hugepages and set transparent gugepages to madvise
+        run: |
+            sudo apt-get install libhugetlbfs-bin -y
+            sudo hugeadm --thp-madvise
 
       - name: Checkout DPDK-target
         uses: actions/checkout@v3
