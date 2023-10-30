@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   build_p4dpdk_ubuntu:
-    runs-on: ubuntu-22.04
+    runs-on: macos-latest
     steps:
     # TODO: Cache for container
       - name: ccache
