@@ -8,9 +8,7 @@ RUN rm -rf p4*
 COPY ./p4c /root/p4c
 COPY ./p4sde /root/p4sde
 COPY ./.ccache /root/.ccache
-RUN apt-get update
-RUN apt-get install rsync git ccache libhugetlbfs-bin -y
-RUN ccache -s
+RUN apt-get update && apt-get install rsync git ccache libhugetlbfs-bin -y
 
 # Update GCC to 11 -> GCC-9 cause config problem, remove after base OS is updated to 22.04
 RUN sudo apt install build-essential manpages-dev software-properties-common -y
@@ -22,18 +20,15 @@ RUN sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 --slav
 
 # p4sde (tdi requires gcc-11)
 WORKDIR /root/p4sde
-RUN pip3 install distro
-RUN python3 ./tools/setup/install_dep.py
-RUN ./autogen.sh
-RUN ./configure --prefix=$IPDK_INSTALL_DIR 
-RUN make -j4
-RUN make install
+RUN pip3 install distro && python3 ./tools/setup/install_dep.py
+RUN ./autogen.sh && ./configure --prefix=$IPDK_INSTALL_DIR \
+    && make -j4 && make install
 
 # infrap4d deps
 WORKDIR /root
 RUN sudo apt install libatomic1 libnl-route-3-dev openssl -y
-RUN rsync -avh ./networking-recipe/deps_install/* $IPDK_INSTALL_DIR 
-RUN rsync -avh ./networking-recipe/install/* $IPDK_INSTALL_DIR
+RUN rsync -avh ./networking-recipe/deps_install/* $IPDK_INSTALL_DIR \
+    && rsync -avh ./networking-recipe/install/* $IPDK_INSTALL_DIR
 
 # P4C
 ENV CMAKE_UNITY_BUILD="ON"
