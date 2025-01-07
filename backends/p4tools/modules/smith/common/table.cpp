@@ -124,7 +124,6 @@ IR::ActionList *TableGenerator::genActionList(size_t len) {
     IR::IndexedVector<IR::ActionListElement> actList;
     auto p4Actions = P4Scope::getDecls<IR::P4Action>();
     std::set<cstring> actNames;
-
     if (p4Actions.empty()) {
         return new IR::ActionList(actList);
     }
@@ -144,6 +143,7 @@ IR::ActionList *TableGenerator::genActionList(size_t len) {
         if (mce != nullptr) {
             auto *actlistEle = new IR::ActionListElement(mce);
             actList.push_back(actlistEle);
+            printInfo("Action name: %s added", actName.c_str());
         }
     }
     return new IR::ActionList(actList);

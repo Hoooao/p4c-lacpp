@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "backends/p4tools/common/lib/logging.h"
 #include "backends/p4tools/common/lib/util.h"
 #include "backends/p4tools/modules/smith/common/declarations.h"
 #include "backends/p4tools/modules/smith/common/parser.h"
@@ -194,9 +195,11 @@ const IR::P4Program *GenericCoreSmithTarget::generateP4Program() const {
     objects->push_back(declarationGenerator().genHeaderStruct());
 
     // generate some callables
+    // the number of callalbles to be generated
     int callableDecls =
         Utils::getRandInt(Declarations::get().MIN_CALLABLES, Declarations::get().MAX_CALLABLES);
     for (int i = 0; i < callableDecls; ++i) {
+        // 
         std::vector<int64_t> percent = {70, 15, 10, 5};
         switch (Utils::getRandInt(percent)) {
             case 0: {

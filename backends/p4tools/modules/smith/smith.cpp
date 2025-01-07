@@ -15,6 +15,7 @@
 #include "backends/p4tools/modules/smith/options.h"
 #include "backends/p4tools/modules/smith/register.h"
 #include "backends/p4tools/modules/smith/toolname.h"
+
 #include "frontends/common/parser_options.h"
 #include "frontends/p4/toP4/toP4.h"
 #include "ir/ir.h"

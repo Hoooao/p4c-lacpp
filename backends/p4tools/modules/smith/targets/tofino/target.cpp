@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "backends/p4tools/common/lib/logging.h"
 #include "backends/p4tools/common/lib/util.h"
 #include "backends/p4tools/modules/smith/common/declarations.h"
 #include "backends/p4tools/modules/smith/common/parser.h"
@@ -413,12 +414,13 @@ IR::P4Control *TofinoTnaSmithTarget::generateIngressBlock() const {
         }
     }
 
+    printInfo("Generating localDecls in generateIngressBlock");
     IR::IndexedVector<IR::Declaration> localDecls = declarationGenerator().genLocalControlDecls();
     // apply body
     auto *applyBlock = statementGenerator().genBlockStatement(false);
     // hardcode the output port to be zero
     auto *outputPort = new IR::PathExpression("ig_tm_md.ucast_egress_port");
-    auto *outputPortVal = new IR::Constant(IR::Type_InfInt::get(), 0);
+    auto *outputPortVal = new IR::Constant(IR::Type_InfInt::get(), Utils::getRandInt(Declarations::get().MIN_PORT, Declarations::get().MIN_PORT));
     auto *assign = new IR::AssignmentStatement(outputPort, outputPortVal);
     // some hack to insert the expression at the beginning
     auto it = applyBlock->components.begin();
@@ -534,6 +536,7 @@ IR::P4Control *TofinoTnaSmithTarget::generateEgressBlock() const {
     return new IR::P4Control("SwitchEgress", typeCtrl, localDecls, blkStat);
 }
 
+// Hao: change here for T2NA
 int TofinoTnaSmithTarget::writeTargetPreamble(std::ostream *ostream) const {
     *ostream << "#include <core.p4>\n";
     *ostream << "#define __TARGET_TOFINO__ 1\n";
@@ -554,6 +557,7 @@ const IR::P4Program *TofinoTnaSmithTarget::generateP4Program() const {
     P4Scope::notInitializedStructs.insert("egress_intrinsic_metadata_for_deparser_t"_cs);
     P4Scope::notInitializedStructs.insert("egress_intrinsic_metadata_for_output_port_t"_cs);
 
+    // Hao: do same for t2na?
     // set tna-specific probabilities
     setTnaProbabilities();
 
@@ -603,6 +607,7 @@ const IR::P4Program *TofinoTnaSmithTarget::generateP4Program() const {
         }
     }
 
+    // Hao: these components should be the focus as they are the core of the executions
     // generate all the necessary pipelines for the package
     objects->push_back(generateIngressParserBlock());
     objects->push_back(generateIngressBlock());

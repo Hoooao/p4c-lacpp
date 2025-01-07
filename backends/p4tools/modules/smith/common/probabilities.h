@@ -7,17 +7,17 @@ namespace P4::P4Tools::P4Smith {
 
 struct Probabilities {
     // assignment or method call
-    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_ASSIGN = 75;
-    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_CALL = 25;
+    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_ASSIGN = 65;
+    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_CALL = 35;
     // probabilities of assignment types
     uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_ASSIGN_BIT = 100;
     uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_ASSIGN_STRUCTLIKE = 0;
     // probabilities of method calls
-    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_ACTION = 44;
-    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_FUNCTION = 45;
-    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_TABLE = 10;
-    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_CTRL = 5;
-    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_BUILT_IN = 1;
+    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_ACTION = 2;
+    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_FUNCTION = 2;
+    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_TABLE = 90;
+    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_CTRL = 2;
+    uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_BUILT_IN = 4;
 
     // probabilities for statements
     uint16_t STATEMENT_SWITCH = 5;
@@ -318,11 +318,11 @@ struct Declarations {
 
     // minimum and maximum number of statements in a block statement
     uint16_t BLOCKSTATEMENT_MIN_STAT = 3;
-    uint16_t BLOCKSTATEMENT_MAX_STAT = 10;
+    uint16_t BLOCKSTATEMENT_MAX_STAT = 7;
 
     // minimum and maximum number of callable declarations
     uint16_t MIN_CALLABLES = 0;
-    uint16_t MAX_CALLABLES = 4;
+    uint16_t MAX_CALLABLES = 20;
 
     // minimum and maximum variable declarations
     uint16_t MIN_VAR = 0;
@@ -331,11 +331,15 @@ struct Declarations {
     uint16_t MIN_INSTANCE = 0;
     uint16_t MAX_INSTANCE = 2;
 
-    uint16_t MIN_ACTION = 0;
-    uint16_t MAX_ACTION = 2;
+    uint16_t MIN_ACTION = 2;
+    uint16_t MAX_ACTION = 4;
 
-    uint16_t MIN_TABLE = 0;
-    uint16_t MAX_TABLE = 3;
+    uint16_t MIN_TABLE = 1;
+    uint16_t MAX_TABLE = 4;
+
+    // for output port in control block
+    uint16_t MIN_PORT = 1;
+    uint16_t MAX_PORT = 4;
 
     static Declarations &get() {
         static Declarations INSTANCE;

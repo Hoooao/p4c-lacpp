@@ -12,6 +12,7 @@
 #include "backends/p4tools/modules/smith/common/table.h"
 #include "backends/p4tools/modules/smith/core/target.h"
 #include "backends/p4tools/modules/smith/util/util.h"
+#include "backends/p4tools/common/lib/logging.h"
 #include "ir/indexed_vector.h"
 #include "ir/vector.h"
 #include "lib/cstring.h"
@@ -45,6 +46,7 @@ IR::StatOrDecl *DeclarationGenerator::generateRandomStatementOrDeclaration(bool 
         // it can happen that no statement can be generated
         // for example in functions without writable values
         // so declare a variable instead
+        printInfo("Statment not generated, gen var decl instead");
         return target().declarationGenerator().genVariableDeclaration();
     }
     return stmt;
@@ -122,7 +124,10 @@ IR::P4Action *DeclarationGenerator::genActionDeclaration() {
     return ret;
 }
 
-IR::IndexedVector<IR::Declaration> DeclarationGenerator::genLocalControlDecls() {
+IR::IndexedVector<IR::Declaration> DeclarationGenerator::genLocalControlDecls(bool useScope) {
+    if(useScope){
+        P4Scope::startLocalScope();
+    }
     IR::IndexedVector<IR::Declaration> localDecls;
 
     auto vars = Utils::getRandInt(Declarations::get().MIN_VAR, Declarations::get().MAX_VAR);
@@ -132,6 +137,9 @@ IR::IndexedVector<IR::Declaration> DeclarationGenerator::genLocalControlDecls() 
         Utils::getRandInt(Declarations::get().MIN_ACTION, Declarations::get().MAX_ACTION);
     auto tables = Utils::getRandInt(Declarations::get().MIN_TABLE, Declarations::get().MAX_TABLE);
 
+    printInfo("Generating %d variable declarations, %d instance declarations, %d action "
+              "declarations, and %d table declarations",
+              vars, decls, actions, tables);
     // variableDeclarations
     for (int i = 0; i <= vars; i++) {
         auto *varDecl = genVariableDeclaration();
@@ -157,6 +165,9 @@ IR::IndexedVector<IR::Declaration> DeclarationGenerator::genLocalControlDecls() 
     for (int i = 0; i <= tables; i++) {
         auto *tabDecl = target().tableGenerator().genTableDeclaration();
         localDecls.push_back(tabDecl);
+    }
+    if(useScope){
+        P4Scope::endLocalScope();
     }
     return localDecls;
     // instantiations

@@ -16,7 +16,8 @@ namespace P4::P4Tools::P4Smith {
 std::string getRandomString(size_t len) {
     // Add "for" and "in" to the list of P4 keywords, even though the wordlist doesn't contain them.
     static const std::vector<std::string> P4_KEYWORDS = {"if",      "void", "else", "key",
-                                                         "actions", "true", "for",  "in"};
+                                                         "actions", "true", "for",  "in", 
+                                                         "return","action"};
     static const std::array<char, 53> ALPHANUMERIC_CHARACTERS = {
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         "abcdefghijklmnopqrstuvwxyz"};
@@ -25,6 +26,7 @@ std::string getRandomString(size_t len) {
 
     while (true) {
         std::stringstream ss;
+        // Hao: the word list contain keywords....
         // Try to get a name from the wordlist.
         ss << Wordlist::getFromWordlist();
         size_t lenFromWordlist = ss.str().length();

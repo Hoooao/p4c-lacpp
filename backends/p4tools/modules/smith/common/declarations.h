@@ -24,7 +24,7 @@ class DeclarationGenerator : public Generator {
 
     virtual IR::Declaration_Constant *genConstantDeclaration();
 
-    virtual IR::IndexedVector<IR::Declaration> genLocalControlDecls();
+    virtual IR::IndexedVector<IR::Declaration> genLocalControlDecls(bool useScope = false);
 
     virtual IR::P4Control *genControlDeclaration();
 
