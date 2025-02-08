@@ -3856,6 +3856,9 @@ var hierarchy =
       [ "dyn_vector< std::vector< const IR::MAU::Table * > >", "classdyn__vector.html", null ]
     ] ],
     [ "SuperClusterBuilder", "class_super_cluster_builder.html", null ],
+    [ "TableDepSkeleton::Dependency", "class_table_dep_skeleton_1_1_dependency.html", null ],
+    [ "TableDepSkeleton::TableDepSkeleton", "class_table_dep_skeleton_1_1_table_dep_skeleton.html", null ],
+    [ "TableDepSkeleton::TableNode", "class_table_dep_skeleton_1_1_table_node.html", null ],
     [ "TableFormat", "struct_table_format.html", null ],
     [ "TableFormat::Use", "struct_table_format_1_1_use.html", null ],
     [ "TableFormat::Use::match_group_use", "struct_table_format_1_1_use_1_1match__group__use.html", null ],

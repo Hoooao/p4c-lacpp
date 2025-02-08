@@ -2220,6 +2220,11 @@ var annotated_dup =
       [ "hash< std::pair< T1, T2 > >", "structstd_1_1hash_3_01std_1_1pair_3_01_t1_00_01_t2_01_4_01_4.html", null ],
       [ "hash< std::tuple< Types... > >", "structstd_1_1hash_3_01std_1_1tuple_3_01_types_8_8_8_01_4_01_4.html", null ]
     ] ],
+    [ "TableDepSkeleton", null, [
+      [ "Dependency", "class_table_dep_skeleton_1_1_dependency.html", null ],
+      [ "TableDepSkeleton", "class_table_dep_skeleton_1_1_table_dep_skeleton.html", null ],
+      [ "TableNode", "class_table_dep_skeleton_1_1_table_node.html", null ]
+    ] ],
     [ "Tofino", "namespace_tofino.html", [
       [ "ActionDataBus", "struct_tofino_1_1_action_data_bus.html", "struct_tofino_1_1_action_data_bus" ],
       [ "InstructionMemory", "struct_tofino_1_1_instruction_memory.html", null ],
