@@ -99,6 +99,7 @@ std::optional<ICompileContext *> Target::initializeTarget(std::string_view toolN
                 return std::nullopt;
             }
         }
+
     }
     if (!target) {
         ::P4::error("Missing --target argument");

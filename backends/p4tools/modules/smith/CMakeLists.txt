@@ -21,6 +21,10 @@ set(SMITH_SOURCES
   common/scope.cpp
   common/statements.cpp
   common/table.cpp
+
+  common/skeleton/adjacencyMatGen.cpp
+  common/skeleton/skeleton.cpp
+  
   util/util.cpp
   util/wordlist.cpp
   options.cpp
@@ -32,7 +36,8 @@ set(SMITH_LIBS
 )
 
 file(GLOB tools_targets RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/targets
-     ${CMAKE_CURRENT_SOURCE_DIR}/targets/*
+     ${CMAKE_CURRENT_SOURCE_DIR}/targets/generic
+      ${CMAKE_CURRENT_SOURCE_DIR}/targets/tofino
 )
 
 foreach(ext ${tools_targets})

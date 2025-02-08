@@ -59,8 +59,8 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/common)
 
 # Custom IR constructs for P4Tools.
 set(IR_DEF_FILES ${IR_DEF_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/p4tools.def)
-
-file(GLOB tools_modules RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/modules ${CMAKE_CURRENT_SOURCE_DIR}/modules/*)
+# Hao: revert smith to * 
+file(GLOB tools_modules RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/modules ${CMAKE_CURRENT_SOURCE_DIR}/modules/smith)
 foreach(ext ${tools_modules})
   set(tools_dir ${CMAKE_CURRENT_SOURCE_DIR}/modules/${ext})
   if(EXISTS ${tools_dir}/CMakeLists.txt AND IS_DIRECTORY ${tools_dir})

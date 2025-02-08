@@ -27,6 +27,9 @@ class AbstractP4cToolOptions : public CompilerOptions {
     /// Disable information logging.
     bool disableInformationLogging = false;
 
+    /// Enable DAG generation
+    bool enableDagGeneration = false;
+
     /// Processes options.
     ///
     /// @returns an EXIT_SUCCESS context on success, EXIT_FAILURE on error.

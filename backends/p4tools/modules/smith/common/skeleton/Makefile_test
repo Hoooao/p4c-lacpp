@@ -1,0 +1,2 @@
+adjGen: scratch.cc adjacencyMatGen.cc skeleton.cc
+	g++ -o scratch scratch.cc adjacencyMatGen.cc skeleton.cc 

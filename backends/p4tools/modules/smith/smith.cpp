@@ -22,6 +22,9 @@
 #include "lib/error.h"
 #include "lib/nullstream.h"
 
+// skeleton
+#include "backends/p4tools/modules/smith/common/skeleton/skeleton.h"
+
 namespace P4::P4Tools::P4Smith {
 
 void Smith::registerTarget() { registerSmithTargets(); }
@@ -79,10 +82,10 @@ int Smith::mainImpl(const CompilerResult & /*result*/) {
         smithOptions.seed = r();
         Utils::setRandomSeed(*smithOptions.seed);
     }
+
     // TODO(fruffy): Remove this. We are setting the seed in two frameworks.
     printInfo("============ Program seed %1% =============\n", *smithOptions.seed);
     const auto &smithTarget = SmithTarget::get();
-
     auto result = smithTarget.writeTargetPreamble(ostream);
     if (result != EXIT_SUCCESS) {
         return result;

@@ -4,6 +4,7 @@
 #include <cstddef>
 
 #include "backends/p4tools/modules/smith/common/generator.h"
+#include "backends/p4tools/modules/smith/common/skeleton/skeleton.h"
 #include "ir/indexed_vector.h"
 #include "ir/ir.h"
 #include "lib/cstring.h"
@@ -25,6 +26,9 @@ class DeclarationGenerator : public Generator {
     virtual IR::Declaration_Constant *genConstantDeclaration();
 
     virtual IR::IndexedVector<IR::Declaration> genLocalControlDecls();
+
+    virtual IR::IndexedVector<IR::Declaration> genLocalControlDeclsUsingDAG();
+    IR::IndexedVector<IR::Declaration> traverseSkeletonTableNode(std::shared_ptr<TableDepSkeleton::TableNode> tn);
 
     virtual IR::P4Control *genControlDeclaration();
 

@@ -10,6 +10,7 @@
 #include "backends/p4tools/modules/smith/common/parser.h"
 #include "backends/p4tools/modules/smith/common/statements.h"
 #include "backends/p4tools/modules/smith/common/table.h"
+#include "backends/p4tools/modules/smith/options.h"
 #include "ir/ir.h"
 
 namespace P4::P4Tools::P4Smith {

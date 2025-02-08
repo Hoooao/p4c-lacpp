@@ -162,6 +162,41 @@ IR::IndexedVector<IR::Declaration> DeclarationGenerator::genLocalControlDecls() 
     // instantiations
 }
 
+IR::IndexedVector<IR::Declaration> DeclarationGenerator::genLocalControlDeclsUsingDAG() {
+    // TODO(Hao): make this configurable
+    Matrix mat = AdjMatGen::generateLowerTriangularMatrix(4,0.6);
+    AdjMatGen::printMatrix(mat);
+
+    TableDepSkeleton::TableDepSkeleton skeleton = TableDepSkeleton::TableDepSkeleton(mat);
+    IR::IndexedVector<IR::Declaration> localDecls;
+
+    for(const auto& table : skeleton.zeroIndegreeTables){
+        auto decls = traverseSkeletonTableNode(table);
+        localDecls.append(decls);
+    }
+    return localDecls;
+    // instantiations
+}
+
+IR::IndexedVector<IR::Declaration> DeclarationGenerator::traverseSkeletonTableNode(std::shared_ptr<TableDepSkeleton::TableNode> tn){
+    IR::IndexedVector<IR::Declaration> localDecls;
+    // Dummy vars, actions, and tables, no dependancy inserted, make it produce something first
+    auto *varDecl = genVariableDeclaration();
+    localDecls.push_back(varDecl);
+    // instrument this function for dependancy-write
+    auto *actDecl = genActionDeclaration();
+    localDecls.push_back(actDecl);
+    // instrument this function for dependancy-read/match
+    auto *tabDecl = target().tableGenerator().genTableDeclaration();
+    localDecls.push_back(tabDecl);
+    for(const auto& dep : tn->outboundEdges){
+        auto depDecl = traverseSkeletonTableNode(dep->target);
+        localDecls.append(depDecl);
+    }
+    // Note: in case of a table depend on the same pair of fields in 2 tables point to it, make some map to check that
+    return localDecls;
+    
+}
 IR::P4Control *DeclarationGenerator::genControlDeclaration() {
     // start of new scope
     P4Scope::startLocalScope();

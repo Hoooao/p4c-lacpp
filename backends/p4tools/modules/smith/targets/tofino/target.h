@@ -10,6 +10,7 @@
 #include "backends/p4tools/modules/smith/common/statements.h"
 #include "backends/p4tools/modules/smith/common/table.h"
 #include "backends/p4tools/modules/smith/core/target.h"
+#include "backends/p4tools/modules/smith/common/skeleton/skeleton.h"
 #include "ir/ir.h"
 
 namespace P4::P4Tools::P4Smith::Tofino {
@@ -33,6 +34,7 @@ class TofinoTnaSmithTarget : public AbstractTofinoSmithTarget {
     [[nodiscard]] IR::P4Parser *generateEgressParserBlock() const;
     [[nodiscard]] IR::P4Control *generateEgressBlock() const;
     [[nodiscard]] IR::P4Control *generateEgressDeparserBlock() const;
+    
 
  public:
     /// Registers this target.

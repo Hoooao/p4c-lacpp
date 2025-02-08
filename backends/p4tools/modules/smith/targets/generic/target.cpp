@@ -14,6 +14,7 @@
 #include "backends/p4tools/modules/smith/common/statements.h"
 #include "backends/p4tools/modules/smith/core/target.h"
 #include "backends/p4tools/modules/smith/util/util.h"
+#include "backends/p4tools/modules/smith/common/skeleton/skeleton.h"
 #include "ir/indexed_vector.h"
 #include "ir/ir.h"
 #include "ir/node.h"

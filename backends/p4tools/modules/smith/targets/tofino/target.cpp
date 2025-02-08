@@ -413,7 +413,12 @@ IR::P4Control *TofinoTnaSmithTarget::generateIngressBlock() const {
         }
     }
 
-    IR::IndexedVector<IR::Declaration> localDecls = declarationGenerator().genLocalControlDecls();
+    IR::IndexedVector<IR::Declaration> localDecls;
+    if(SmithOptions::get().enableDagGeneration){
+        localDecls = declarationGenerator().genLocalControlDeclsUsingDAG();
+    }else{
+        localDecls = declarationGenerator().genLocalControlDecls();
+    }
     // apply body
     auto *applyBlock = statementGenerator().genBlockStatement(false);
     // hardcode the output port to be zero
@@ -617,4 +622,5 @@ const IR::P4Program *TofinoTnaSmithTarget::generateP4Program() const {
 
     return new IR::P4Program(*objects);
 }
+
 }  // namespace P4::P4Tools::P4Smith::Tofino

@@ -71,6 +71,14 @@ AbstractP4cToolOptions::AbstractP4cToolOptions(std::string_view toolName, std::s
             return true;
         },
         "Disable printing of information messages to standard output.");
+
+    registerOption(
+        "--generate-dag", nullptr,
+        [this](const char * /*arg*/) {
+            enableDagGeneration = true;
+            return true;
+        },
+        "Generate DAGs for in/e-gress controls for complicated programs.");
 }
 
 bool AbstractP4cToolOptions::validateOptions() const { return true; }
