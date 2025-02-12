@@ -289,7 +289,8 @@ void setTnaProbabilities() {
     // TNA requires that the shift count in IR::SHL must be a constant.
     P4Scope::constraints.const_lshift_count = true;
     // TNA *currently* only supports single stage actions.
-    P4Scope::constraints.single_stage_actions = true;
+    // TODO(Hao): revert this if it actually error
+    P4Scope::constraints.single_stage_actions = false;
     // Saturating arithmetic operators mau not exceed maximum PHV container width.
     P4Scope::constraints.max_phv_container_width = 32;
 }
@@ -415,6 +416,7 @@ IR::P4Control *TofinoTnaSmithTarget::generateIngressBlock() const {
 
     IR::IndexedVector<IR::Declaration> localDecls;
     if(SmithOptions::get().enableDagGeneration){
+        std::cout<<"Generating DAG for local control declarations"<<std::endl;
         localDecls = declarationGenerator().genLocalControlDeclsUsingDAG();
     }else{
         localDecls = declarationGenerator().genLocalControlDecls();
@@ -428,6 +430,11 @@ IR::P4Control *TofinoTnaSmithTarget::generateIngressBlock() const {
     // some hack to insert the expression at the beginning
     auto it = applyBlock->components.begin();
     applyBlock->components.insert(it, assign);
+
+    if(SmithOptions::get().enableDagGeneration){
+        const auto skeleton = TableDepSkeleton::TableDepSkeleton::getSkeleton();
+        skeleton->pupolateTableApplyToBlock(applyBlock);
+    }
     // end of scope
     P4Scope::endLocalScope();
 

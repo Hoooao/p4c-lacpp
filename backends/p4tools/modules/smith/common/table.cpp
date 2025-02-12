@@ -39,8 +39,18 @@ IR::TableProperties *TableGenerator::genTablePropertyList() {
 
 IR::Key *TableGenerator::genKeyElementList(size_t len) {
     IR::Vector<IR::KeyElement> keys;
+    if(SmithOptions::get().enableDagGeneration){
+        const auto tn = TableDepSkeleton::TableDepSkeleton::getSkeleton()->currentNode;
+        for(const auto &fields: tn->parentsWritten){
+            // choose one fields to match, sufficient for dependancy
+            const auto field = fields.at(Utils::getRandInt(0, fields.size() - 1));
+            auto *key = genKeyElement("exact", field->expression);
+            tn->fieldsMatched.push_back(field);
+            keys.push_back(key);
+        }
+    }
 
-    for (size_t i = 0; i < len; i++) {
+    for (size_t i = keys.size(); i < len; i++) {
         // TODO(fruffy): More types than just exact
         IR::KeyElement *key = genKeyElement("exact");
         if (key == nullptr) {
@@ -78,8 +88,17 @@ IR::KeyElement *TableGenerator::genKeyElement(IR::ID match_kind) {
     P4Scope::req.require_scalar = true;
     auto *expr = target().expressionGenerator().genExpression(bitType);
     P4Scope::req.require_scalar = false;
+
+
     auto *key = new IR::KeyElement(expr, match, annotations);
 
+    return key;
+}
+
+IR::KeyElement *TableGenerator::genKeyElement(IR::ID match_kind, const IR::Expression* expr) {
+    auto *match = new IR::PathExpression(std::move(match_kind));
+    auto annotations = target().declarationGenerator().genAnnotation();
+    auto *key = new IR::KeyElement(expr, match, annotations);
     return key;
 }
 
@@ -122,13 +141,31 @@ IR::MethodCallExpression *TableGenerator::genTableActionCall(cstring method_name
 
 IR::ActionList *TableGenerator::genActionList(size_t len) {
     IR::IndexedVector<IR::ActionListElement> actList;
-    auto p4Actions = P4Scope::getDecls<IR::P4Action>();
     std::set<cstring> actNames;
+
+    // prioritize the actions need to be used for dependancy generation
+    if(SmithOptions::get().enableDagGeneration){
+        const auto tn = TableDepSkeleton::TableDepSkeleton::getSkeleton()->currentNode;
+        for(const auto action : tn->actionsToUse){
+            const auto *act = action->to<IR::P4Action>();
+            actNames.insert(act->name.name);
+            const auto *params = act->parameters;
+            IR::MethodCallExpression *mce = genTableActionCall(act->name.name, *params);
+            if (mce != nullptr) {
+                auto *actlistEle = new IR::ActionListElement(mce);
+                actList.push_back(actlistEle);
+            }
+        }
+    }
+
+
+    auto p4Actions = P4Scope::getDecls<IR::P4Action>();
 
     if (p4Actions.empty()) {
         return new IR::ActionList(actList);
     }
-    for (size_t i = 0; i < len; i++) {
+    
+    for (size_t i = actList.size(); i < len; i++) {
         size_t idx = Utils::getRandInt(0, p4Actions.size() - 1);
         const auto *p4Act = p4Actions[idx];
         cstring actName = p4Act->name.name;

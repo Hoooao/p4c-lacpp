@@ -46,18 +46,24 @@ void P4Scope::addToScope(const IR::Node *node) {
 void P4Scope::startLocalScope() { scope.push_back(new IR::Vector<IR::Node>()); }
 
 void P4Scope::endLocalScope() {
+    printInfo("Deleting local scope");
     IR::Vector<IR::Node> *localScope = scope.back();
-
+    cstring name;
     for (const auto *node : *localScope) {
         if (const auto *decl = node->to<IR::Declaration_Variable>()) {
+            name = decl->name.name;
             deleteLval(decl->type, decl->name.name);
         } else if (const auto *dc = node->to<IR::Declaration_Constant>()) {
+            name = dc->name.name;
             deleteLval(dc->type, dc->name.name);
         } else if (const auto *param = node->to<IR::Parameter>()) {
+            name = param->name.name;
             deleteLval(param->type, param->name.name);
         } else if (const auto *tbl = node->to<IR::P4Table>()) {
+            name  = tbl->name.name;
             callableTables.erase(tbl);
         }
+        printInfo("endLocalScope: Deleted node %s", name.c_str());
     }
 
     scope.pop_back();
@@ -86,7 +92,7 @@ void deleteCompoundLvals(const IR::Type_StructLike *sl_type, cstring sl_name) {
 void P4Scope::deleteLval(const IR::Type *tp, cstring name) {
     cstring typeKey;
     int bitBucket = 0;
-
+    printInfo("deleteLval: Deleting lval %s of type %s", name.c_str(), tp->node_type_name());
     if (const auto *tb = tp->to<IR::Type_Bits>()) {
         typeKey = IR::Type_Bits::static_type_name();
         bitBucket = tb->width_bits();
@@ -230,7 +236,7 @@ void P4Scope::addLval(const IR::Type *tp, cstring name, bool read_only) {
 std::set<cstring> P4Scope::getCandidateLvals(const IR::Type *tp, bool must_write) {
     cstring typeKey;
     int bitBucket = 0;
-
+    
     if (const auto *tb = tp->to<IR::Type_Bits>()) {
         typeKey = IR::Type_Bits::static_type_name();
         bitBucket = tb->width_bits();
@@ -255,7 +261,6 @@ std::set<cstring> P4Scope::getCandidateLvals(const IR::Type *tp, bool must_write
     } else {
         BUG("Type %s not yet supported", tp->node_type_name());
     }
-
     std::map<cstring, std::map<int, std::set<cstring>>> lookupMap;
 
     if (must_write) {
@@ -275,6 +280,26 @@ std::set<cstring> P4Scope::getCandidateLvals(const IR::Type *tp, bool must_write
     return keyTypes[bitBucket];
 }
 
+bool P4Scope::hasLval(const IR::Expression *left) {
+    cstring lvalStr = nullptr;
+    auto* tp = left->type;
+    if (const auto *path = left->to<IR::PathExpression>()) {
+        lvalStr = path->path->name.name;
+    } else if (const auto *mem = left->to<IR::Member>()) {
+        lvalStr = mem->member.name;
+    } else if (const auto *slice = left->to<IR::AbstractSlice>()) {
+        lvalStr = slice->e0->to<IR::PathExpression>()->path->name.name;
+    } else if (const auto *arrIdx = left->to<IR::ArrayIndex>()) {
+        lvalStr = arrIdx->left->to<IR::PathExpression>()->path->name.name;
+    }
+    printInfo("Checking if %s is in the scope", lvalStr.c_str());
+    auto candidates = getCandidateLvals(tp, false);
+    for(const auto& candidate : candidates) {
+        printInfo("Candidate: %s", candidate.c_str());
+    }
+    return candidates.find(lvalStr) != candidates.end();
+
+}
 std::optional<std::map<int, std::set<cstring>>> P4Scope::getWriteableLvalForTypeKey(
     cstring typeKey) {
     if (lvalMapRw.find(typeKey) == lvalMapRw.end()) {

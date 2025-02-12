@@ -28,7 +28,7 @@ class DeclarationGenerator : public Generator {
     virtual IR::IndexedVector<IR::Declaration> genLocalControlDecls();
 
     virtual IR::IndexedVector<IR::Declaration> genLocalControlDeclsUsingDAG();
-    IR::IndexedVector<IR::Declaration> traverseSkeletonTableNode(std::shared_ptr<TableDepSkeleton::TableNode> tn);
+    IR::IndexedVector<IR::Declaration> instantiateTableNode(std::shared_ptr<TableDepSkeleton::TableNode> tn);
 
     virtual IR::P4Control *genControlDeclaration();
 

@@ -1,6 +1,3 @@
-# Handle the Z3 installation with this macro. Users have the option to supply their own Z3.
-include(${P4C_SOURCE_DIR}/cmake/Z3.cmake)
-obtain_z3()
 
 # Generate version information.
 configure_file(version.h.in version.h)
@@ -21,7 +18,6 @@ set(
 
   core/abstract_execution_state.cpp
   core/target.cpp
-  core/z3_solver.cpp
 
   lib/arch_spec.cpp
   lib/format_int.cpp
@@ -43,7 +39,8 @@ add_library(p4tools-common OBJECT ${P4C_TOOLS_COMMON_SOURCES})
 target_link_libraries(
   p4tools-common
   # We export Z3 with the common library.
-  PUBLIC ${Z3_LIB}
+  # TODO(Hao): smith not using this, block for now..
+  #PUBLIC ${Z3_LIB}
     # For Abseil includes.
   PRIVATE frontend
 )

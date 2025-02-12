@@ -30,6 +30,10 @@ class AbstractP4cToolOptions : public CompilerOptions {
     /// Enable DAG generation
     bool enableDagGeneration = false;
 
+    // DAG generation depth
+    uint32_t dagNodesNum = 0;
+    float dagDensity = 0.0;
+
     /// Processes options.
     ///
     /// @returns an EXIT_SUCCESS context on success, EXIT_FAILURE on error.

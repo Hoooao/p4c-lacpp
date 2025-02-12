@@ -8,6 +8,7 @@
 #include "backends/p4tools/common/lib/util.h"
 #include "backends/p4tools/modules/smith/common/probabilities.h"
 #include "backends/p4tools/modules/smith/common/scope.h"
+#include "backends/p4tools/common/lib/logging.h"
 #include "backends/p4tools/modules/smith/common/statements.h"
 #include "backends/p4tools/modules/smith/common/table.h"
 #include "backends/p4tools/modules/smith/core/target.h"
@@ -103,6 +104,7 @@ IR::Declaration_Constant *DeclarationGenerator::genConstantDeclaration() {
 }
 
 IR::P4Action *DeclarationGenerator::genActionDeclaration() {
+    //TODO(Hao): add support to Write-after actions here
     cstring name = getRandomString(5);
     IR::ParameterList *params = nullptr;
     IR::BlockStatement *blk = nullptr;
@@ -116,6 +118,12 @@ IR::P4Action *DeclarationGenerator::genActionDeclaration() {
 
     P4Scope::prop.in_action = false;
     P4Scope::endLocalScope();
+
+    // collect vars defined in control scode or larger that is used in this action
+    if(SmithOptions::get().enableDagGeneration){
+        const auto tn = TableDepSkeleton::TableDepSkeleton::getSkeleton()->currentNode;
+        tn->extractFieldsWrittenInBlock(blk);
+    }
 
     P4Scope::addToScope(ret);
 
@@ -163,40 +171,71 @@ IR::IndexedVector<IR::Declaration> DeclarationGenerator::genLocalControlDecls() 
 }
 
 IR::IndexedVector<IR::Declaration> DeclarationGenerator::genLocalControlDeclsUsingDAG() {
-    // TODO(Hao): make this configurable
-    Matrix mat = AdjMatGen::generateLowerTriangularMatrix(4,0.6);
+    IR::IndexedVector<IR::Declaration> localDecls;
+    const auto op = SmithOptions::get();
+    Matrix mat = AdjMatGen::generateLowerTriangularMatrix(op.dagNodesNum,op.dagDensity);
     AdjMatGen::printMatrix(mat);
 
-    TableDepSkeleton::TableDepSkeleton skeleton = TableDepSkeleton::TableDepSkeleton(mat);
-    IR::IndexedVector<IR::Declaration> localDecls;
-
-    for(const auto& table : skeleton.zeroIndegreeTables){
-        auto decls = traverseSkeletonTableNode(table);
+    TableDepSkeleton::TableDepSkeleton::getSkeleton()= std::make_shared<TableDepSkeleton::TableDepSkeleton>(mat);
+    auto skeleton = TableDepSkeleton::TableDepSkeleton::getSkeleton();
+    while(!skeleton->tableNodeQueue.empty()){
+        const auto table = skeleton->tableNodeQueue.front();
+        skeleton->currentNode = table;
+        auto decls = instantiateTableNode(table);
         localDecls.append(decls);
+        skeleton->tableNodeQueue.pop();
+
+        skeleton->tablesInOrder.push_back(table);
     }
     return localDecls;
-    // instantiations
 }
 
-IR::IndexedVector<IR::Declaration> DeclarationGenerator::traverseSkeletonTableNode(std::shared_ptr<TableDepSkeleton::TableNode> tn){
+// ----------- SKELETON LOGIC START, Might be good to move to somewhere else like the skeleton folder
+
+IR::IndexedVector<IR::Declaration> DeclarationGenerator::instantiateTableNode(std::shared_ptr<TableDepSkeleton::TableNode> tn){
     IR::IndexedVector<IR::Declaration> localDecls;
-    // Dummy vars, actions, and tables, no dependancy inserted, make it produce something first
-    auto *varDecl = genVariableDeclaration();
-    localDecls.push_back(varDecl);
-    // instrument this function for dependancy-write
-    auto *actDecl = genActionDeclaration();
-    localDecls.push_back(actDecl);
-    // instrument this function for dependancy-read/match
-    auto *tabDecl = target().tableGenerator().genTableDeclaration();
-    localDecls.push_back(tabDecl);
-    for(const auto& dep : tn->outboundEdges){
-        auto depDecl = traverseSkeletonTableNode(dep->target);
-        localDecls.append(depDecl);
+    // Hao: 
+    // progress: implementing only RAW dependancy
+    // 
+    
+    // Utilize the parent-manipulated fields to generate the actual dependancy
+    for(auto dep : tn->inboundEdges){
+        tn->parentsMatched.push_back(dep->source->fieldsMatched);  
+        tn->parentsWritten.push_back(dep->source->fieldsWritten);
     }
-    // Note: in case of a table depend on the same pair of fields in 2 tables point to it, make some map to check that
+
+    // Vars:generate new vars for flavor~
+    auto vars = Utils::getRandInt(Declarations::get().MIN_VAR, Declarations::get().MAX_VAR);
+    for (int i = 0; i <= vars; i++) {
+        auto *varDecl = genVariableDeclaration();
+        localDecls.push_back(varDecl);
+    }
+
+    // Actions: it has to use the knowledge of parent node for dependancy->write/read
+    auto actions =
+        Utils::getRandInt(Declarations::get().MIN_ACTION, Declarations::get().MAX_ACTION);
+    for (int i = 0; i <= actions; i++) {
+        auto *actDecl = genActionDeclaration();
+        tn->actionsToUse.push_back(actDecl);
+        localDecls.push_back(actDecl);
+    }
+
+
+    // Table: it has to use the knowledge of parent node for dependancy->matching
+    auto *tabDecl = target().tableGenerator().genTableDeclaration();
+    tn->table = tabDecl;
+    localDecls.push_back(tabDecl);
+    
+
+
+    TableDepSkeleton::TableDepSkeleton::getSkeleton()->updateInboundNumForOutboundAndTryEnqueue(tn);
     return localDecls;
     
 }
+
+
+// ----------- SKELETON LOGIC END, Might be good to move to somewhere else like the skeleton folder
+
 IR::P4Control *DeclarationGenerator::genControlDeclaration() {
     // start of new scope
     P4Scope::startLocalScope();

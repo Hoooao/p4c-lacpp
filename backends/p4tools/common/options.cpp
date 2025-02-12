@@ -79,6 +79,21 @@ AbstractP4cToolOptions::AbstractP4cToolOptions(std::string_view toolName, std::s
             return true;
         },
         "Generate DAGs for in/e-gress controls for complicated programs.");
+
+    registerOption(
+        "--dag-node-num", "dagNodesNum",
+        [this](const char * arg) {
+            dagNodesNum = std::stoul(arg); 
+            return true;
+        },
+        "DAG nodes number.");
+    registerOption(
+        "--dag-density", "dagDensity",
+        [this](const char * arg) {
+            dagDensity = std::stof(arg);
+            return true;
+        },
+        "DAG connection density [0,1.0].");
 }
 
 bool AbstractP4cToolOptions::validateOptions() const { return true; }

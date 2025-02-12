@@ -13,6 +13,7 @@
 #include "backends/p4tools/modules/smith/common/scope.h"
 #include "backends/p4tools/modules/smith/core/target.h"
 #include "backends/p4tools/modules/smith/util/util.h"
+#include "backends/p4tools/common/lib/logging.h"
 #include "ir/indexed_vector.h"
 #include "ir/irutils.h"
 #include "ir/vector.h"
@@ -181,6 +182,7 @@ IR::Statement *StatementGenerator::genAssignmentStatement() {
             }
             auto *left = target().expressionGenerator().pickLvalOrSlice(bitType);
             if (P4Scope::constraints.single_stage_actions) {
+                printInfo("Single stage action left remove");
                 removeLval(left, bitType);
             }
             auto *right = target().expressionGenerator().genExpression(bitType);
@@ -240,6 +242,8 @@ IR::Statement *StatementGenerator::genMethodCallStatement(bool is_in_func) {
         Probabilities::get().ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_TABLE = 0;
     }
     if (P4Scope::prop.in_action) {
+        // Hao: table call seems a bug in tofino
+        Probabilities::get().ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_TABLE = 0;
         Probabilities::get().ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_CTRL = 0;
     }
     std::vector<int64_t> percent = {

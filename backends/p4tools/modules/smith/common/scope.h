@@ -95,6 +95,7 @@ class P4Scope {
     static cstring pickLval(const IR::Type *tp, bool must_write = false);
     static void deleteLval(const IR::Type *tp, cstring name);
     static std::set<cstring> getCandidateLvals(const IR::Type *tp, bool must_write = true);
+    static bool hasLval(const IR::Expression *left);
     static bool hasWriteableLval(cstring typeKey);
     static std::optional<std::map<int, std::set<cstring>>> getWriteableLvalForTypeKey(
         cstring typeKey);
