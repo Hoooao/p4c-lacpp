@@ -127,14 +127,30 @@ $(function(){initNavTree('class_table_dep_skeleton_1_1_table_node.html',''); ini
 
 <div class="header">
   <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="class_table_dep_skeleton_1_1_table_node-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">TableDepSkeleton::TableNode Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a53904e5c0dbcc25bcbe92d67f85bac60" id="r_a53904e5c0dbcc25bcbe92d67f85bac60"><td class="memItemLeft" align="right" valign="top"><a id="a53904e5c0dbcc25bcbe92d67f85bac60" name="a53904e5c0dbcc25bcbe92d67f85bac60"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>extractFieldsWrittenInBlock</b> (IR::BlockStatement *blk)</td></tr>
+<tr class="separator:a53904e5c0dbcc25bcbe92d67f85bac60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a08b9a48efdd18d38da2f19cd05d32051" id="r_a08b9a48efdd18d38da2f19cd05d32051"><td class="memItemLeft" align="right" valign="top"><a id="a08b9a48efdd18d38da2f19cd05d32051" name="a08b9a48efdd18d38da2f19cd05d32051"></a>
+IR::IndexedVector&lt; IR::Declaration &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>actionsToUse</b></td></tr>
+<tr class="separator:a08b9a48efdd18d38da2f19cd05d32051"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a803f173a4e3d940ee7d11701dd126b56" id="r_a803f173a4e3d940ee7d11701dd126b56"><td class="memItemLeft" align="right" valign="top"><a id="a803f173a4e3d940ee7d11701dd126b56" name="a803f173a4e3d940ee7d11701dd126b56"></a>
+IR::IndexedVector&lt; IR::NamedExpression &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>fieldsMatched</b></td></tr>
+<tr class="separator:a803f173a4e3d940ee7d11701dd126b56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79cab3a0f7db836562542bc115e781f0" id="r_a79cab3a0f7db836562542bc115e781f0"><td class="memItemLeft" align="right" valign="top"><a id="a79cab3a0f7db836562542bc115e781f0" name="a79cab3a0f7db836562542bc115e781f0"></a>
+IR::IndexedVector&lt; IR::NamedExpression &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>fieldsWritten</b></td></tr>
+<tr class="separator:a79cab3a0f7db836562542bc115e781f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29fc80546a69d494d0fd5ee81f6a2b1e" id="r_a29fc80546a69d494d0fd5ee81f6a2b1e"><td class="memItemLeft" align="right" valign="top"><a id="a29fc80546a69d494d0fd5ee81f6a2b1e" name="a29fc80546a69d494d0fd5ee81f6a2b1e"></a>
 std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_table_dep_skeleton_1_1_dependency.html">Dependency</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>inboundEdges</b></td></tr>
 <tr class="separator:a29fc80546a69d494d0fd5ee81f6a2b1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -144,50 +160,16 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td><
 <tr class="memitem:a8609dc2bc99d511a810bca0bc234f6f1" id="r_a8609dc2bc99d511a810bca0bc234f6f1"><td class="memItemLeft" align="right" valign="top"><a id="a8609dc2bc99d511a810bca0bc234f6f1" name="a8609dc2bc99d511a810bca0bc234f6f1"></a>
 std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_table_dep_skeleton_1_1_dependency.html">Dependency</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>outboundEdges</b></td></tr>
 <tr class="separator:a8609dc2bc99d511a810bca0bc234f6f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d968afb2a93be5578132b0a25db2aa8" id="r_a3d968afb2a93be5578132b0a25db2aa8"><td class="memItemLeft" align="right" valign="top"><a id="a3d968afb2a93be5578132b0a25db2aa8" name="a3d968afb2a93be5578132b0a25db2aa8"></a>
+std::vector&lt; IR::IndexedVector&lt; IR::NamedExpression &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parentsMatched</b></td></tr>
+<tr class="separator:a3d968afb2a93be5578132b0a25db2aa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf791159872c0279928a0f1f75687cf8" id="r_adf791159872c0279928a0f1f75687cf8"><td class="memItemLeft" align="right" valign="top"><a id="adf791159872c0279928a0f1f75687cf8" name="adf791159872c0279928a0f1f75687cf8"></a>
+std::vector&lt; IR::IndexedVector&lt; IR::NamedExpression &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parentsWritten</b></td></tr>
+<tr class="separator:adf791159872c0279928a0f1f75687cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae39512b04d81d77018b40f48f0226aa9" id="r_ae39512b04d81d77018b40f48f0226aa9"><td class="memItemLeft" align="right" valign="top"><a id="ae39512b04d81d77018b40f48f0226aa9" name="ae39512b04d81d77018b40f48f0226aa9"></a>
+IR::P4Table *&#160;</td><td class="memItemRight" valign="bottom"><b>table</b></td></tr>
+<tr class="separator:ae39512b04d81d77018b40f48f0226aa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a29fc80546a69d494d0fd5ee81f6a2b1e" name="a29fc80546a69d494d0fd5ee81f6a2b1e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29fc80546a69d494d0fd5ee81f6a2b1e">&#9670;&#160;</a></span>inboundEdges</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::shared_ptr&lt;<a class="el" href="class_table_dep_skeleton_1_1_dependency.html">Dependency</a>&gt; &gt; TableDepSkeleton::TableNode::inboundEdges</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae18217a694dd412f2b18db19987ba36d" name="ae18217a694dd412f2b18db19987ba36d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae18217a694dd412f2b18db19987ba36d">&#9670;&#160;</a></span>name</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string TableDepSkeleton::TableNode::name</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8609dc2bc99d511a810bca0bc234f6f1" name="a8609dc2bc99d511a810bca0bc234f6f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8609dc2bc99d511a810bca0bc234f6f1">&#9670;&#160;</a></span>outboundEdges</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::shared_ptr&lt;<a class="el" href="class_table_dep_skeleton_1_1_dependency.html">Dependency</a>&gt; &gt; TableDepSkeleton::TableNode::outboundEdges</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.13.2-->

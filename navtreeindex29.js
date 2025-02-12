@@ -197,6 +197,7 @@ var NAVTREEINDEX29 =
 "class_table_alloc_pass.html":[13,0,571],
 "class_table_control_deps.html":[13,0,572],
 "class_table_dep_skeleton_1_1_table_dep_skeleton.html":[13,0,14,1],
+"class_table_dep_skeleton_1_1_table_node.html":[13,0,14,2],
 "class_table_dependency_graph_summary.html":[13,0,573],
 "class_table_field_pack_optimization.html":[13,0,574],
 "class_table_field_pack_optimization.html#a06b47569c376dfd7715c76401ca85e2e":[13,0,574,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX29 =
 "class_tofino_mau_power_spec.html#a660c82cb6a4295b2fb654e2cf9850eea":[13,0,597,2],
 "class_tofino_mau_power_spec.html#a6f4ba77b83e414ae77def35139ccbedd":[13,0,597,1],
 "class_tofino_mau_power_spec.html#a78fb084d188e6a46d454931055940708":[13,0,597,3],
-"class_tofino_mau_spec.html":[13,0,598],
-"class_tofino_parde_spec.html":[13,0,599]
+"class_tofino_mau_spec.html":[13,0,598]
 };
