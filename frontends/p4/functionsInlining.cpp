@@ -183,7 +183,7 @@ const IR::Node *FunctionsInliner::preorder(IR::BaseAssignmentStatement *statemen
 
     auto [callee, callExpr] = get(*replMap, orig);
     if (callee == nullptr) return statement;
-    BUG_CHECK(callExpr != nullptr, "%1%: expected a method call", statement->right);
+    BUG_CHECK(callExpr != nullptr, "%1%: expected A method call", statement->right);
     return inlineBefore(callee, callExpr, statement);
 }
 
@@ -195,7 +195,7 @@ const IR::Node *FunctionsInliner::preorder(IR::IfStatement *statement) {
 
     auto [callee, callExpr] = get(*replMap, orig);
     if (callee == nullptr) return statement;
-    BUG_CHECK(callExpr != nullptr, "%1%: expected a method call", statement->condition);
+    BUG_CHECK(callExpr != nullptr, "%1%: expected B method call", statement->condition);
     return inlineBefore(callee, callExpr, statement);
 }
 
@@ -357,7 +357,7 @@ const IR::Statement *FunctionsInliner::inlineBefore(const IR::Node *calleeNode,
         auto [it, inserted] = pendingReplacements.emplace(mce, retExpr);
         BUG_CHECK(inserted, "%1%: duplicate value for pending replacements", it->first);
     } else {
-        BUG_CHECK(statement->is<IR::MethodCallStatement>(), "%1%: expected a method call",
+        BUG_CHECK(statement->is<IR::MethodCallStatement>(), "%1%: expected C a method call",
                   statement);
         // ignore the returned value.
     }

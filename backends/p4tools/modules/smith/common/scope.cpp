@@ -46,7 +46,6 @@ void P4Scope::addToScope(const IR::Node *node) {
 void P4Scope::startLocalScope() { scope.push_back(new IR::Vector<IR::Node>()); }
 
 void P4Scope::endLocalScope() {
-    printInfo("Deleting local scope");
     IR::Vector<IR::Node> *localScope = scope.back();
     cstring name;
     for (const auto *node : *localScope) {
