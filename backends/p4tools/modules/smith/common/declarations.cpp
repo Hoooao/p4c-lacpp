@@ -118,9 +118,8 @@ IR::P4Action *DeclarationGenerator::genActionDeclaration() {
 
     P4Scope::prop.in_action = false;
     P4Scope::endLocalScope();
-
-    // collect vars defined in control scode or larger that is used in this action
-    if(SmithOptions::get().enableDagGeneration){
+    // collect vars defined in control scope or larger that is used in this action
+    if(SmithOptions::get().enableDagGeneration && TableDepSkeleton::TableDepSkeleton::getSkeleton()!=nullptr){
         const auto tn = TableDepSkeleton::TableDepSkeleton::getSkeleton()->currentNode;
         tn->extractFieldsWrittenInBlock(blk);
     }

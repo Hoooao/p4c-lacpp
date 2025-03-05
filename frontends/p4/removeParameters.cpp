@@ -52,7 +52,7 @@ void FindActionParameters::postorder(const IR::ActionListElement *element) {
     auto path = element->getPath();
     auto decl = getDeclaration(path, true);
     BUG_CHECK(decl->is<IR::P4Action>(), "%1%: not an action", element);
-    BUG_CHECK(element->expression->is<IR::MethodCallExpression>(), "%1%: expected a method call",
+    BUG_CHECK(element->expression->is<IR::MethodCallExpression>(), "%1%: expected D a method call",
               element->expression);
     invocations->bind(decl->to<IR::P4Action>(), element->expression->to<IR::MethodCallExpression>(),
                       false);

@@ -289,7 +289,8 @@ void setTnaProbabilities() {
     // TNA requires that the shift count in IR::SHL must be a constant.
     P4Scope::constraints.const_lshift_count = true;
     // TNA *currently* only supports single stage actions.
-    // TODO(Hao): revert this if it actually error
+    // TODO(Hao): it seems that in the previous impl, making this true 
+    // deletes any var accessable in the actions' scope.
     P4Scope::constraints.single_stage_actions = false;
     // Saturating arithmetic operators mau not exceed maximum PHV container width.
     P4Scope::constraints.max_phv_container_width = 32;

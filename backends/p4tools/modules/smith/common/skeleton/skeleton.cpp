@@ -21,14 +21,17 @@ namespace TableDepSkeleton
                     }
 
                     IR::NamedExpression *ne = new IR::NamedExpression(left->srcInfo, lvalStr,left);
-                    fieldsWritten.push_back(ne);
-                    P4Tools::printInfo("Var used in action %s: %s", name.c_str(), lvalStr.c_str());
+                    // check if ne is already in the fieldsWritten
+                    // only add once, otherwise the vector class will complain with error
+                    if (fieldsWritten.getDeclaration(lvalStr) == nullptr) {
+                        fieldsWritten.push_back(ne);
+                        P4Tools::printInfo("Var used in action %s: %s", name.c_str(), lvalStr.c_str());
+                    }
                 }
             }
         }
     }
-    TableDepSkeleton::TableDepSkeleton(Matrix matrix){
-        adjMatrix = matrix;
+    TableDepSkeleton::TableDepSkeleton(Matrix matrix):adjMatrix(matrix), currentNode(nullptr){
         uint32_t dim = matrix.size();
         std::vector<std::shared_ptr<TableNode>> tables;
         for (uint32_t i = 0; i < dim; ++i) {

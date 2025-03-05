@@ -24,7 +24,8 @@ IR::P4Table *TableGenerator::genTableDeclaration() {
     cstring name = getRandomString(6);
     auto *ret = new IR::P4Table(name, tbProperties);
     P4Scope::addToScope(ret);
-    P4Scope::callableTables.emplace(ret);
+    // Hao: ask fabian why it is, wierd stuff, cause compiling to fail
+    // P4Scope::callableTables.emplace(ret);
     return ret;
 }
 
@@ -39,7 +40,7 @@ IR::TableProperties *TableGenerator::genTablePropertyList() {
 
 IR::Key *TableGenerator::genKeyElementList(size_t len) {
     IR::Vector<IR::KeyElement> keys;
-    if(SmithOptions::get().enableDagGeneration){
+    if(SmithOptions::get().enableDagGeneration && TableDepSkeleton::TableDepSkeleton::getSkeleton()!=nullptr){
         const auto tn = TableDepSkeleton::TableDepSkeleton::getSkeleton()->currentNode;
         for(const auto &fields: tn->parentsWritten){
             // choose one fields to match, sufficient for dependancy
@@ -144,7 +145,7 @@ IR::ActionList *TableGenerator::genActionList(size_t len) {
     std::set<cstring> actNames;
 
     // prioritize the actions need to be used for dependancy generation
-    if(SmithOptions::get().enableDagGeneration){
+    if(SmithOptions::get().enableDagGeneration && TableDepSkeleton::TableDepSkeleton::getSkeleton()!=nullptr){
         const auto tn = TableDepSkeleton::TableDepSkeleton::getSkeleton()->currentNode;
         for(const auto action : tn->actionsToUse){
             const auto *act = action->to<IR::P4Action>();

@@ -19,7 +19,7 @@ struct Requirements {
     bool compile_time_known{false};
     bool no_methodcalls{false};
     bool not_zero{false};
-    bool not_negative{false};
+    bool not_negative{true};
     bool byte_align_headers{false};
     int shift_width{8};
     Requirements()

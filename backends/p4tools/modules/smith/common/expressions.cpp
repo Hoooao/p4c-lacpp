@@ -375,6 +375,7 @@ IR::Expression *ExpressionGenerator::constructUnaryExpr(const IR::Type_Bits *tb)
             for (const auto *fun : p4Functions) {
                 if (fun->type->returnType->to<IR::Type_Bits>() != nullptr) {
                     viableFunctions.push_back(fun);
+                    printInfo("constructUnaryExpr: Function: %s", fun->name.name);
                 }
             }
             for (const auto *fun : p4Externs) {
@@ -527,9 +528,11 @@ IR::Expression *ExpressionGenerator::constructBinaryBitExpr(const IR::Type_Bits 
                 P4Scope::prop.width_unknown = false;
             }
             // TODO(fruffy): Make this more sophisticated,
-            P4Scope::req.not_negative = true;
-            IR::Expression *right = constructBitExpr(tb);
-            P4Scope::req.not_negative = false;
+            // P4Scope::req.not_negative = true;
+            // IR::Expression *right = constructBitExpr(tb);
+            // P4Scope::req.not_negative = false;
+            // Hao: shift in tofino can only be constants.
+            IR::Expression *right = genBitLiteral(IR::Type_Bits::get(8, false));
             // TODO(fruffy): Make this more sophisticated
             // shifts are limited to 8 bits
             if (P4Scope::constraints.const_lshift_count) {
@@ -549,10 +552,12 @@ IR::Expression *ExpressionGenerator::constructBinaryBitExpr(const IR::Type_Bits 
             }
 
             // TODO(fruffy): Make this more sophisticated,
-            P4Scope::req.not_negative = true;
-            IR::Expression *right = constructBitExpr(tb);
-            P4Scope::req.not_negative = false;
+            // P4Scope::req.not_negative = true;
+            // IR::Expression *right = constructBitExpr(tb);
+            // P4Scope::req.not_negative = false;
             // shifts are limited to 8 bits
+            // Hao: shift in tofino can only be constants.
+            IR::Expression *right = genBitLiteral(IR::Type_Bits::get(P4Scope::req.shift_width, false));
             right = new IR::Cast(IR::Type_Bits::get(8, false), right);
             // pick a right-shift that matches the type
             expr = new IR::Shr(tb, left, right);
@@ -805,6 +810,7 @@ IR::Expression *ExpressionGenerator::constructBooleanExpr() {
             IR::IndexedVector<IR::Declaration> viableFunctions;
             for (const auto *fun : p4Functions) {
                 if (fun->type->returnType->to<IR::Type_Boolean>() != nullptr) {
+                    printInfo("constructBooleanExpr: Function: %s", fun->name.name);
                     viableFunctions.push_back(fun);
                 }
             }
@@ -873,6 +879,7 @@ IR::Expression *ExpressionGenerator::constructUnaryIntExpr() {
             for (const auto *fun : p4Functions) {
                 if (fun->type->returnType->to<IR::Type_InfInt>() != nullptr) {
                     viableFunctions.push_back(fun);
+                    printInfo("constructUnaryExpr: Function: %s", fun->name.name);
                 }
             }
             for (const auto *fun : p4Externs) {
@@ -1117,6 +1124,7 @@ IR::Expression *ExpressionGenerator::constructStructExpr(const IR::Type_Name *tn
             for (const auto *fun : p4Functions) {
                 if (fun->type->returnType == tn) {
                     viableFunctions.push_back(fun);
+                    printInfo("constructStructExpr: Function: %s", fun->name.name);
                 }
             }
             for (const auto *fun : p4Externs) {

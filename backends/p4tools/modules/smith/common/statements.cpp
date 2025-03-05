@@ -190,6 +190,7 @@ IR::Statement *StatementGenerator::genAssignmentStatement() {
                 removeLval(left, bitType);
             }
             right = target().expressionGenerator().genExpression(bitType);
+            printInfo("genAssignmentStatement: %s = %s", left->toString().c_str(), right->toString().c_str());
             return new IR::AssignmentStatement(left, right);
         }
         case 1:
