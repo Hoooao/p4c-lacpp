@@ -90,7 +90,7 @@ class BFN_Options : public CompilerOptions {
     bool allow_pov_aliasing = false;
 
     cstring bfRtSchema = ""_cs;
-    cstring dumpOptimizedFile = ""_cs;
+    // cstring dumpOptimizedFile = ""_cs;
     bool p4RuntimeForceStdExterns = false;
     cstring programName;
     cstring outputDir = nullptr;  // output directory, default "programName.device"

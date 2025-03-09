@@ -141,7 +141,7 @@ static void log_dump(const IR::Node *node, const char *head) {
                   << " |\n"
                   << '+' << std::setw(strlen(head) + 3) << "+" << std::endl
                   << std::setfill(' ');
-    if (true)
+    if (LOGGING(2))
         dump(node);
     else
         std::cout << *node << std::endl;
@@ -501,7 +501,7 @@ int main(int ac, char **av) {
                     ? options.dumpJsonFile
                     : std::filesystem::path(BFNContext::get().getOutputDirectory() +
                                             "/frontend-ir.json");
-            std::filesystem::path afterMidFilePath = std::filesystem::path(BFNContext::get().getOutputDirectory() + "/after_mid.p4");
+            // std::filesystem::path afterMidFilePath = std::filesystem::path(BFNContext::get().getOutputDirectory() + "/after_mid.p4");
             // Print out the IR for p4i after frontend (--toJson "-" signifies stdout)
             auto &irFile = irFilePath != "-" ? *openFile(irFilePath, false) : std::cout;
             LOG3("IR dump after frontend to " << irFilePath);

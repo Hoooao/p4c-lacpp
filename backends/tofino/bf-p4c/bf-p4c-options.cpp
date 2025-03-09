@@ -363,13 +363,13 @@ BFN_Options::BFN_Options() {
             return true;
         },
         "Generate and write BF-RT JSON schema to the specified file");
-    registerOption(
-        "--optimized-source", "file",
-        [this](const char *arg) {
-            dumpOptimizedFile = cstring(arg);
-            return true;
-        },
-        "Get the optimized source code and write it to the specified file then end the program");
+    // registerOption(
+    //     "--optimized-source", "file",
+    //     [this](const char *arg) {
+    //         dumpOptimizedFile = cstring(arg);
+    //         return true;
+    //     },
+    //     "Get the optimized source code and write it to the specified file then end the program");
     registerOption(
         "--backward-compatible", nullptr,
         [this](const char *) {
