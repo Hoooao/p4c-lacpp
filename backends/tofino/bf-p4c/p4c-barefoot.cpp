@@ -127,6 +127,8 @@
 #include "midend.h"
 #include "version.h"
 
+//#include "toP4/toP4.h"
+
 #if !defined(BAREFOOT_INTERNAL) || defined(RELEASE_BUILD)
 // Catch all exceptions in production or release environment
 #define BFP4C_CATCH_EXCEPTIONS 1
@@ -139,7 +141,7 @@ static void log_dump(const IR::Node *node, const char *head) {
                   << " |\n"
                   << '+' << std::setw(strlen(head) + 3) << "+" << std::endl
                   << std::setfill(' ');
-    if (LOGGING(2))
+    if (true)
         dump(node);
     else
         std::cout << *node << std::endl;
@@ -316,6 +318,29 @@ class GenerateOutputs : public PassManager {
     }
 };
 
+// Hao: add this so that we can get the optimized code but maintain the original semantics
+// class DumpOptimized : public Inspector {
+//     /// output file
+//     std::filesystem::path ppfile;
+//     /// The file that is being compiled.
+//     std::filesystem::path inputfile;
+
+//  public:
+//     explicit DumpOptimized(const CompilerOptions &options) {
+//         setName("DumpOptimized");
+//         ppfile = options.dumpOptimizedFile;
+//         inputfile = options.file;
+//     }
+//     bool preorder(const IR::P4Program *program) override {
+//         if (!ppfile.empty()) {
+//             std::ostream *ppStream = openFile(ppfile, true);
+//             P4::ToP4 top4(ppStream, false, inputfile);
+//             (void)program->apply(top4);
+//         }
+//         return false;  // prune
+//     }
+// };
+
 /// use pipe.n to generate output directory.
 void execute_backend(const IR::BFN::Pipe *maupipe, BFN_Options &options) {
     if (::errorCount() > 0) return;
@@ -442,7 +467,7 @@ int main(int ac, char **av) {
     try {
 #endif  // BFP4C_CATCH_EXCEPTIONS
         auto *program = run_frontend();
-
+        
         if (options.num_stages_override) {
             Device::overrideNumStages(options.num_stages_override);
             if (::errorCount() > 0) {
@@ -476,6 +501,7 @@ int main(int ac, char **av) {
                     ? options.dumpJsonFile
                     : std::filesystem::path(BFNContext::get().getOutputDirectory() +
                                             "/frontend-ir.json");
+            std::filesystem::path afterMidFilePath = std::filesystem::path(BFNContext::get().getOutputDirectory() + "/after_mid.p4");
             // Print out the IR for p4i after frontend (--toJson "-" signifies stdout)
             auto &irFile = irFilePath != "-" ? *openFile(irFilePath, false) : std::cout;
             LOG3("IR dump after frontend to " << irFilePath);
