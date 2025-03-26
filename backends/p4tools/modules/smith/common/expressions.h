@@ -84,7 +84,7 @@ class ExpressionGenerator : public Generator {
  public:
     virtual IR::Expression *pickBitVar(const IR::Type_Bits *tb);
 
-    virtual IR::Expression *constructBitExpr(const IR::Type_Bits *tb);
+    virtual IR::Expression *constructBitExpr(const IR::Type_Bits *tb, bool is_arith = false);
 
  private:
     IR::Expression *constructCmpExpr();
@@ -106,6 +106,11 @@ class ExpressionGenerator : public Generator {
     IR::ListExpression *genStructListExpr(const IR::Type_Name *tn);
 
     IR::Expression *editHdrStack(cstring lval);
+
+    // for constrain the number of func call in a stat
+    std::vector<uint16_t> storeFunctionProb();
+    void zeroFunctionProb();
+    void restoreFunctionProb(std::vector<uint16_t>& probs);
 
  public:
     virtual IR::Expression *constructStructExpr(const IR::Type_Name *tn);

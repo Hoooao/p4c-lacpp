@@ -35,6 +35,8 @@ void DiscoverFunctionsInlining::postorder(const IR::MethodCallExpression *mce) {
     CHECK_NULL(caller);
 
     auto stat = findContext<IR::Statement>();
+    LOG1("DiscoverFunctionsInlining: mce "<<mce->toString().c_str());
+    LOG1("DiscoverFunctionsInlining: caller "<<caller->toString().c_str());
     CHECK_NULL(stat);
 
     BUG_CHECK(

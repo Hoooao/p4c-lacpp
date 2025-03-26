@@ -31,10 +31,12 @@ struct Constraints {
     bool const_header_stack_index{false};
     bool const_lshift_count{false};
     bool single_stage_actions{false};
+    bool no_header_field_wide_arith{false}; // tofino does not support `some` wide arith for >48bit header.
     int max_phv_container_width{0};
     // This is the maximum bitwidth that
     // can be specified for different targets.
     int max_bitwidth{128};
+    int method_call_max_in_stat{1};
     Constraints()
 
         = default;
