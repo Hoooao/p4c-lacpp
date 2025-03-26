@@ -44,6 +44,7 @@ IR::Key *TableGenerator::genKeyElementList(size_t len) {
         const auto tn = TableDepSkeleton::TableDepSkeleton::getSkeleton()->currentNode;
         for(const auto &fields: tn->parentsWritten){
             // choose one fields to match, sufficient for dependancy
+            if(fields.size() == 0) continue;
             const auto field = fields.at(Utils::getRandInt(0, fields.size() - 1));
             auto *key = genKeyElement("exact", field->expression);
             tn->fieldsMatched.push_back(field);
@@ -87,7 +88,10 @@ IR::KeyElement *TableGenerator::genKeyElement(IR::ID match_kind) {
     }
     // this expression can!be an infinite precision integer
     P4Scope::req.require_scalar = true;
+    // no func call in key
+    P4Scope::constraints.method_call_max_in_stat = 0;
     auto *expr = target().expressionGenerator().genExpression(bitType);
+    P4Scope::constraints.method_call_max_in_stat = 1;
     P4Scope::req.require_scalar = false;
 
 
