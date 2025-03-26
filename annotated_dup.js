@@ -2434,6 +2434,7 @@ var annotated_dup =
     [ "DotDumper", "class_dot_dumper.html", null ],
     [ "dp_packet", "structdp__packet.html", null ],
     [ "DumpJsonGraph", "class_dump_json_graph.html", null ],
+    [ "DumpOptimized", "class_dump_optimized.html", null ],
     [ "DumpParser", "group__parde.html#class_dump_parser", null ],
     [ "DumpPipe", "struct_dump_pipe.html", null ],
     [ "DumpSeqTables", "class_dump_seq_tables.html", null ],

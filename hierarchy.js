@@ -2477,6 +2477,7 @@ var hierarchy =
         [ "DarkLiveRange", "class_dark_live_range.html", null ],
         [ "DetermineCandidateFields", "class_determine_candidate_fields.html", null ],
         [ "DetermineCandidateHeaders", "class_determine_candidate_headers.html", null ],
+        [ "DumpOptimized", "class_dump_optimized.html", null ],
         [ "DumpPipe", "struct_dump_pipe.html", null ],
         [ "DumpTableFlowGraph::CollectPhvReadsAndWrites", "struct_dump_table_flow_graph_1_1_collect_phv_reads_and_writes.html", null ],
         [ "EmitHashExpression", "class_emit_hash_expression.html", null ],

@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"class_p4_1_1_control_plane_a_p_i_1_1_flatten_header.html":[12,0,9,1,6],
 "class_p4_1_1_control_plane_a_p_i_1_1_flatten_header.html":[13,0,7,3,6],
 "class_p4_1_1_control_plane_a_p_i_1_1_p4_info_maps.html":[12,0,9,1,8],
 "class_p4_1_1_control_plane_a_p_i_1_1_p4_info_maps.html":[13,0,7,3,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "class_p4_1_1_d_p_d_k_1_1_convert_to_dpdk_program.html#a5f7dc7896f573e1e6908d057d1e3d8f0":[13,0,7,7,32,0],
 "class_p4_1_1_d_p_d_k_1_1_convert_to_string.html":[12,0,9,3,33],
 "class_p4_1_1_d_p_d_k_1_1_convert_to_string.html":[13,0,7,7,33],
-"class_p4_1_1_d_p_d_k_1_1_copy_match_keys_to_single_struct.html":[12,0,9,3,34],
-"class_p4_1_1_d_p_d_k_1_1_copy_match_keys_to_single_struct.html":[13,0,7,7,34]
+"class_p4_1_1_d_p_d_k_1_1_copy_match_keys_to_single_struct.html":[12,0,9,3,34]
 };

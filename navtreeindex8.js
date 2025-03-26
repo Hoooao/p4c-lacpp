@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"class_p4_1_1_d_p_d_k_1_1_copy_match_keys_to_single_struct.html":[13,0,7,7,34],
 "class_p4_1_1_d_p_d_k_1_1_copy_propagation_and_elimination.html":[12,0,9,3,35],
 "class_p4_1_1_d_p_d_k_1_1_copy_propagation_and_elimination.html":[13,0,7,7,35],
 "class_p4_1_1_d_p_d_k_1_1_declaration_injector.html":[12,0,9,3,36],
@@ -248,6 +249,5 @@ var NAVTREEINDEX8 =
 "class_p4_1_1_do_constant_folding.html#a699067d48b4fcc0ec993fa5397f2d2c8":[13,0,7,116,9],
 "class_p4_1_1_do_constant_folding.html#a8fda82bf4aa6421c6ea6c76eb4c35957":[12,0,9,101,11],
 "class_p4_1_1_do_constant_folding.html#a8fda82bf4aa6421c6ea6c76eb4c35957":[13,0,7,116,11],
-"class_p4_1_1_do_constant_folding.html#a92320f78791dd5ec5ad5f47be63a62db":[12,0,9,101,5],
-"class_p4_1_1_do_constant_folding.html#a92320f78791dd5ec5ad5f47be63a62db":[13,0,7,116,5]
+"class_p4_1_1_do_constant_folding.html#a92320f78791dd5ec5ad5f47be63a62db":[12,0,9,101,5]
 };
