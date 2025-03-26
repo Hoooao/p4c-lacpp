@@ -133,6 +133,7 @@ IR::IfStatement *StatementGenerator::genConditionalStatement(bool is_in_func) {
     IR::Statement *ifFalse = nullptr;
 
     cond = target().expressionGenerator().genExpression(IR::Type_Boolean::get());
+    P4Scope::constraints.method_call_max_in_stat = 1;
     if (cond == nullptr) {
         BUG("cond in IfStatement should !be nullptr!");
     }
@@ -190,11 +191,13 @@ IR::Statement *StatementGenerator::genAssignmentStatement() {
                 removeLval(left, bitType);
             }
             right = target().expressionGenerator().genExpression(bitType);
+            P4Scope::constraints.method_call_max_in_stat = 1;
             printInfo("genAssignmentStatement: %s = %s", left->toString().c_str(), right->toString().c_str());
             return new IR::AssignmentStatement(left, right);
         }
         case 1:
             // TODO(fruffy): Compound types
+            // TODO(Hao): give an example?
             break;
     }
 
@@ -224,6 +227,7 @@ IR::Statement *StatementGenerator::genMethodCallExpression(const IR::PathExpress
         arg = new IR::Argument(target().expressionGenerator().genInputArg(par));
         args->push_back(arg);
     }
+    P4Scope::constraints.method_call_max_in_stat = 1;
     auto *mce = new IR::MethodCallExpression(methodName, args);
     auto *mcs = new IR::MethodCallStatement(mce);
     P4Scope::endLocalScope();
@@ -415,6 +419,7 @@ IR::ReturnStatement *StatementGenerator::genReturnStatement(const IR::Type *tp) 
     if ((tp != nullptr) && (tp->to<IR::Type_Void>() == nullptr)) {
         expr = target().expressionGenerator().genExpression(tp);
     }
+    P4Scope::constraints.method_call_max_in_stat = 1;
     return new IR::ReturnStatement(expr);
 }
 

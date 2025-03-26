@@ -263,7 +263,8 @@ IR::Expression *ExpressionGenerator::genExpression(const IR::Type *tp) {
 IR::MethodCallExpression *ExpressionGenerator::pickFunction(
     IR::IndexedVector<IR::Declaration> viable_functions, const IR::Type **ret_type) {
     // TODO(fruffy): Make this more sophisticated
-    if (viable_functions.empty() || P4Scope::req.compile_time_known) {
+    if (P4Scope::constraints.method_call_max_in_stat && 
+            (viable_functions.empty() || P4Scope::req.compile_time_known)) {
         return nullptr;
     }
 
@@ -287,6 +288,7 @@ IR::MethodCallExpression *ExpressionGenerator::pickFunction(
     if ((expr == nullptr) || (ret_type == nullptr)) {
         return nullptr;
     }
+    P4Scope::constraints.method_call_max_in_stat--;
     return expr;
 }
 
@@ -456,7 +458,7 @@ IR::Expression *ExpressionGenerator::constructBinaryBitExpr(const IR::Type_Bits 
     switch (Utils::getRandInt(percent)) {
         case 0: {
             IR::Expression *left = constructBitExpr(tb);
-            IR::Expression *right = constructBitExpr(tb);
+            IR::Expression *right = constructBitExpr(tb, true);
             // pick a multiplication that matches the type
             expr = new IR::Mul(tb, left, right);
         } break;
@@ -482,13 +484,13 @@ IR::Expression *ExpressionGenerator::constructBinaryBitExpr(const IR::Type_Bits 
         } break;
         case 3: {
             IR::Expression *left = constructBitExpr(tb);
-            IR::Expression *right = constructBitExpr(tb);
+            IR::Expression *right = constructBitExpr(tb, true);
             // pick an addition that matches the type
             expr = new IR::Add(tb, left, right);
         } break;
         case 4: {
             IR::Expression *left = constructBitExpr(tb);
-            IR::Expression *right = constructBitExpr(tb);
+            IR::Expression *right = constructBitExpr(tb, true);
             // pick a subtraction that matches the type
             expr = new IR::Sub(tb, left, right);
         } break;
@@ -674,7 +676,7 @@ IR::Expression *ExpressionGenerator::pickBitVar(const IR::Type_Bits *tb) {
     return genBitLiteral(tb);
 }
 
-IR::Expression *ExpressionGenerator::constructBitExpr(const IR::Type_Bits *tb) {
+IR::Expression *ExpressionGenerator::constructBitExpr(const IR::Type_Bits *tb, bool is_arith) {
     IR::Expression *expr = nullptr;
 
     std::vector<int64_t> percent = {Probabilities::get().EXPRESSION_BIT_VAR,
@@ -684,7 +686,8 @@ IR::Expression *ExpressionGenerator::constructBitExpr(const IR::Type_Bits *tb) {
                                     Probabilities::get().EXPRESSION_BIT_BINARY,
                                     Probabilities::get().EXPRESSION_BIT_TERNARY};
 
-    switch (Utils::getRandInt(percent)) {
+    int64_t c = Utils::getRandInt(percent);
+    switch (c) {
         case 0: {
             // pick a variable that matches the type
             // do !pick, if the requirement is to be a compile time known value
@@ -693,6 +696,10 @@ IR::Expression *ExpressionGenerator::constructBitExpr(const IR::Type_Bits *tb) {
                 expr = genBitLiteral(tb);
             } else {
                 expr = pickBitVar(tb);
+                // header fields contraint in TNA
+                if(is_arith && expr->toString().startsWith("h.") && tb->width_bits() > 32 && tb->width_bits()%32){
+                    expr = genBitLiteral(tb);
+                }
             }
         } break;
         case 1: {
@@ -721,6 +728,7 @@ IR::Expression *ExpressionGenerator::constructBitExpr(const IR::Type_Bits *tb) {
             expr = constructTernaryBitExpr(tb);
         } break;
     }
+    printInfo("constructBitExpr: %u %s",c, expr->toString().c_str());
     return expr;
 }
 
@@ -1282,5 +1290,29 @@ IR::Expression *ExpressionGenerator::pickLvalOrSlice(const IR::Type *tp) {
     }
     return expr;
 }
+
+std::vector<uint16_t> ExpressionGenerator::storeFunctionProb(){
+    std::vector<uint16_t> probs(4);
+    probs[0] = Probabilities::get().EXPRESSION_BIT_UNARY_FUNCTION;
+    probs[1] = Probabilities::get().EXPRESSION_INT_UNARY_FUNCTION;
+    probs[2] = Probabilities::get().EXPRESSION_BOOLEAN_FUNCTION;
+    probs[3] = Probabilities::get().EXPRESSION_STRUCT_FUNCTION;
+    return probs;
+}
+
+void zeroFunctionProb(){
+    Probabilities::get().EXPRESSION_BIT_UNARY_FUNCTION = 0;
+    Probabilities::get().EXPRESSION_INT_UNARY_FUNCTION = 0;
+    Probabilities::get().EXPRESSION_BOOLEAN_FUNCTION = 0;
+    Probabilities::get().EXPRESSION_STRUCT_FUNCTION = 0;
+}
+
+void restoreFunctionProb(std::vector<uint16_t>& probs){
+    Probabilities::get().EXPRESSION_BIT_UNARY_FUNCTION = probs[0];
+    Probabilities::get().EXPRESSION_INT_UNARY_FUNCTION = probs[1];
+    Probabilities::get().EXPRESSION_BOOLEAN_FUNCTION = probs[2];
+    Probabilities::get().EXPRESSION_STRUCT_FUNCTION = probs[3];
+}
+
 
 }  // namespace P4::P4Tools::P4Smith

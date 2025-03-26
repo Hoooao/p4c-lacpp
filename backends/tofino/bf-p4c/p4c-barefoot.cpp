@@ -127,7 +127,7 @@
 #include "midend.h"
 #include "version.h"
 
-//#include "toP4/toP4.h"
+#include "frontends/p4/toP4/toP4.h"
 
 #if !defined(BAREFOOT_INTERNAL) || defined(RELEASE_BUILD)
 // Catch all exceptions in production or release environment
@@ -319,27 +319,27 @@ class GenerateOutputs : public PassManager {
 };
 
 // Hao: add this so that we can get the optimized code but maintain the original semantics
-// class DumpOptimized : public Inspector {
-//     /// output file
-//     std::filesystem::path ppfile;
-//     /// The file that is being compiled.
-//     std::filesystem::path inputfile;
+class DumpOptimized : public Inspector {
+    /// output file
+    std::filesystem::path ppfile;
+    /// The file that is being compiled.
+    std::filesystem::path inputfile;
 
-//  public:
-//     explicit DumpOptimized(const CompilerOptions &options) {
-//         setName("DumpOptimized");
-//         ppfile = options.dumpOptimizedFile;
-//         inputfile = options.file;
-//     }
-//     bool preorder(const IR::P4Program *program) override {
-//         if (!ppfile.empty()) {
-//             std::ostream *ppStream = openFile(ppfile, true);
-//             P4::ToP4 top4(ppStream, false, inputfile);
-//             (void)program->apply(top4);
-//         }
-//         return false;  // prune
-//     }
-// };
+ public:
+    explicit DumpOptimized(const BFN_Options &options) {
+        setName("DumpOptimized");
+        ppfile = std::filesystem::path(options.dumpOptimizedFile.string());
+        inputfile = options.file;
+    }
+    bool preorder(const IR::P4Program *program) override {
+        if (!ppfile.empty()) {
+            std::ostream *ppStream = openFile(ppfile, true);
+            P4::ToP4 top4(ppStream, false, inputfile);
+            (void)program->apply(top4);
+        }
+        return false;  // prune
+    }
+};
 
 /// use pipe.n to generate output directory.
 void execute_backend(const IR::BFN::Pipe *maupipe, BFN_Options &options) {
@@ -468,6 +468,10 @@ int main(int ac, char **av) {
 #endif  // BFP4C_CATCH_EXCEPTIONS
         auto *program = run_frontend();
         
+        if(options.dumpOptimizedFile) {
+            DumpOptimized dumpOptimized(options);
+            program->apply(dumpOptimized);
+        }
         if (options.num_stages_override) {
             Device::overrideNumStages(options.num_stages_override);
             if (::errorCount() > 0) {

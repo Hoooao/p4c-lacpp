@@ -92,6 +92,7 @@ IR::Declaration_Constant *DeclarationGenerator::genConstantDeclaration() {
     if (tp->is<IR::Type_Bits>() || tp->is<IR::Type_InfInt>() || tp->is<IR::Type_Boolean>() ||
         tp->is<IR::Type_Name>()) {
         auto *expr = target().expressionGenerator().genExpression(tp);
+        P4Scope::constraints.method_call_max_in_stat = 1;
         ret = new IR::Declaration_Constant(name, tp, expr);
     } else {
         BUG("Type %s not supported!", tp->node_type_name());
@@ -744,6 +745,7 @@ IR::Declaration_Variable *DeclarationGenerator::genVariableDeclaration() {
     if (tp->is<IR::Type_Bits>() || tp->is<IR::Type_InfInt>() || tp->is<IR::Type_Boolean>() ||
         tp->is<IR::Type_Name>()) {
         auto *expr = target().expressionGenerator().genExpression(tp);
+        P4Scope::constraints.method_call_max_in_stat = 1;
         ret = new IR::Declaration_Variable(name, tp, expr);
     } else if (tp->is<IR::Type_Stack>()) {
         // header stacks do !have an initializer yet

@@ -289,11 +289,14 @@ void setTnaProbabilities() {
     // TNA requires that the shift count in IR::SHL must be a constant.
     P4Scope::constraints.const_lshift_count = true;
     // TNA *currently* only supports single stage actions.
-    // TODO(Hao): it seems that in the previous impl, making this true 
-    // deletes any var accessable in the actions' scope.
     P4Scope::constraints.single_stage_actions = false;
     // Saturating arithmetic operators mau not exceed maximum PHV container width.
     P4Scope::constraints.max_phv_container_width = 32;
+    // Hao: seems like something like var[32:1] cannot be r side of a header assign
+    P4Scope::constraints.no_header_field_wide_arith = true;
+    // Hao: there can only be one call in a stat
+    //  required by frontend
+    P4Scope::constraints.method_call_max_in_stat = 1;
 }
 
 IR::MethodCallStatement *generateDeparserEmitCall() {
