@@ -50,6 +50,9 @@ OPTION (ENABLE_PROTOBUF_STATIC "Link against Protobuf statically" ON)
 OPTION (ENABLE_GC "Compile with the Boehm-Demers-Weiser garbage collector." ON)
 OPTION (ENABLE_WERROR "Treat warnings as errors" OFF)
 OPTION (ENABLE_SANITIZERS "Enable sanitizers" OFF)
+
+OPTION (ENABLE_P4FEATURE_EXTRACTOR "Build the LACPP feature extractor backend" ON)
+
 OPTION (STATIC_BUILD_WITH_DYNAMIC_GLIBC "Build a (mostly) statically linked release binary. \
 Glibc is linked dynamically. WARNING: This only works if all dependencies that depend on the C++ \
 standard library can be linked statically, otherwise the build will likely be broken and it will \
@@ -501,6 +504,9 @@ if (ENABLE_TOFINO)
 endif ()
 if (ENABLE_GTESTS)
   add_subdirectory (test)
+endif ()
+if (ENABLE_P4FEATURE_EXTRACTOR)
+  add_subdirectory (backends/feature_extract)
 endif ()
 
 ####################################### IR Generation Begin #######################################

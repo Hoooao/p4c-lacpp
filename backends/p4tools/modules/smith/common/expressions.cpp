@@ -263,14 +263,15 @@ IR::Expression *ExpressionGenerator::genExpression(const IR::Type *tp) {
 IR::MethodCallExpression *ExpressionGenerator::pickFunction(
     IR::IndexedVector<IR::Declaration> viable_functions, const IR::Type **ret_type) {
     // TODO(fruffy): Make this more sophisticated
-    if (P4Scope::constraints.method_call_max_in_stat && 
-            (viable_functions.empty() || P4Scope::req.compile_time_known)) {
+    if (P4Scope::constraints.method_call_max_in_stat == 0 || 
+            viable_functions.empty() || P4Scope::req.compile_time_known) {
         return nullptr;
     }
 
     size_t idx = Utils::getRandInt(0, viable_functions.size() - 1);
     cstring funName;
     const IR::ParameterList *params = nullptr;
+    P4Scope::constraints.method_call_max_in_stat--;
     if (const auto *p4Fun = viable_functions[idx]->to<IR::Function>()) {
         funName = p4Fun->name.name;
         params = p4Fun->getParameters();
@@ -288,7 +289,6 @@ IR::MethodCallExpression *ExpressionGenerator::pickFunction(
     if ((expr == nullptr) || (ret_type == nullptr)) {
         return nullptr;
     }
-    P4Scope::constraints.method_call_max_in_stat--;
     return expr;
 }
 
