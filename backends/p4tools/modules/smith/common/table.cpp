@@ -91,6 +91,7 @@ IR::KeyElement *TableGenerator::genKeyElement(IR::ID match_kind) {
     // no func call in key
     P4Scope::constraints.method_call_max_in_stat = 0;
     auto *expr = target().expressionGenerator().genExpression(bitType);
+    printInfo("genKeyElement: expr:%s", expr->toString().c_str());
     P4Scope::constraints.method_call_max_in_stat = 1;
     P4Scope::req.require_scalar = false;
 
@@ -171,6 +172,7 @@ IR::ActionList *TableGenerator::genActionList(size_t len) {
     }
     
     for (size_t i = actList.size(); i < len; i++) {
+        if(p4Actions.size()==0) continue;
         size_t idx = Utils::getRandInt(0, p4Actions.size() - 1);
         const auto *p4Act = p4Actions[idx];
         cstring actName = p4Act->name.name;
