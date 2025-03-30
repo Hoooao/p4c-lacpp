@@ -893,6 +893,13 @@ var annotated_dup =
       [ "P4_14", null, [
         [ "InlineActions", "class_p4_1_1_p4__14_1_1_inline_actions.html", null ]
       ] ],
+      [ "P4Features", null, [
+        [ "actionInfo", "struct_p4_1_1_p4_features_1_1action_info.html", null ],
+        [ "GressInfo", "struct_p4_1_1_p4_features_1_1_gress_info.html", null ],
+        [ "P4FeatureExtractor", "class_p4_1_1_p4_features_1_1_p4_feature_extractor.html", null ],
+        [ "P4FeaturesOptions", "class_p4_1_1_p4_features_1_1_p4_features_options.html", null ],
+        [ "tableInfo", "struct_p4_1_1_p4_features_1_1table_info.html", null ]
+      ] ],
       [ "P4Fmt", null, [
         [ "Attach", "class_p4_1_1_p4_fmt_1_1_attach.html", "class_p4_1_1_p4_fmt_1_1_attach" ],
         [ "P4fmtOptions", "class_p4_1_1_p4_fmt_1_1_p4fmt_options.html", null ],

@@ -1061,6 +1061,7 @@ var hierarchy =
           [ "P4::P4CContextWithOptions< SimpleSwitchOptions >", "class_p4_1_1_p4_c_context_with_options.html", null ],
           [ "P4::P4CContextWithOptions< DpdkOptions >", "class_p4_1_1_p4_c_context_with_options.html", null ],
           [ "P4::P4CContextWithOptions< EbpfOptions >", "class_p4_1_1_p4_c_context_with_options.html", null ],
+          [ "P4::P4CContextWithOptions< P4FeaturesOptions >", "class_p4_1_1_p4_c_context_with_options.html", null ],
           [ "P4::P4CContextWithOptions< Options >", "class_p4_1_1_p4_c_context_with_options.html", null ],
           [ "P4::P4CContextWithOptions< P4fmtOptions >", "class_p4_1_1_p4_c_context_with_options.html", null ],
           [ "P4::P4CContextWithOptions< P4TestOptions >", "class_p4_1_1_p4_c_context_with_options.html", null ],
@@ -1409,6 +1410,9 @@ var hierarchy =
         [ "P4::P4Tools::CompilerConfiguration", "class_p4_1_1_p4_tools_1_1_compiler_configuration.html", null ]
       ] ]
     ] ],
+    [ "P4::P4Features::actionInfo", "struct_p4_1_1_p4_features_1_1action_info.html", null ],
+    [ "P4::P4Features::GressInfo", "struct_p4_1_1_p4_features_1_1_gress_info.html", null ],
+    [ "P4::P4Features::tableInfo", "struct_p4_1_1_p4_features_1_1table_info.html", null ],
     [ "P4::P4Fmt::Attach::Comments", "class_p4_1_1_p4_fmt_1_1_attach.html#struct_p4_1_1_p4_fmt_1_1_attach_1_1_comments", null ],
     [ "P4::P4RuntimeAPI", "struct_p4_1_1_p4_runtime_a_p_i.html", null ],
     [ "P4::P4RuntimeSerializer", "class_p4_1_1_p4_runtime_serializer.html", null ],
@@ -2032,6 +2036,7 @@ var hierarchy =
           ] ],
           [ "P4::DPDK::DpdkOptions", "class_p4_1_1_d_p_d_k_1_1_dpdk_options.html", null ],
           [ "P4::EbpfOptions", "class_p4_1_1_ebpf_options.html", null ],
+          [ "P4::P4Features::P4FeaturesOptions", "class_p4_1_1_p4_features_1_1_p4_features_options.html", null ],
           [ "P4::P4Fmt::P4fmtOptions", "class_p4_1_1_p4_fmt_1_1_p4fmt_options.html", null ],
           [ "P4::P4Tools::AbstractP4cToolOptions", "class_p4_1_1_p4_tools_1_1_abstract_p4c_tool_options.html", [
             [ "P4::P4Tools::P4Testgen::TestgenOptions", "class_p4_1_1_p4_tools_1_1_p4_testgen_1_1_testgen_options.html", null ],
@@ -2766,6 +2771,7 @@ var hierarchy =
         [ "P4::KeyNameGenerator", "class_p4_1_1_key_name_generator.html", null ],
         [ "P4::MidEndLast", "class_p4_1_1_mid_end_last.html", null ],
         [ "P4::MinimalNameGenerator", "class_p4_1_1_minimal_name_generator.html", null ],
+        [ "P4::P4Features::P4FeatureExtractor", "class_p4_1_1_p4_features_1_1_p4_feature_extractor.html", null ],
         [ "P4::P4Fmt::Attach", "class_p4_1_1_p4_fmt_1_1_attach.html", null ],
         [ "P4::P4Fmt::P4Formatter", "class_p4_1_1_p4_fmt_1_1_p4_formatter.html", null ],
         [ "P4::P4Tools::P4ProgramDCGCreator", "class_p4_1_1_p4_tools_1_1_p4_program_d_c_g_creator.html", null ],
