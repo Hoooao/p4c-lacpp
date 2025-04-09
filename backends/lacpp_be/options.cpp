@@ -1,8 +1,8 @@
 #include "options.h"
 
-namespace P4::P4Features {
+namespace P4::P4LACPP {
 
-P4FeaturesOptions::P4FeaturesOptions() {
+P4LACPPOptions::P4LACPPOptions() {
     registerOption(
         "-o", "outfile",
         [this](const char *arg) {
@@ -12,6 +12,6 @@ P4FeaturesOptions::P4FeaturesOptions() {
         "Write features to outfile");
 }
 
-const std::filesystem::path &P4FeaturesOptions::outputFile() const { return outFile; }
+const std::filesystem::path &P4LACPPOptions::outputFile() const { return outFile; }
 
 }  // namespace P4::P4Fmt

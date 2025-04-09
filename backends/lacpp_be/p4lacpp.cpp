@@ -5,11 +5,11 @@
 #include "frontends/p4/frontend.h"
 #include "ir/ir.h"
 
-#include "backends/feature_extract/p4feature.h"
-#include "backends/feature_extract/p4feature_extractor.h"
+#include "backends/lacpp_be/p4lacpp.h"
+#include "backends/lacpp_be/p4feature_extractor.h"
 
 
-namespace P4::P4Features{
+namespace P4::P4LACPP{
 std::optional<std::pair<const IR::P4Program *, const Util::InputSources *>> parseProgram(
     const ParserOptions &options) {
     if (!std::filesystem::exists(options.file)) {
@@ -37,8 +37,8 @@ std::optional<std::pair<const IR::P4Program *, const Util::InputSources *>> pars
 
 
 std::string getFeatures(std::filesystem::path inputFile){
-    AutoCompileContext autoP4FeaturesContext(new P4FeaturesContext);
-    auto &options = P4FeaturesContext::get().options();
+    AutoCompileContext autoP4LACPPContext(new P4LACPPContext);
+    auto &options = P4LACPPContext::get().options();
     options.file = std::move(inputFile);
 
     auto parseResult = parseProgram(options);

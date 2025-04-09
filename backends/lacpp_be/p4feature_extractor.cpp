@@ -1,7 +1,7 @@
-#include "backends/feature_extract/p4feature_extractor.h"
+#include "backends/lacpp_be/p4feature_extractor.h"
 #include "thrid_party/json.hpp"
 
-namespace P4::P4Features{
+namespace P4::P4LACPP{
 
 using FE=P4FeatureExtractor;
 using json=nlohmann::ordered_json;

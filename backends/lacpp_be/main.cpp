@@ -4,20 +4,20 @@
 
 #include "lib/nullstream.h"
 #include "options.h"
-#include "p4feature.h"
+#include "p4lacpp.h"
 
 using namespace P4;
 
 int main(int argc, char *const argv[]) {
-    AutoCompileContext autoP4FeaturesContext(new P4Features::P4FeaturesContext);
-    auto &options = P4Features::P4FeaturesContext::get().options();
+    AutoCompileContext autoP4LACPPContext(new P4LACPP::P4LACPPContext);
+    auto &options = P4LACPP::P4LACPPContext::get().options();
     if (options.process(argc, argv) == nullptr) {
         return EXIT_FAILURE;
     }
     options.setInputFile();
 
-    // TODO: make json as well
-    std::string featuresInJson = P4Features::getFeatures(options.file);
+    // TODO: add options for either get feature or annotate
+    std::string featuresInJson = P4LACPP::getFeatures(options.file);
     if (featuresInJson.empty()) {
         return EXIT_FAILURE;
     };
