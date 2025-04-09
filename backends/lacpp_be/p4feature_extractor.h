@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <optional>
 
-namespace P4::P4Features{
+namespace P4::P4LACPP{
 
 
 enum class MatchTypes{

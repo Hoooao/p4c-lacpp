@@ -51,7 +51,7 @@ OPTION (ENABLE_GC "Compile with the Boehm-Demers-Weiser garbage collector." ON)
 OPTION (ENABLE_WERROR "Treat warnings as errors" OFF)
 OPTION (ENABLE_SANITIZERS "Enable sanitizers" OFF)
 
-OPTION (ENABLE_P4FEATURE_EXTRACTOR "Build the LACPP feature extractor backend" ON)
+OPTION (ENABLE_P4LACPP_BE "Build the LACPP " ON)
 
 OPTION (STATIC_BUILD_WITH_DYNAMIC_GLIBC "Build a (mostly) statically linked release binary. \
 Glibc is linked dynamically. WARNING: This only works if all dependencies that depend on the C++ \
@@ -505,8 +505,8 @@ endif ()
 if (ENABLE_GTESTS)
   add_subdirectory (test)
 endif ()
-if (ENABLE_P4FEATURE_EXTRACTOR)
-  add_subdirectory (backends/feature_extract)
+if (ENABLE_P4LACPP_BE)
+  add_subdirectory (backends/lacpp_be)
 endif ()
 
 ####################################### IR Generation Begin #######################################
