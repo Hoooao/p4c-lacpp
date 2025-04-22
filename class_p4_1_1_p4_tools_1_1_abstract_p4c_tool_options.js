@@ -6,6 +6,5 @@ var class_p4_1_1_p4_tools_1_1_abstract_p4c_tool_options =
     [ "validateOptions", "class_p4_1_1_p4_tools_1_1_abstract_p4c_tool_options.html#a1764bc5dd73d28269946aa243690c4a1", null ],
     [ "compilerArgs", "class_p4_1_1_p4_tools_1_1_abstract_p4c_tool_options.html#a4bd43f7ef14ef7e52ed1fc419615a38f", null ],
     [ "disableInformationLogging", "class_p4_1_1_p4_tools_1_1_abstract_p4c_tool_options.html#ade4cc5a6dc3fa99c403f3baf73f004c7", null ],
-    [ "enableDagGeneration", "class_p4_1_1_p4_tools_1_1_abstract_p4c_tool_options.html#ae29a5198c324cb031db782c1cbb1a1e9", null ],
     [ "seed", "class_p4_1_1_p4_tools_1_1_abstract_p4c_tool_options.html#a23b524f4780d3194e8638a84e2f0553c", null ]
 ];
