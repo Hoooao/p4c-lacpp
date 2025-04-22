@@ -6,8 +6,11 @@
 #include "options.h"
 
 namespace P4::P4LACPP{
-std::string getFeatures(std::filesystem::path inputFile);
-
+std::optional<std::pair<const IR::P4Program *, const Util::InputSources *>> parseProgram(
+    const ParserOptions &options);
+    
+int getFeatures(P4LACPPOptions& options, const IR::P4Program *program);
+int dumpAfterFrontend(P4LACPPOptions& options, const IR::P4Program *program);
 } // namespace P4::P4LACPP
 
 
