@@ -52,3 +52,7 @@ docs/doxygen/awesome_css/
 
 # thirdparty
 backends/tofino/third_party/
+
+# lacpp specifics
+backends/lacpp_be/scripts/faults
+**/smith_run*
