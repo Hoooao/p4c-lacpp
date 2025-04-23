@@ -46,6 +46,7 @@ struct Properties {
     bool width_unknown{false};
     bool has_methodcall{false};
     bool in_action{false};
+    bool in_header_field_assignment{false};
     size_t depth = 0;
     // This means we are in a block that returns.
     // We need to return an expression with the specified type.

@@ -458,7 +458,18 @@ IR::Expression *ExpressionGenerator::constructBinaryBitExpr(const IR::Type_Bits 
     switch (Utils::getRandInt(percent)) {
         case 0: {
             IR::Expression *left = constructBitExpr(tb);
-            IR::Expression *right = constructBitExpr(tb, true);
+            // here is to solve the source of modify_field invalid issue
+            // check if toString can give us a complete name of left,
+            // if yes, then we can check if h. is in the name and enfore the constraint
+            // if not, then we can just use the left as it is
+            printInfo("constructBinaryBitExpr: left: %s", left->toString().c_str());
+            IR::Expression *right;
+            if (left->toString().find("h.")!= nullptr) {
+                // just mult 2 (will be processed as lshift)
+                right = new IR::Constant(tb,2);
+            }else {
+                right = constructBitExpr(tb, true);
+            }
             // pick a multiplication that matches the type
             expr = new IR::Mul(tb, left, right);
         } break;
@@ -467,9 +478,16 @@ IR::Expression *ExpressionGenerator::constructBinaryBitExpr(const IR::Type_Bits 
             // TODO(fruffy): Make more sophisticated
             // this requires only compile time known values
             IR::Expression *left = genBitLiteral(tb);
-            P4Scope::req.not_zero = true;
-            IR::Expression *right = genBitLiteral(tb);
-            P4Scope::req.not_zero = false;
+            printInfo("constructBinaryBitExpr: left: %s", left->toString().c_str());
+            IR::Expression *right;
+            if (left->toString().find("h.")!= nullptr) {
+                // just div 2 (will be processed as rshift)
+                right = new IR::Constant(tb,2);
+            }else {
+                P4Scope::req.not_zero = true;
+                right = constructBitExpr(tb, true);
+                P4Scope::req.not_zero = false;
+            }
             expr = new IR::Div(tb, left, right);
         } break;
         case 2: {
@@ -610,8 +628,7 @@ IR::Expression *ExpressionGenerator::constructBinaryBitExpr(const IR::Type_Bits 
 }
 
 IR::Expression *ExpressionGenerator::constructTernaryBitExpr(const IR::Type_Bits *tb) {
-    IR::Expression *expr = nullptr;
-
+    IR::Expression * expr = nullptr;
     if (P4Scope::prop.depth > MAX_DEPTH) {
         return genBitLiteral(tb);
     }
@@ -620,9 +637,9 @@ IR::Expression *ExpressionGenerator::constructTernaryBitExpr(const IR::Type_Bits
     std::vector<int64_t> percent = {Probabilities::get().EXPRESSION_BIT_BINARY_SLICE,
                                     Probabilities::get().EXPRESSION_BIT_BINARY_MUX};
 
-    switch (Utils::getRandInt(percent)) {
-        case 0: {
-            // TODO(fruffy): Refine this...
+    // TODO(Hao): this is ugly
+    auto sliceExpr = [&]() {
+                    // TODO(fruffy): Refine this...
             // pick a slice that matches the type
             auto typeWidth = tb->width_bits();
             // TODO(fruffy): this is some arbitrary value...
@@ -636,7 +653,12 @@ IR::Expression *ExpressionGenerator::constructTernaryBitExpr(const IR::Type_Bits
             auto margin = newTypeSize - typeWidth;
             auto high = Utils::getRandInt(0, margin) + typeWidth - 1;
             auto low = high - typeWidth + 1;
-            expr = new IR::Slice(sliceExpr, high, low);
+            return new IR::Slice(sliceExpr, high, low);
+    };
+
+    switch (Utils::getRandInt(percent)) {
+        case 0: {
+            expr = sliceExpr();
             break;
         }
         case 1: {
@@ -653,7 +675,7 @@ IR::Expression *ExpressionGenerator::constructTernaryBitExpr(const IR::Type_Bits
                 P4Scope::prop.width_unknown = false;
             }
             expr = new IR::Mux(tb, cond, left, right);
-        } break;
+        }
     }
     return expr;
 }
@@ -696,8 +718,11 @@ IR::Expression *ExpressionGenerator::constructBitExpr(const IR::Type_Bits *tb, b
                 expr = genBitLiteral(tb);
             } else {
                 expr = pickBitVar(tb);
-                // header fields contraint in TNA
-                if(is_arith && expr->toString().startsWith("h.") && tb->width_bits() > 32 && tb->width_bits()%32){
+                // header fields contraints in TNA
+                bool header_not_aligned = expr->toString().startsWith("h.") && tb->width_bits() > 32 && tb->width_bits()%32;
+                // this is a overkill but fine
+                bool no_hdr_in_hdr_assignment = P4Scope::prop.in_header_field_assignment && expr->toString().startsWith("h.");
+                if(is_arith || header_not_aligned || no_hdr_in_hdr_assignment){
                     expr = genBitLiteral(tb);
                 }
             }

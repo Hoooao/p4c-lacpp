@@ -182,12 +182,17 @@ IR::Statement *StatementGenerator::genAssignmentStatement() {
                 return nullptr;
             }
             auto *left = target().expressionGenerator().pickLvalOrSlice(bitType);
+            if (left->toString().startsWith("h.")) {
+                P4Scope::prop.in_header_field_assignment = true;
+                printInfo("Header field assignment, rside should not be a header");
+            }
             if (P4Scope::constraints.single_stage_actions) {
                 printInfo("Single stage action left remove");
                 removeLval(left, bitType);
             }
             auto *right = target().expressionGenerator().genExpression(bitType);
             P4Scope::constraints.method_call_max_in_stat = 1;
+            P4Scope::prop.in_header_field_assignment = false;
             printInfo("genAssignmentStatement: %s = %s", left->toString().c_str(), right->toString().c_str());
             return new IR::AssignmentStatement(left, right);
         }

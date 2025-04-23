@@ -61,8 +61,8 @@ struct Probabilities {
     uint16_t EXPRESSION_BIT_BINARY_BXOR = 10;
     uint16_t EXPRESSION_BIT_BINARY_CONCAT = 5;
     // probabilities for ternary bit expressions
-    uint16_t EXPRESSION_BIT_BINARY_SLICE = 50;
-    uint16_t EXPRESSION_BIT_BINARY_MUX = 50;
+    uint16_t EXPRESSION_BIT_BINARY_SLICE = 100;
+    uint16_t EXPRESSION_BIT_BINARY_MUX = 0; // Hao: make this 0 temporarily, cause one of the error
     // probabilities for bit expressions
     uint16_t EXPRESSION_BIT_VAR = 20;
     uint16_t EXPRESSION_BIT_INT_LITERAL = 5;
