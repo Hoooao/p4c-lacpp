@@ -375,13 +375,14 @@ IR::Expression *ExpressionGenerator::constructUnaryExpr(const IR::Type_Bits *tb)
 
             IR::IndexedVector<IR::Declaration> viableFunctions;
             for (const auto *fun : p4Functions) {
-                if (fun->type->returnType->to<IR::Type_Bits>() != nullptr) {
+                if (fun->type->returnType == tb) {
                     viableFunctions.push_back(fun);
                     printInfo("constructUnaryExpr: Function: %s", fun->name.name);
                 }
             }
             for (const auto *fun : p4Externs) {
-                if (fun->type->returnType->to<IR::Type_Bits>() != nullptr) {
+                if (fun->type->returnType == tb) {
+                    printInfo("constructUnaryExpr: ExternMethod: %s", fun->name.name);
                     viableFunctions.push_back(fun);
                 }
             }
@@ -391,10 +392,6 @@ IR::Expression *ExpressionGenerator::constructUnaryExpr(const IR::Type_Bits *tb)
             if (expr == nullptr) {
                 expr = genBitLiteral(tb);
                 break;
-            }
-            // if the return value does !match try to cast it
-            if (retType != tb) {
-                expr = new IR::Cast(tb, expr);
             }
         } break;
     }
@@ -485,7 +482,7 @@ IR::Expression *ExpressionGenerator::constructBinaryBitExpr(const IR::Type_Bits 
                 right = new IR::Constant(tb,2);
             }else {
                 P4Scope::req.not_zero = true;
-                right = constructBitExpr(tb, true);
+                right = genBitLiteral(tb);
                 P4Scope::req.not_zero = false;
             }
             expr = new IR::Div(tb, left, right);

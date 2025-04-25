@@ -1,10 +1,10 @@
 ### LACPP
 
 #### P4Smith with DAG enhanced
-see [here](./backends/p4tools/modules/smith/common/skeleton/)
+see [backends/p4tools/modules/smith/common/skeleton/](./backends/p4tools/modules/smith/common/skeleton/)
 
 #### Feature Extractor BE
-see [here](./backends/feature_extract/)
+see [backends/lacpp_be](./backends/lacpp_be)
 
 #### Some scripts for data collection pipeline and training
-see [here](./backends/p4tools/modules/smith/scripts/)
+see [backends/lacpp_be/scripts/](./backends/lacpp_be/scripts/)

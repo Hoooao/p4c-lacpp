@@ -11,22 +11,27 @@ from tqdm import tqdm
 import random
 
 def debug_print(*args, **kwargs):
-    if False:
+    if True:
+        print(*args, **kwargs)
+
+def error_print(*args, **kwargs):
+    if True:
         print(*args, **kwargs)
 
 def info_print(*args, **kwargs):
     if True:
         print(*args, **kwargs)
 
+stop_ongoing_process = multiprocessing.Event()
 
-def run_single_smith(smith_executable, p4c_barefoot, finished):
+def run_single_smith(smith_executable, p4c_barefoot):
     """
     Runs a single instance of 'smith' until it succeeds.
     """
     attempts = 0
     while True:
 
-        if finished.value:
+        if stop_ongoing_process.is_set():
             return [None,0]
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
@@ -39,40 +44,48 @@ def run_single_smith(smith_executable, p4c_barefoot, finished):
         attempts += 1
         debug_print(f"Running p4smith in {folder_name}...")
         log_file_path = os.path.join(folder_name, "log.txt")
-
+        timedout = False
         try:
             with open(log_file_path, "w") as log_file:
-                smith_exec = [smith_executable, "--target", "tofino", "--arch", "tna", "./smith.p4", "--generate-dag", "--dag-node-num", "5", "--dag-density", "0.6"]
-                bf_exec = [p4c_barefoot, "./smith.p4", "-g", "--target", "tofino", "--arch", "tna"]
+                smith_exec = [smith_executable, "--target", "tofino", "--arch", "tna", "./smith.p4", "--generate-dag", "--dag-node-num", "6", "--dag-density", "0.6"]
+                bf_exec = [p4c_barefoot, "./smith.p4", "-g", "--target", "tofino", "--arch", "tna", "--verbose", "--enable-event-logger", 
+                           "--optimized-source","opt.p4", "-Ttable_dependency_graph:3,table_dependency_summary:3,table_placement:5"
+                ]
 
                 subprocess.run(smith_exec,
                                stdout=log_file, stderr=log_file, check=True, cwd=folder_name)
-                subprocess.run(bf_exec, stdout=log_file, stderr=subprocess.STDOUT,
-                               check=False, cwd=folder_name)
+                try:
+                    subprocess.run(bf_exec, stdout=log_file, stderr=subprocess.STDOUT,
+                                check=False, cwd=folder_name, timeout=30)
+                except subprocess.TimeoutExpired:
+                    timedout = True
                 
                 log_file.write(f"\n\n\nsmith command: {' '.join(smith_exec)}\n")
                 log_file.write(f"p4c_barefoot command: {' '.join(bf_exec)}")
 
             with open(log_file_path, "r") as log_file:
                 log_contents = log_file.read()
-                if "0 errors" in log_contents:
+                if "0 errors" in log_contents and not timedout:
                     debug_print(f"Success! Output stored in {folder_name}.")
                     return [folder_name, attempts]  # Successful run
                 else:
                     debug_print(f"Errors found in output. Deleting {folder_name} and retrying...")
         
-        except subprocess.CalledProcessError as e:
-            debug_print(f"Execution failed: {e}. Deleting {folder_name} and retrying...")
-        # shutil.rmtree(folder_name)  # Clean up before retrying
+        except Exception as e:
+            error_print(f"Execution failed: {e}. Deleting {folder_name} and retrying...")
+        shutil.rmtree(folder_name)  # Clean up before retrying
 
 def run_smith_parallel(num_repetitions, smith_executable, p4c_barefoot, num_workers):
     """
     Runs 'smith' multiple times in parallel, dynamically retrying failed runs until success count is met.
     """
+
+    def debug_print(*args, **kwargs):
+        if True:
+            print(*args, **kwargs)
     manager = multiprocessing.Manager()
     success_list = manager.list()
     total_runs_cnt = multiprocessing.Value('i', 0)
-    finished = manager.Value('i', 0)
     with ProcessPoolExecutor(max_workers=num_workers) as executor:
         futures = set()
         progress_bar = tqdm(total=num_repetitions, desc="Successful runs", ncols=80)
@@ -86,7 +99,7 @@ def run_smith_parallel(num_repetitions, smith_executable, p4c_barefoot, num_work
 
                 debug_print(f"Success count: {len(success_list)}")
                 info_print(f"Active workers: {len(futures)}")
-                futures.add(executor.submit(run_single_smith, smith_executable, p4c_barefoot, finished))
+                futures.add(executor.submit(run_single_smith, smith_executable, p4c_barefoot))
             for future in as_completed(futures):
                 futures.remove(future)
                 try:
@@ -95,14 +108,22 @@ def run_smith_parallel(num_repetitions, smith_executable, p4c_barefoot, num_work
                         with total_runs_cnt.get_lock():
                             success_list.append(result[0])
                             progress_bar.update(1)
+                            progress_bar.refresh()
                             total_runs_cnt.value += result[1]
                     if len(success_list) >= num_repetitions:
-                        finished.value = 1
+                        stop_ongoing_process.set()
                         break
+                    if len(success_list) < num_repetitions:
+                        debug_print(f"Success count: {len(success_list)}")
+                        info_print(f"Active workers: {len(futures)}")
+                        futures.add(executor.submit(run_single_smith, 
+                                                    smith_executable, p4c_barefoot))
+                        break # break here so the as_completed(futures) iterator will be updated
+
                 except Exception as e:
                     debug_print(f"Task failed with error: {e}")
                     # Retry failed task
-                    futures.add(executor.submit(run_single_smith, smith_executable, p4c_barefoot, finished))
+                    futures.add(executor.submit(run_single_smith, smith_executable, p4c_barefoot))
         progress_bar.close()
 
     
@@ -121,10 +142,15 @@ def compile_p4_file(p4_file, p4c_barefoot):
     with open(log_file_path, "w") as log_file:
         try:
             subprocess.run([
-                p4c_barefoot, os.path.basename(p4_file), "-g", "--target", "tofino", "--arch", "tna", "--verbose", "--enable-event-logger", "--optimized-source","opt.p4", "-Ttable_dependency_graph:3,table_dependency_summary:3"
-                ], stdout=log_file, stderr=log_file, check=True, cwd=os.path.dirname(p4_file))
-        except subprocess.CalledProcessError as e:
+                p4c_barefoot, os.path.basename(p4_file), "-g", "--target", "tofino", "--arch", "tna","--verbose", "--enable-event-logger", "--optimized-source","opt.p4", "-Ttable_dependency_graph:3,table_dependency_summary:3,table_placement:5"
+                ], stdout=log_file, stderr=log_file, check=True, cwd=os.path.dirname(p4_file), timeout=40)
+        except Exception as e:
             debug_print(f"Error compiling {p4_file}: {e}")
+            # remove the folder file if compilation fails -> too dangerous
+            # try:
+            #     shutil.rmtree(os.path.dirname(p4_file))
+            # except Exception as e:
+            #     debug_print(f"Error removing folder {os.path.dirname(p4_file)}: {e}")
 
 def build_p4_programs_recursive(p4c_barefoot, build_only_dir, num_workers):
     """
