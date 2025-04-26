@@ -11,12 +11,12 @@ P4LACPPOptions::P4LACPPOptions() {
         },
         "Write features to outfile");
     registerOption(
-        "--optimized-source", "file",
+        "--post-midend-source", "file",
         [this](const char *arg) {
             dumpOptimizedFile = arg;
             return true;
         },
-        "Get the optimized source code and write it to the specified file then end the program");
+        "Get the source code after midend and write it to the specified file then end the program");
 }
 
 const std::filesystem::path &P4LACPPOptions::getFeatureOutFile() const { return featureOutFile; }

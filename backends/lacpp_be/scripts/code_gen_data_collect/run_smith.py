@@ -6,7 +6,6 @@ from datetime import datetime
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import multiprocessing
 import concurrent.futures
-import time
 from tqdm import tqdm
 import random
 
