@@ -5,16 +5,18 @@ import shutil
 import re
 import subprocess
 import networkx as nx
-import concurrent.futures
+import numpy as np
+import matplotlib.pyplot as plt
+from tqdm import tqdm
 
 P4LACPP = "p4lacpp"  # Path to the p4lacpp executable (in $PATH)
 
 def debug_print(msg):
     # Uncomment the next line to enable debug printing
-    print(f"DEBUG: {msg}")
+    #print(f"DEBUG: {msg}")
     pass
 def info_print(msg):
-    print(f"INFO: {msg}")
+    #print(f"INFO: {msg}")
     pass
 ### Table Graph Processing BEGIN
 # dependancy bits
@@ -167,6 +169,82 @@ def process_metrics_json(json_file):
         debug_print(f"Error reading {json_file}: {e}")
         return -1
 
+def load_all_node_attrs_and_labels(directory):
+    all_node_attrs = []
+    all_labels = []
+
+    file_paths = []
+    for filename in os.listdir(directory):
+        if filename.endswith(".json"):
+            path = os.path.join(directory, filename)
+            file_paths.append(path)
+            with open(path, "r") as f:
+                data = json.load(f)
+                if "node_attr" in data:
+                    all_node_attrs.extend(data["node_attr"])
+                if "y" in data and isinstance(data["y"], list):
+                    all_labels.extend([data["y"]])
+    # print dimensions
+    info_print(f"Number of node attributes: {len(all_node_attrs)}")
+    info_print(f"Number of labels: {len(all_labels)}")
+    return file_paths, np.array(all_node_attrs, dtype=np.float32), np.array(all_labels, dtype=np.float32)
+
+def z_score(data):
+    mean = np.mean(data, axis=0)
+    std = np.std(data, axis=0)
+
+    if np.isscalar(std):
+        std = std if std != 0 else 1.0
+    else:
+        std[std == 0] = 1.0
+
+    return (data - mean) / std, mean, std
+
+
+def normalize_and_update_files(file_paths, node_mean, node_std, label_mean, label_std):
+    for path in tqdm(file_paths, desc="Normalizing"):
+        with open(path, "r") as f:
+            data = json.load(f)
+
+        if "node_attr" in data:
+            x = np.array(data["node_attr"], dtype=np.float32)
+            data["node_attr_normalized"] = ((x - node_mean) / node_std).tolist()
+
+        if "y" in data and isinstance(data["y"], list):
+            y = np.array(data["y"], dtype=np.float32)
+            data["y_normalized"] = ((y - label_mean) / label_std).tolist()
+
+        with open(path, "w") as f:
+            json.dump(data, f, indent=2)
+
+def plot_distribution(data, prefix):
+    num_features = data.shape[1]
+    for i in range(num_features):
+        plt.hist(data[:, i], bins=20, alpha=0.7)
+        plt.title(f"Distribution of {prefix}_{i}")
+        plt.xlabel(f"{prefix}_{i}")
+        plt.ylabel("Frequency")
+        plt.grid(True)
+        plt.savefig(f"{prefix}_{i}_distribution.png")
+        plt.close()
+
+def normalize_node_attr_and_label(directory):
+    file_paths, all_node_attrs, all_labels = load_all_node_attrs_and_labels(directory)
+
+    # Normalize
+    norm_node_attr, node_mean, node_std = z_score(all_node_attrs)
+    norm_labels, label_mean, label_std = z_score(all_labels)
+
+    # Plot
+    plot_distribution(all_node_attrs, "node_attr")
+    plot_distribution(all_labels, "y")
+
+    # # Update files
+    normalize_and_update_files(file_paths, node_mean, node_std, label_mean, label_std)
+
+    info_print("All files updated with normalized features.")
+
+
 ### JSON Processing END
 
 ### Node feature extraction
@@ -290,7 +368,7 @@ def process_p4_folders(root_dir):
 
             gnn_data = extract_node_features(os.path.join(root, "opt.p4"),gnn_data)
 
-            # write to a file
+            # write to a file with the same name as the folder
             output_file = os.path.join(root, "data.json")
             gnn_data["y"] = [mau_len, lat,sram, tcam]
             save_to_json(gnn_data, output_file)             
@@ -308,13 +386,13 @@ def copy_p4_programs_to_dataset(root_dir):
             continue
         if any(file.endswith("opt.p4") for file in files):
             folder_name = os.path.basename(root)
-            target_dir = os.path.join(dataset_dir, folder_name)
-            os.makedirs(target_dir, exist_ok=True)
+            os.makedirs(dataset_dir, exist_ok=True)
             
             for file in files:
-                if file.endswith("opt.p4") or file == "data.json" or file == "node_features.json":
+                if file == "data.json": #or file == "node_features.json" or file.endswith("opt.p4"):
                     src_path = os.path.join(root, file)
-                    dst_path = os.path.join(target_dir, file)
+                    # copy to a file with the same name as the source folder
+                    dst_path = os.path.join(dataset_dir,folder_name+".json")
                     shutil.copy2(src_path, dst_path)
                     debug_print(f"Copied {src_path} to {dst_path}")
 
@@ -327,6 +405,7 @@ def main():
     
     process_p4_folders(args.directory)
     copy_p4_programs_to_dataset(args.directory)
+    normalize_node_attr_and_label(args.output)
 # exp python3 ./code_gen_data_collect/parse_performance.py -d . 
 if __name__ == "__main__":
     main()

@@ -2,50 +2,48 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch_geometric.nn import GATConv, global_mean_pool
-from torch_geometric.data import Data, Dataset, DataLoader as GeoDataLoader
+from torch_geometric.data import Data, Dataset
+from torch_geometric.loader import DataLoader as GeoDataLoader
 
 import os
-import pickle
+import json
+from pathlib import Path
 from time import time
 from tqdm import tqdm
-from transformers import AutoTokenizer, AutoModel
-import json
+import matplotlib.pyplot as plt
 
 USE_GPU = True
-BATCH_SIZE = 1
-EPOCHS = 100
+BATCH_SIZES = [1,2,4,8,16,32,64]
+EPOCHS = 500
 LEARNING_RATE = 0.001
-MODEL_SAVE_PATH = "performance_predictor.pth"
-EMBEDDING_CACHE = "codebert_embeddings.pkl"
 
 # Device selection
 device = torch.device("cuda" if USE_GPU and torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
-# Dataset using node features and adjacency from file
-class CodeGraphDataset(Dataset):
+# Custom Dataset from JSON
+class CodeGraphJSONDataset(Dataset):
     def __init__(self, folder_path):
+        super().__init__()
         self.folder_path = folder_path
         self.samples = self._load_samples()
 
     def _load_samples(self):
         samples = []
-        from pathlib import Path
-        for file in Path(self.folder_path).rglob("*.p4"):
-            base = file.stem
-            node_feat_file = file.parent / f"{base}_nodes.pt"
-            edge_index_file = file.parent / f"{base}_edges.pt"
-            label_file = file.parent / "perf.txt"
+        for file in Path(self.folder_path).rglob("*.json"):
+            with open(file, "r") as f:
+                js = json.load(f)
 
-            if not (node_feat_file.exists() and edge_index_file.exists() and label_file.exists()):
-                continue
+            x = torch.tensor(js["node_attr_normalized"], dtype=torch.float)  # [num_nodes, feat_dim]
+            edge_index = torch.tensor(js["edge_index"], dtype=torch.long)  # [2, num_edges]
+            edge_attr = torch.tensor(
+                [[int(b) for b in s] for s in js["edge_attr"]],
+                dtype=torch.float
+            )  # [num_edges, bit_vector_len]
+            y = torch.tensor(js["y_normalized"], dtype=torch.float).unsqueeze(0)  
 
-            x = torch.load(node_feat_file)  # Tensor [num_nodes, feat_dim]
-            edge_index = torch.load(edge_index_file)  # Tensor [2, num_edges]
-            with open(label_file, "r") as f:
-                a, b = map(float, f.read().strip().split(","))
-            y = torch.tensor([a, b], dtype=torch.float32)
-            samples.append(Data(x=x, edge_index=edge_index, y=y))
+            data = Data(x=x, edge_index=edge_index, edge_attr=edge_attr, y=y)
+            samples.append(data)
         return samples
 
     def len(self):
@@ -54,9 +52,9 @@ class CodeGraphDataset(Dataset):
     def get(self, idx):
         return self.samples[idx]
 
-# GAT model for graph-level prediction
+# GAT model with edge_attr support (currently ignored, placeholder for future use)
 class GATPerformanceModel(nn.Module):
-    def __init__(self, in_dim=768, hidden_dim=128, out_dim=2):
+    def __init__(self, in_dim=6, hidden_dim=128, out_dim=4):
         super().__init__()
         self.gat1 = GATConv(in_dim, hidden_dim, heads=4, concat=True)
         self.gat2 = GATConv(hidden_dim * 4, hidden_dim, heads=1, concat=False)
@@ -73,19 +71,10 @@ class GATPerformanceModel(nn.Module):
         x = global_mean_pool(x, batch)
         return self.mlp(x)
 
-# Weighted MSE loss
-class WeightedMSELoss(nn.Module):
-    def __init__(self, weights):
-        super().__init__()
-        self.weights = torch.tensor(weights).to(device)
-
-    def forward(self, outputs, targets):
-        loss = (outputs - targets) ** 2
-        return (loss * self.weights).mean()
 
 # Training function
-def train_model(model, dataloader):
-    criterion = WeightedMSELoss([100, 1])
+def train_model(model, dataloader, batch_size=1):
+    criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.5)
 
@@ -108,24 +97,24 @@ def train_model(model, dataloader):
         avg_loss = total_loss / len(dataloader)
         loss_history.append(avg_loss)
         print(f"Epoch {epoch+1}/{EPOCHS}, Loss: {avg_loss:.2f}")
-        torch.save(model.state_dict(), MODEL_SAVE_PATH)
+        torch.save(model.state_dict(), f"performance_predictor_b{batch_size}.pth")
 
     return loss_history
 
 # Main
 if __name__ == "__main__":
-    folder_path = "../dataset"
-    dataset = CodeGraphDataset(folder_path)
-    dataloader = GeoDataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
+    folder_path = "./dataset"
+    dataset = CodeGraphJSONDataset(folder_path)
+    for batch_size in BATCH_SIZES:
+        dataloader = GeoDataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-    model = GATPerformanceModel().to(device)
-    loss_history = train_model(model, dataloader)
+        model = GATPerformanceModel().to(device)
+        loss_history = train_model(model, dataloader, batch_size)
 
-    import matplotlib.pyplot as plt 
-    plt.plot(loss_history)
-    plt.title("Training Loss Curve")
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.grid(True)
-    plt.savefig("loss_curve.png")
-    plt.show()
+        plt.plot(loss_history)
+        plt.title("Training Loss Curve")
+        plt.xlabel("Epoch")
+        plt.ylabel("Loss")
+        plt.grid(True)
+        plt.savefig(f"loss_curve_b{batch_size}.png")
+        plt.show()
