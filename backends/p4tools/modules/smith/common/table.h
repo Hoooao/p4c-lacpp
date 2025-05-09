@@ -18,12 +18,14 @@ class TableGenerator : public Generator {
 
     virtual IR::TableProperties *genTablePropertyList();
 
-    virtual IR::KeyElement *genKeyElement(IR::ID match_kind);
-    virtual IR::KeyElement *genKeyElement(IR::ID match_kind, const IR::Expression* expr);
+    virtual cstring genKetMatchType();
+    virtual IR::KeyElement *genKeyElement();
+    virtual IR::KeyElement *genKeyElement(const IR::Expression* expr);
 
     virtual IR::Key *genKeyElementList(size_t len);
 
     virtual IR::Property *genKeyProperty();
+    virtual IR::Property *genSizeProperty();
 
     virtual IR::MethodCallExpression *genTableActionCall(cstring method_name,
                                                          const IR::ParameterList &params);

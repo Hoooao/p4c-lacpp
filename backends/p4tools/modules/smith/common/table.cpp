@@ -9,6 +9,7 @@
 #include "backends/p4tools/common/lib/util.h"
 #include "backends/p4tools/modules/smith/common/declarations.h"
 #include "backends/p4tools/modules/smith/common/expressions.h"
+#include "backends/p4tools/modules/smith/common/probabilities.h"
 #include "backends/p4tools/modules/smith/common/scope.h"
 #include "backends/p4tools/modules/smith/core/target.h"
 #include "backends/p4tools/modules/smith/util/util.h"
@@ -16,6 +17,7 @@
 #include "ir/vector.h"
 #include "lib/cstring.h"
 #include "lib/exceptions.h"
+
 
 namespace P4::P4Tools::P4Smith {
 
@@ -34,6 +36,7 @@ IR::TableProperties *TableGenerator::genTablePropertyList() {
 
     tabProperties.push_back(genKeyProperty());
     tabProperties.push_back(genActionListProperty());
+    tabProperties.push_back(genSizeProperty());
 
     return new IR::TableProperties(tabProperties);
 }
@@ -46,15 +49,14 @@ IR::Key *TableGenerator::genKeyElementList(size_t len) {
             // choose one fields to match, sufficient for dependancy
             if(fields.size() == 0) continue;
             const auto field = fields.at(Utils::getRandInt(0, fields.size() - 1));
-            auto *key = genKeyElement("exact", field->expression);
+            auto *key = genKeyElement(field->expression);
             tn->fieldsMatched.push_back(field);
             keys.push_back(key);
         }
     }
 
     for (size_t i = keys.size(); i < len; i++) {
-        // TODO(fruffy): More types than just exact
-        IR::KeyElement *key = genKeyElement("exact");
+        IR::KeyElement *key = genKeyElement();
         if (key == nullptr) {
             continue;
         }
@@ -76,7 +78,30 @@ IR::Key *TableGenerator::genKeyElementList(size_t len) {
     return new IR::Key(keys);
 }
 
-IR::KeyElement *TableGenerator::genKeyElement(IR::ID match_kind) {
+
+cstring TableGenerator::genKetMatchType() {
+    std::string match_kind;
+    std::vector<int64_t> typePercent = {
+        Probabilities::get().TABLEDECLARATION_MATCH_EXACT,
+        Probabilities::get().TABLEDECLARATION_MATCH_LPM,
+        Probabilities::get().TABLEDECLARATION_MATCH_TERNARY,
+    };
+    auto rand = Utils::getRandInt(typePercent);
+    if(rand == 0){
+        match_kind = "exact";
+    }else if(rand == 1){
+        match_kind = "lpm";
+    }else if(rand == 2){
+        match_kind = "ternary";
+    }else{
+        printInfo("genKetMatchType: unknown match type\n");
+        return nullptr;
+    }
+    return match_kind;
+}
+
+IR::KeyElement *TableGenerator::genKeyElement() {
+    IR::ID match_kind = genKetMatchType();
     auto *match = new IR::PathExpression(std::move(match_kind));
     auto annotations = target().declarationGenerator().genAnnotation();
     auto *bitType = P4Scope::pickDeclaredBitType(false);
@@ -101,8 +126,8 @@ IR::KeyElement *TableGenerator::genKeyElement(IR::ID match_kind) {
     return key;
 }
 
-IR::KeyElement *TableGenerator::genKeyElement(IR::ID match_kind, const IR::Expression* expr) {
-    auto *match = new IR::PathExpression(std::move(match_kind));
+IR::KeyElement *TableGenerator::genKeyElement(const IR::Expression* expr) {
+    auto *match = new IR::PathExpression(std::move(genKetMatchType()));
     auto annotations = target().declarationGenerator().genAnnotation();
     auto *key = new IR::KeyElement(expr, match, annotations);
     return key;
@@ -114,6 +139,25 @@ IR::Property *TableGenerator::genKeyProperty() {
 
     // isConstant --> false
     return new IR::Property(name, keys, false);
+}
+
+IR::Property *TableGenerator::genSizeProperty(){
+    std::vector<int64_t> typePercent = {
+        Probabilities::get().TABLEDECLARATION_SIZE_512,
+        Probabilities::get().TABLEDECLARATION_SIZE_1024,
+        Probabilities::get().TABLEDECLARATION_SIZE_2048,
+        Probabilities::get().TABLEDECLARATION_SIZE_4096,
+        Probabilities::get().TABLEDECLARATION_SIZE_8192,
+        Probabilities::get().TABLEDECLARATION_SIZE_16384,
+        Probabilities::get().TABLEDECLARATION_SIZE_32768,
+        Probabilities::get().TABLEDECLARATION_SIZE_65536
+    };
+    uint64_t size = 512 * pow(2, Utils::getRandInt(typePercent));
+
+    return new IR::Property(
+        IR::TableProperties::sizePropertyName,
+        new IR::ExpressionValue(new IR::Constant(size)),  // 32 bits
+        false);
 }
 
 IR::MethodCallExpression *TableGenerator::genTableActionCall(cstring method_name,

@@ -9,6 +9,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
+
+NODE_ATTRIBUTES = {0: "size", 1: "op_num_sum", 2: "lpm_count", 3: "exact_count", 4: "ternary_count", 5: "unknown"}
+LABEL_ATTRIBUTES = {0: "mau_len", 1: "latency", 2: "sram", 3: "tcam"}
+
 P4LACPP = "p4lacpp"  # Path to the p4lacpp executable (in $PATH)
 
 def debug_print(msg):
@@ -225,7 +229,10 @@ def plot_distribution(data, prefix):
         plt.xlabel(f"{prefix}_{i}")
         plt.ylabel("Frequency")
         plt.grid(True)
-        plt.savefig(f"{prefix}_{i}_distribution.png")
+        if prefix == "node_attr":
+            plt.savefig(f"{prefix}_{NODE_ATTRIBUTES[i]}_distribution.png")
+        else:
+            plt.savefig(f"{prefix}_{LABEL_ATTRIBUTES[i]}_distribution.png")
         plt.close()
 
 def normalize_node_attr_and_label(directory):

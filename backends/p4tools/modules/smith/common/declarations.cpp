@@ -717,6 +717,7 @@ IR::Type *DeclarationGenerator::genTypeDefOrNewType() {
     return genTypeDef();
 }
 
+
 IR::Declaration_Variable *DeclarationGenerator::genVariableDeclaration() {
     cstring name = getRandomString(6);
 

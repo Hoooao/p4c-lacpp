@@ -304,6 +304,21 @@ struct Probabilities {
     uint16_t VARIABLEDECLARATION_TYPE_VOID = TYPE_VOID;
     uint16_t VARIABLEDECLARATION_TYPE_MATCH_KIND = TYPE_MATCH_KIND;
 
+
+    // Probabilities for the types of match in table declarations
+    uint16_t TABLEDECLARATION_MATCH_EXACT = 50;
+    uint16_t TABLEDECLARATION_MATCH_LPM = 30;
+    uint16_t TABLEDECLARATION_MATCH_TERNARY = 20;
+
+    uint16_t TABLEDECLARATION_SIZE_512 = 54;
+    uint16_t TABLEDECLARATION_SIZE_1024 = 20;
+    uint16_t TABLEDECLARATION_SIZE_2048 = 10;
+    uint16_t TABLEDECLARATION_SIZE_4096 = 5;
+    uint16_t TABLEDECLARATION_SIZE_8192 = 5;
+    uint16_t TABLEDECLARATION_SIZE_16384 = 2;
+    uint16_t TABLEDECLARATION_SIZE_32768 = 2;
+    uint16_t TABLEDECLARATION_SIZE_65536 = 2;
+
     static Probabilities &get() {
         static Probabilities INSTANCE;
         return INSTANCE;
