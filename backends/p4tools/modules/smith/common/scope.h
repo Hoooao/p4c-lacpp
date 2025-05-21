@@ -47,6 +47,9 @@ struct Properties {
     bool has_methodcall{false};
     bool in_action{false};
     bool in_header_field_assignment{false};
+    // if lpm is used in a table, no ternary or another lpm can be used (Tofino at least)
+    bool lpm_used{false}; 
+    bool ternary_used{false};
     size_t depth = 0;
     // This means we are in a block that returns.
     // We need to return an expression with the specified type.

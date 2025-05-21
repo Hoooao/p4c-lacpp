@@ -18,7 +18,7 @@ class TableGenerator : public Generator {
 
     virtual IR::TableProperties *genTablePropertyList();
 
-    virtual cstring genKetMatchType();
+    virtual cstring genKeyMatchType();
     virtual IR::KeyElement *genKeyElement();
     virtual IR::KeyElement *genKeyElement(const IR::Expression* expr);
 

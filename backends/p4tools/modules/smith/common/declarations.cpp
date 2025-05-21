@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <set>
 #include <vector>
+#include <algorithm>
 
 #include "backends/p4tools/common/lib/util.h"
 #include "backends/p4tools/modules/smith/common/probabilities.h"
@@ -134,6 +135,7 @@ IR::IndexedVector<IR::Declaration> DeclarationGenerator::genLocalControlDecls() 
     IR::IndexedVector<IR::Declaration> localDecls;
 
     auto vars = Utils::getRandInt(Declarations::get().MIN_VAR, Declarations::get().MAX_VAR);
+    // instantiate the control declaration
     auto decls =
         Utils::getRandInt(Declarations::get().MIN_INSTANCE, Declarations::get().MAX_INSTANCE);
     auto actions =
@@ -253,7 +255,7 @@ IR::P4Control *DeclarationGenerator::genControlDeclaration() {
     // add to the whole scope
     auto *p4ctrl = new IR::P4Control(name, typeCtrl, localDecls, applyBlock);
     P4Scope::addToScope(p4ctrl);
-
+    printInfo("Control Declaration: %s", p4ctrl->name.name);
     return p4ctrl;
 }
 
@@ -270,6 +272,7 @@ IR::Declaration_Instance *DeclarationGenerator::genControlDeclarationInstance() 
     IR::Type *tp = new IR::Type_Name(p4ctrl->name);
     auto *decl = new IR::Declaration_Instance(cstring(getRandomString(6)), tp, args);
     P4Scope::addToScope(decl);
+    printInfo("Control Instance Declaration: %s", decl->name.name);
     return decl;
 }
 

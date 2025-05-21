@@ -50,7 +50,7 @@ class ExpressionGenerator : public Generator {
     virtual ~ExpressionGenerator() = default;
     explicit ExpressionGenerator(const SmithTarget &target) : Generator(target) {}
 
-    static constexpr size_t MAX_DEPTH = 3;
+    static constexpr size_t MAX_DEPTH = 1;
 
     static const IR::Type_Boolean *genBoolType();
 

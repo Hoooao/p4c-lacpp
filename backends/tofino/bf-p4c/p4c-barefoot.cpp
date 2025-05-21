@@ -302,10 +302,10 @@ class GenerateOutputs : public PassManager {
         addPasses(
             {&_dynhash,  // Verifies that the hash is valid before the dump of
                          // information in assembly
-            o.debugInfo ? new BFN::AsmOutput(_pipeId, b.get_phv(), b.get_clot(), b.get_defuse(),
+            new BFN::AsmOutput(_pipeId, b.get_phv(), b.get_clot(), b.get_defuse(),
                 b.get_flexible_logging(), b.get_nxt_tbl(), b.get_power_and_mpr(),
                 b.get_tbl_summary(), b.get_live_range_report(),
-                b.get_parser_hdr_seqs(), o, success) : nullptr,
+                b.get_parser_hdr_seqs(), o, success),
              o.debugInfo ? new PhvLogging(phvLogFile.c_str(), b.get_phv(), b.get_clot(),
                                           *b.get_phv_logging(), *b.get_phv_logging_defuse_info(),
                                           b.get_table_alloc(), b.get_tbl_summary())

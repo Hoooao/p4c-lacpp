@@ -10,11 +10,11 @@ from tqdm import tqdm
 import random
 
 def debug_print(*args, **kwargs):
-    if True:
+    if False:
         print(*args, **kwargs)
 
 def error_print(*args, **kwargs):
-    if True:
+    if False:
         print(*args, **kwargs)
 
 def info_print(*args, **kwargs):
@@ -31,7 +31,7 @@ def run_single_smith(smith_executable, p4c_barefoot):
     while True:
 
         if stop_ongoing_process.is_set():
-            return [None,0]
+            return [None,attempts]
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
         folder_name = f"smith_run_{timestamp}_thread-{multiprocessing.current_process().pid}{random.randint(0, 1000000)}"
@@ -46,7 +46,7 @@ def run_single_smith(smith_executable, p4c_barefoot):
         timedout = False
         try:
             with open(log_file_path, "w") as log_file:
-                smith_exec = [smith_executable, "--target", "tofino", "--arch", "tna", "./smith.p4", "--generate-dag", "--dag-node-num", "6", "--dag-density", "0.6"]
+                smith_exec = [smith_executable, "--target", "tofino", "--arch", "tna", "./smith.p4", "--generate-dag", "--dag-node-num", "9", "--dag-density", "0.6"]
                 bf_exec = [p4c_barefoot, "./smith.p4", "-g", "--target", "tofino", "--arch", "tna", "--verbose", "--enable-event-logger", 
                            "--optimized-source","opt.p4", "-Ttable_dependency_graph:3,table_dependency_summary:3,table_placement:5"
                 ]
@@ -80,11 +80,12 @@ def run_smith_parallel(num_repetitions, smith_executable, p4c_barefoot, num_work
     """
 
     def debug_print(*args, **kwargs):
-        if True:
+        if False:
             print(*args, **kwargs)
     manager = multiprocessing.Manager()
     success_list = manager.list()
     total_runs_cnt = multiprocessing.Value('i', 0)
+    start_time = datetime.now()
     with ProcessPoolExecutor(max_workers=num_workers) as executor:
         futures = set()
         progress_bar = tqdm(total=num_repetitions, desc="Successful runs", ncols=80)
@@ -102,19 +103,19 @@ def run_smith_parallel(num_repetitions, smith_executable, p4c_barefoot, num_work
             for future in as_completed(futures):
                 futures.remove(future)
                 try:
-                    result = future.result()
-                    if result:
-                        with total_runs_cnt.get_lock():
-                            success_list.append(result[0])
+                    [result, count] = future.result()
+                    with total_runs_cnt.get_lock():
+                        if result:
+                            success_list.append(result)
                             progress_bar.update(1)
                             progress_bar.refresh()
-                            total_runs_cnt.value += result[1]
+                        total_runs_cnt.value += count
                     if len(success_list) >= num_repetitions:
                         stop_ongoing_process.set()
                         break
                     if len(success_list) < num_repetitions:
                         debug_print(f"Success count: {len(success_list)}")
-                        info_print(f"Active workers: {len(futures)}")
+                        debug_print(f"Active workers: {len(futures)}")
                         futures.add(executor.submit(run_single_smith, 
                                                     smith_executable, p4c_barefoot))
                         break # break here so the as_completed(futures) iterator will be updated
@@ -128,6 +129,7 @@ def run_smith_parallel(num_repetitions, smith_executable, p4c_barefoot, num_work
     
     info_print(f"All {num_repetitions} runs completed successfully.")
     info_print(f"Total runs attempted: {total_runs_cnt.value}")
+    info_print(f"Total time taken: {datetime.now() - start_time}")
     ratio = len(success_list) / total_runs_cnt.value if total_runs_cnt.value > 0 else 0
     info_print(f"Success ratio: {ratio:.2%}")
     info_print(f"Success count: {len(success_list)}")
@@ -219,7 +221,10 @@ def main():
     parser.add_argument("--p4c-build-logs", type=str, default="", help="Full path to the 'p4c-build-logs' executable.")
     
     args = parser.parse_args()
-    if  args.smith_executable != "" and os.path.exists(args.smith_executable):
+    if  args.smith_executable != "" \
+        and (os.path.exists(args.smith_executable) or shutil.which(args.smith_executable) is not None) \
+        and args.p4c_barefoot != "" and (os.path.exists(args.p4c_barefoot) \
+                                         or shutil.which(args.p4c_barefoot) is not None):
         run_smith_parallel(args.num_repetitions, args.smith_executable, args.p4c_barefoot, args.workers)
         return
 

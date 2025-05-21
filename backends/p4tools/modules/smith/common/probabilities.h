@@ -306,8 +306,8 @@ struct Probabilities {
 
 
     // Probabilities for the types of match in table declarations
-    uint16_t TABLEDECLARATION_MATCH_EXACT = 50;
-    uint16_t TABLEDECLARATION_MATCH_LPM = 30;
+    uint16_t TABLEDECLARATION_MATCH_EXACT = 60;
+    uint16_t TABLEDECLARATION_MATCH_LPM = 20;
     uint16_t TABLEDECLARATION_MATCH_TERNARY = 20;
 
     uint16_t TABLEDECLARATION_SIZE_512 = 54;
@@ -318,6 +318,12 @@ struct Probabilities {
     uint16_t TABLEDECLARATION_SIZE_16384 = 2;
     uint16_t TABLEDECLARATION_SIZE_32768 = 2;
     uint16_t TABLEDECLARATION_SIZE_65536 = 2;
+
+
+    // in DAG smith, weather to enforce the dependency
+    // between tables by match on a key
+    uint16_t TABLE_DEPENDENCY_ENFORCE = 60;
+    uint16_t TABLE_DEPENDENCY_NOT_ENFORCE = 40;
 
     static Probabilities &get() {
         static Probabilities INSTANCE;
@@ -339,14 +345,14 @@ struct Declarations {
 
     // minimum and maximum number of callable declarations
     uint16_t MIN_CALLABLES = 0;
-    uint16_t MAX_CALLABLES = 4;
+    uint16_t MAX_CALLABLES = 15;
 
     // minimum and maximum variable declarations
     uint16_t MIN_VAR = 0;
     uint16_t MAX_VAR = 5;
 
     uint16_t MIN_INSTANCE = 0;
-    uint16_t MAX_INSTANCE = 2;
+    uint16_t MAX_INSTANCE = 0;
 
     uint16_t MIN_ACTION = 0;
     uint16_t MAX_ACTION = 2;

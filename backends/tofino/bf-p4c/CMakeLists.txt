@@ -90,6 +90,9 @@ set (P4C_LIB_DEPS ${P4C_LIB_DEPS} PARENT_SCOPE)
 
 add_subdirectory(logging)
 
+set (BF_P4C_LACPP_ADDONS_SRCS
+  lacpp_addons/lacpp_addons.cpp
+  )
 set (BF_P4C_MIDEND_SRCS
   midend/annotate_with_in_hash.cpp
   midend/check_design_pattern.cpp
@@ -126,7 +129,8 @@ set (BF_P4C_MIDEND_SRCS
   )
 
 
-set (BF_P4C_BACKEND_CONV_SRCS
+
+  set (BF_P4C_BACKEND_CONV_SRCS
   arch/fromv1.0/field_list.cpp
   arch/fromv1.0/lpf.cpp
   arch/fromv1.0/meter.cpp
@@ -503,6 +507,7 @@ set (hack_p4_14include_HEADERS
 
 
 set (BF_P4C_SOURCES
+  ${BF_P4C_LACPP_ADDONS_SRCS}
   ${BF_P4C_MIDEND_SRCS}
   ${BF_P4C_BACKEND_COMMON_SRCS}
   ${BF_P4C_BACKEND_CONTROL_PLANE_SRCS}

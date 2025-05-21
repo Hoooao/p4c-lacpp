@@ -43,7 +43,11 @@ IR::TableProperties *TableGenerator::genTablePropertyList() {
 
 IR::Key *TableGenerator::genKeyElementList(size_t len) {
     IR::Vector<IR::KeyElement> keys;
-    if(SmithOptions::get().enableDagGeneration && TableDepSkeleton::TableDepSkeleton::getSkeleton()!=nullptr){
+    bool enforce = Utils::getRandInt({
+        Probabilities::get().TABLE_DEPENDENCY_ENFORCE,
+        Probabilities::get().TABLE_DEPENDENCY_NOT_ENFORCE
+    });
+    if(enforce==0 && SmithOptions::get().enableDagGeneration && TableDepSkeleton::TableDepSkeleton::getSkeleton()!=nullptr){
         const auto tn = TableDepSkeleton::TableDepSkeleton::getSkeleton()->currentNode;
         for(const auto &fields: tn->parentsWritten){
             // choose one fields to match, sufficient for dependancy
@@ -52,6 +56,7 @@ IR::Key *TableGenerator::genKeyElementList(size_t len) {
             auto *key = genKeyElement(field->expression);
             tn->fieldsMatched.push_back(field);
             keys.push_back(key);
+            break;
         }
     }
 
@@ -79,7 +84,7 @@ IR::Key *TableGenerator::genKeyElementList(size_t len) {
 }
 
 
-cstring TableGenerator::genKetMatchType() {
+cstring TableGenerator::genKeyMatchType() {
     std::string match_kind;
     std::vector<int64_t> typePercent = {
         Probabilities::get().TABLEDECLARATION_MATCH_EXACT,
@@ -89,20 +94,20 @@ cstring TableGenerator::genKetMatchType() {
     auto rand = Utils::getRandInt(typePercent);
     if(rand == 0){
         match_kind = "exact";
-    }else if(rand == 1){
+    }else if(rand == 1 && !P4Scope::prop.lpm_used && !P4Scope::prop.ternary_used){
         match_kind = "lpm";
-    }else if(rand == 2){
+    }else if(rand == 2 && !P4Scope::prop.lpm_used){
+        // there can be multiple ternary matches
         match_kind = "ternary";
     }else{
-        printInfo("genKetMatchType: unknown match type\n");
-        return nullptr;
+        match_kind = "exact";
     }
     return match_kind;
 }
 
 IR::KeyElement *TableGenerator::genKeyElement() {
-    IR::ID match_kind = genKetMatchType();
-    auto *match = new IR::PathExpression(std::move(match_kind));
+    cstring match_type = genKeyMatchType();
+    auto *match = new IR::PathExpression(std::move(IR::ID(match_type)));
     auto annotations = target().declarationGenerator().genAnnotation();
     auto *bitType = P4Scope::pickDeclaredBitType(false);
 
@@ -119,15 +124,24 @@ IR::KeyElement *TableGenerator::genKeyElement() {
     printInfo("genKeyElement: expr:%s", expr->toString().c_str());
     P4Scope::constraints.method_call_max_in_stat = 1;
     P4Scope::req.require_scalar = false;
-
-
+    if (match_type == "lpm") {
+        P4Scope::prop.lpm_used = true;
+    }else if (match_type == "ternary") {
+        P4Scope::prop.ternary_used = true;
+    }
     auto *key = new IR::KeyElement(expr, match, annotations);
 
     return key;
 }
 
 IR::KeyElement *TableGenerator::genKeyElement(const IR::Expression* expr) {
-    auto *match = new IR::PathExpression(std::move(genKetMatchType()));
+    cstring match_type = genKeyMatchType();
+    if (match_type == "lpm") {
+        P4Scope::prop.lpm_used = true;
+    } else if (match_type == "ternary") {
+        P4Scope::prop.ternary_used = true;
+    }
+    auto *match = new IR::PathExpression(std::move(IR::ID(match_type)));
     auto annotations = target().declarationGenerator().genAnnotation();
     auto *key = new IR::KeyElement(expr, match, annotations);
     return key;
@@ -135,8 +149,9 @@ IR::KeyElement *TableGenerator::genKeyElement(const IR::Expression* expr) {
 
 IR::Property *TableGenerator::genKeyProperty() {
     cstring name = IR::TableProperties::keyPropertyName;
-    auto *keys = genKeyElementList(Utils::getRandInt(0, 3));
-
+    auto *keys = genKeyElementList(Utils::getRandInt(0, 5));
+    P4Scope::prop.lpm_used = false;
+    P4Scope::prop.ternary_used = false;
     // isConstant --> false
     return new IR::Property(name, keys, false);
 }

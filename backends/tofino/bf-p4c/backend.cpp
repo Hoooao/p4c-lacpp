@@ -128,6 +128,7 @@
 #include "backends/tofino/bf-p4c/phv/split_padding.h"
 #include "backends/tofino/bf-p4c/phv/utils/slice_alloc.h"
 #include "backends/tofino/bf-p4c/phv/v2/metadata_initialization.h"
+#include "backends/tofino/bf-p4c/lacpp_addons/lacpp_addons.h"
 #include "ir/dump.h"
 #include "ir/pass_manager.h"
 #include "lib/indent.h"
@@ -211,7 +212,7 @@ Backend::Backend(const BFN_Options &o, int pipe_id)
     auto *allocateClot = Device::numClots() > 0 && options.use_clot
                              ? new AllocateClot(clot, phv, uses, *pragmaDoNotUseClot, *pragmaAlias)
                              : nullptr;
-
+    auto perfTimer = new LacppAddons::PerfTimer;
     addPasses({
         new P4::DumpPipe("Initial table graph"),
         flexibleLogging,
@@ -242,12 +243,14 @@ Backend::Backend(const BFN_Options &o, int pipe_id)
         // as it will also error out on invalid gateway expressions and we fail
         // early in those cases.
         new CanonGatewayExpr,        // Must be before PHV_Analysis
+        perfTimer,
         new CollectHeaderStackInfo,  // Needed by CollectPhvInfo.
         new CollectPhvInfo(phv),
         &defuse,
         Device::hasMetadataPOV() ? new AddMetadataPOV(phv) : nullptr,
         Device::currentDevice() == Device::TOFINO ? new ResetInvalidatedChecksumHeaders(phv)
                                                   : nullptr,
+
         new CollectPhvInfo(phv),
         &defuse,
         new CollectHeaderStackInfo,  // Needs to be rerun after CreateThreadLocalInstances, but
@@ -295,6 +298,7 @@ Backend::Backend(const BFN_Options &o, int pipe_id)
         ((Device::currentDevice() != Device::TOFINO) && options.infer_payload_offset)
             ? new InferPayloadOffset(phv, defuse)
             : nullptr,
+            
         new CollectPhvInfo(phv),
         &defuse,
         new CollectHeaderStackInfo,
@@ -476,6 +480,7 @@ Backend::Backend(const BFN_Options &o, int pipe_id)
         // must be called right before characterize power
         new FindDependencyGraph(phv, deps, &options, "placement_graph"_cs,
                                 "After Table Placement"_cs),
+        perfTimer,
         new DumpJsonGraph(deps, &jsonGraph, "After Table Placement"_cs, true),
 
         // Call this at the end of the backend. This changes the logical stages used for PHV
