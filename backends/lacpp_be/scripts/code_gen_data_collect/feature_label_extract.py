@@ -8,7 +8,7 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 NODE_ATTRIBUTES = {0: "size", 1: "op_num_sum", 2: "lpm_count", 3: "exact_count", 4: "ternary_count", 5: "unknown"}
 # note: latency is only that of ingress, we don't consider egree rn
@@ -101,7 +101,6 @@ def process_table_dependency_summary(filepath):
             table_info = parts[1].strip().split(":")[0].strip().split("-")[-1].strip()
             table_name = clean_node_name(table_info)
             dep_labels = [c for c in prefix.strip().replace(' ', '').strip()]
-            print(f"table_name: {table_name}, dep_labels: {dep_labels}")
             dependency_matrix.append(dep_labels)
             table_list.append(table_name)
     # Build the graph
@@ -121,7 +120,6 @@ def process_table_dependency_summary(filepath):
     edge_attr = []
 
     for src, dst, data in graph.edges(data=True):
-        print(f"src: {src}, dst: {dst}, data: {data}")
         edge_index[0].append(node_to_id[src])
         edge_index[1].append(node_to_id[dst])
         edge_attr.append(bin(list(data['labels'])[0])[2:]) 
@@ -152,10 +150,13 @@ def process_resource_json(json_file):
             if isinstance(mau_stages, list):
                 return len(mau_stages)
             else:
-                debug_print(f"Error in {json_file}: 'mau_stages' is not a list.")
+                print(f"Error in {json_file}: 'mau_stages' is not a list.")
                 return -1
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        debug_print(f"Error reading {json_file}: {e}")
+        print(f"Error reading {json_file}: {e}")
+        return -1
+    except Exception as e:
+        print(f"Unexpected error in {json_file}: {e}")
         return -1
 
 def process_metrics_json(json_file):
@@ -169,10 +170,10 @@ def process_metrics_json(json_file):
             if isinstance(latency, list):
                 return [latency, sram, tcam]
             else:
-                debug_print(f"Error in {json_file}: 'latency' is not a list.")
+                print(f"Error in {json_file}: 'latency' is not a list.")
                 return -1
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        debug_print(f"Error reading {json_file}: {e}")
+        print(f"Error reading {json_file}: {e}")
         return -1
 
 def load_all_node_attrs_and_labels(directory):
@@ -180,16 +181,18 @@ def load_all_node_attrs_and_labels(directory):
     all_labels = []
 
     file_paths = []
-    for filename in os.listdir(directory):
-        if filename.endswith(".json"):
-            path = os.path.join(directory, filename)
-            file_paths.append(path)
-            with open(path, "r") as f:
-                data = json.load(f)
-                if "node_attr" in data:
-                    all_node_attrs.extend(data["node_attr"])
-                if "y" in data and isinstance(data["y"], list):
-                    all_labels.extend([data["y"]])
+
+    for root, _, files in os.walk(directory):
+        for filename in files:
+            if filename.endswith(".json"):
+                path = os.path.join(root, filename)
+                file_paths.append(path)
+                with open(path, "r") as f:
+                    data = json.load(f)
+                    if "node_attr" in data:
+                        all_node_attrs.extend(data["node_attr"])
+                    if "y" in data and isinstance(data["y"], list):
+                        all_labels.extend([data["y"]])
     # print dimensions
     info_print(f"Number of node attributes: {len(all_node_attrs)}")
     info_print(f"Number of labels: {len(all_labels)}")
@@ -206,9 +209,9 @@ def z_score(data):
 
     return (data - mean) / std, mean, std
 
-
 def normalize_and_update_files(file_paths, node_mean, node_std, label_mean, label_std):
-    for path in tqdm(file_paths, desc="Normalizing"):
+
+    for i, path in enumerate(tqdm(file_paths, desc="Normalizing")):
         with open(path, "r") as f:
             data = json.load(f)
 
@@ -247,12 +250,19 @@ def normalize_node_attr_and_label(directory):
     # Normalize
     norm_node_attr, node_mean, node_std = z_score(all_node_attrs)
     norm_labels, label_mean, label_std = z_score(all_labels)
-
+    # store the means and stds
+    with open("means_stds.json", "w") as f:
+        json.dump({
+            "node_mean": node_mean.tolist(),
+            "node_std": node_std.tolist(),
+            "label_mean": label_mean.tolist(),
+            "label_std": label_std.tolist()
+        }, f, indent=2)
     # Plot
     plot_distribution(all_node_attrs, "node_attr")
     plot_distribution(all_labels, "y")
 
-    # # Update files
+    # # # Update files
     normalize_and_update_files(file_paths, node_mean, node_std, label_mean, label_std)
 
     info_print("All files updated with normalized features.")
@@ -307,7 +317,7 @@ def extract_node_features(p4_file,gnn_data):
                 check=True
             )
         except Exception as e:
-            debug_print(f"Error running p4lacpp on {p4_file}: {e}")
+            print(f"Error running p4lacpp on {p4_file}: {e}")
             return
     with open(output_file, 'r') as file:
         data = json.load(file)
@@ -340,52 +350,78 @@ def extract_node_features(p4_file,gnn_data):
         gnn_data["node_attr"] = node_attr
     return gnn_data
     
-
-
-def process_p4_folders(root_dir):
+def process_single_p4_folder(root):
     """
-    Recursively finds P4 program folders and processes their JSON files.
+    Processes a single P4 folder.
     """
+    try:
+        resource_file = os.path.join(root, "smith.tofino/pipe", "logs/resources.json")
+        metrics_file = os.path.join(root, "smith.tofino/pipe", "metrics.json")
+        dependency_file = os.path.join(root, "smith.tofino/pipe/logs", "table_dependency_summary.log")
+
+        mau_len = 0
+        lat = 0
+        sram = 0
+        tcam = 0
+        gnn_data = {}
+
+        debug_print(f"Processing P4 folder: {root}")
+
+        if os.path.exists(resource_file):
+            size = process_resource_json(resource_file)
+            if size != -1:
+                info_print(f"Size of 'mau_stages' in {resource_file}: {size}")
+                mau_len = size
+        else:
+            debug_print(f"Missing resource file: {resource_file}")
+
+        if os.path.exists(metrics_file):
+            [latencies, sram, tcam] = process_metrics_json(metrics_file)
+            if latencies != -1:
+                for latency in latencies:
+                    if latency['gress'] == "ingress":
+                        info_print(f"gress: {latency['gress']}, cycles: {latency['cycles']}")
+                        lat += latency['cycles']
+        else:
+            debug_print(f"Missing metrics file: {metrics_file}")
+
+        if os.path.exists(dependency_file):
+            gnn_data = process_table_dependency_summary(dependency_file)
+            debug_print(f"Processed table dependency summary: {gnn_data}")
+        else:
+            debug_print(f"Missing dependency file: {dependency_file}")
+
+        gnn_data = extract_node_features(os.path.join(root, "opt.p4"), gnn_data)
+        gnn_data["y"] = [mau_len, lat, sram, tcam]
+
+        output_file = os.path.join(root, "data.json")
+        save_to_json(gnn_data, output_file)
+
+        return (root, "success")
+
+    except Exception as e:
+        return (root, f"error: {e}")
+
+def process_p4_folders(root_dir, num_workers=4):
+    """
+    Recursively finds P4 program folders and processes their JSON files using multiprocessing.
+    """
+    p4_dirs = []
+
     for root, _, files in os.walk(root_dir):
         if any(file.endswith("smith.p4") for file in files):
-            resource_file = os.path.join(root,"smith.tofino/pipe", "logs/resources.json")
-            metrics_file = os.path.join(root, "smith.tofino/pipe", "metrics.json")
-            dependancy_file = os.path.join(root, "smith.tofino/pipe/logs", "table_dependency_summary.log")
-            mau_len = 0
-            lat = 0
-            debug_print(f"Processing P4 folder: {root}")
-            
-            if os.path.exists(resource_file):
-                size = process_resource_json(resource_file)
-                if size != -1:
-                    info_print(f"Size of 'mau_stages' in {resource_file}: {size}")
-                    mau_len = size
-            else:
-                debug_print(f"Missing resource file: {resource_file}")
-            
-            if os.path.exists(metrics_file):
-                [latencies, sram, tcam] = process_metrics_json(metrics_file)
-                if latencies != -1:
-                    for latency in latencies:
-                        if latency['gress'] == "ingress":
-                            info_print(f"gress: {latency['gress']}, cycles: {latency['cycles']}")
-                            lat += latency['cycles']
-            else:
-                debug_print(f"Missing metrics file: {metrics_file}")
-
-
-            if os.path.exists(dependancy_file):
-                gnn_data = process_table_dependency_summary(dependancy_file)
-                debug_print(f"Processed table dependency summary: {gnn_data}")
-            else:
-                debug_print(f"Missing dependency file: {dependancy_file}")
-
-            gnn_data = extract_node_features(os.path.join(root, "opt.p4"),gnn_data)
-
-            # write to a file with the same name as the folder
-            output_file = os.path.join(root, "data.json")
-            gnn_data["y"] = [mau_len, lat,sram, tcam]
-            save_to_json(gnn_data, output_file)             
+            p4_dirs.append(root)
+    process_bar = tqdm(total=len(p4_dirs), desc="Processing P4 folders", unit="folder")
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        futures = {executor.submit(process_single_p4_folder, folder): folder for folder in p4_dirs}
+        for future in as_completed(futures):
+            process_bar.update(1)
+            folder = futures[future]
+            try:
+                result = future.result()
+                info_print(f"Finished {result[0]}: {result[1]}")
+            except Exception as e:
+                print(f"Failed processing {folder}: {e}")
 
 def copy_p4_programs_to_dataset(root_dir):
     """
@@ -415,9 +451,10 @@ def main():
     parser = argparse.ArgumentParser(description="Find P4 programs recursively and parse their JSON files for perf. Move them to dataset folder.")
     parser.add_argument("-d", "--directory", type=str, required=True, help="Root directory to search for P4 programs.")
     parser.add_argument("-o", "--output", type=str, default="dataset", help="Output directory for the dataset.")
+    parser.add_argument("-w", "--workers", type=int, default=4, help="Number of worker processes.")
     args = parser.parse_args()
     
-    process_p4_folders(args.directory)
+    process_p4_folders(args.directory, args.workers)
     copy_p4_programs_to_dataset(args.directory)
     normalize_node_attr_and_label(args.output)
 # exp python3 ./code_gen_data_collect/parse_performance.py -d . 

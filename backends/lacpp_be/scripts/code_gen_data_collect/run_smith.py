@@ -10,7 +10,7 @@ from tqdm import tqdm
 import random
 
 def debug_print(*args, **kwargs):
-    if False:
+    if True:
         print(*args, **kwargs)
 
 def error_print(*args, **kwargs):
@@ -163,21 +163,44 @@ def build_p4_programs_recursive(p4c_barefoot, build_only_dir, num_workers):
             if file.endswith(".p4"):
                 p4_files.append(os.path.join(root, file))
     debug_print(f"Found {len(p4_files)} P4 programs. Compiling with {num_workers} workers...")
-    with concurrent.futures.ThreadPoolExecutor(max_workers=num_workers) as executor:
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
         futures = {executor.submit(compile_p4_file, p4_file, p4c_barefoot) for p4_file in p4_files}
         concurrent.futures.wait(futures)
 
+def run_single_p4c_build_logs(cmd, p4_file, relative_folder):
+    try:
+        log_path = os.path.join(os.path.dirname(p4_file), relative_folder, "log.txt")
+        cwd = os.path.join(os.path.dirname(p4_file), relative_folder)
+        os.makedirs(cwd, exist_ok=True)
+        with open(log_path, "w") as log_file:
+            subprocess.run(
+                cmd,
+                stdout=log_file,
+                stderr=subprocess.STDOUT,
+                check=True,
+                cwd=cwd
+            )
+        return (p4_file, "success")
+    except Exception as e:
+        return (p4_file, f"unexpected error: {str(e)}")
+        
 def run_p4c_build_logs(p4c_build_logs,relative_folder, num_workers, build_only_dir):
     """
     Recursively searches for P4 programs and runs p4c-build-logs in each folder.
     """
+
+    #check if the p4c_build_logs exists
+    if not os.path.exists(p4c_build_logs):
+        print(f"Error: p4c_build_logs executable not found: {p4c_build_logs}")
+        return
+
     p4_files = []
     for root, _, files in os.walk(build_only_dir):
         for file in files:
             if file.endswith("opt.p4"):
                 p4_files.append(os.path.join(root, file))
 
-    debug_print(f"Found {len(p4_files)} P4 programs. Running p4c-build-logs with {num_workers} workers...")
+    print(f"Found {len(p4_files)} P4 programs. Running p4c-build-logs with {num_workers} workers...")
 
 
     link_phv_cmd = ["ln", "-s", os.path.join("./logs", "phv.json"), os.path.join("./phv.json")]
@@ -196,19 +219,19 @@ def run_p4c_build_logs(p4c_build_logs,relative_folder, num_workers, build_only_d
         for p4_file in p4_files
     ]
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=num_workers) as executor:
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
         futures = {
-            executor.submit(
-                subprocess.run,
-                cmd,
-                stdout=open(os.path.join(os.path.dirname(p4_file),relative_folder, "log.txt"), "w"),
-                stderr=subprocess.STDOUT,
-                check=True,
-                cwd=os.path.join(os.path.dirname(p4_file), relative_folder)
-            )
+            executor.submit(run_single_p4c_build_logs, cmd, p4_file, relative_folder): p4_file
             for cmd, p4_file in zip(commands, p4_files)
         }
-        concurrent.futures.wait(futures)
+
+        for future in as_completed(futures):
+            p4_file = futures[future]
+            try:
+                result = future.result()
+                print(f"{result[0]}: {result[1]}")
+            except Exception as e:
+                print(f"{p4_file}: failed with exception: {e}")
 
 def main():
     parser = argparse.ArgumentParser(description="Run 'smith' executable multiple times in parallel and store outputs.")
@@ -235,7 +258,7 @@ def main():
     if args.p4c_build_logs != "" and os.path.exists(args.p4c_build_logs) and args.build_only_dir != "":
         run_p4c_build_logs(args.p4c_build_logs, "smith.tofino/pipe", args.workers, args.build_only_dir)
         return
-    debug_print("Nothing run, check the arguments")
+    print("Nothing run, check the arguments")
 
 if __name__ == "__main__":
     main()
