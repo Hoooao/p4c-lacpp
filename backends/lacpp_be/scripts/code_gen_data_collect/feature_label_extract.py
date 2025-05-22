@@ -100,10 +100,10 @@ def process_table_dependency_summary(filepath):
             prefix = parts[0].strip()
             table_info = parts[1].strip().split(":")[0].strip().split("-")[-1].strip()
             table_name = clean_node_name(table_info)
-            dep_labels = [c for c in prefix.replace('-', '').strip().replace(' ', '').strip()]
+            dep_labels = [c for c in prefix.strip().replace(' ', '').strip()]
+            print(f"table_name: {table_name}, dep_labels: {dep_labels}")
             dependency_matrix.append(dep_labels)
             table_list.append(table_name)
-
     # Build the graph
     for i, deps in enumerate(dependency_matrix):
         for j, label in enumerate(deps):
@@ -121,9 +121,10 @@ def process_table_dependency_summary(filepath):
     edge_attr = []
 
     for src, dst, data in graph.edges(data=True):
+        print(f"src: {src}, dst: {dst}, data: {data}")
         edge_index[0].append(node_to_id[src])
         edge_index[1].append(node_to_id[dst])
-        edge_attr.append(bin(list(data['labels'])[0])[2:])  # Count the number of bits set to 1
+        edge_attr.append(bin(list(data['labels'])[0])[2:]) 
 
     gnn_data = {
         "nodes": node_names,
