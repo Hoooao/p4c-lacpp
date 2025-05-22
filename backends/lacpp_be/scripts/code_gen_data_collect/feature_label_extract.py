@@ -11,6 +11,7 @@ from tqdm import tqdm
 
 
 NODE_ATTRIBUTES = {0: "size", 1: "op_num_sum", 2: "lpm_count", 3: "exact_count", 4: "ternary_count", 5: "unknown"}
+# note: latency is only that of ingress, we don't consider egree rn
 LABEL_ATTRIBUTES = {0: "mau_len", 1: "latency", 2: "sram", 3: "tcam"}
 
 P4LACPP = "p4lacpp"  # Path to the p4lacpp executable (in $PATH)
@@ -225,14 +226,18 @@ def plot_distribution(data, prefix):
     num_features = data.shape[1]
     for i in range(num_features):
         plt.hist(data[:, i], bins=20, alpha=0.7)
-        plt.title(f"Distribution of {prefix}_{i}")
-        plt.xlabel(f"{prefix}_{i}")
+        if prefix == "node_attr":
+            name = f"{prefix}_{NODE_ATTRIBUTES[i]}"
+        else:
+            name = f"{prefix}_{LABEL_ATTRIBUTES[i]}"
+        plt.title(f"Distribution of {name}")
+        plt.xlabel(f"{name}")
         plt.ylabel("Frequency")
         plt.grid(True)
         if prefix == "node_attr":
-            plt.savefig(f"{prefix}_{NODE_ATTRIBUTES[i]}_distribution.png")
+            plt.savefig(f"{name}_distribution.png")
         else:
-            plt.savefig(f"{prefix}_{LABEL_ATTRIBUTES[i]}_distribution.png")
+            plt.savefig(f"{name}_distribution.png")
         plt.close()
 
 def normalize_node_attr_and_label(directory):
@@ -361,8 +366,9 @@ def process_p4_folders(root_dir):
                 [latencies, sram, tcam] = process_metrics_json(metrics_file)
                 if latencies != -1:
                     for latency in latencies:
-                        info_print(f"gress: {latency['gress']}, cycles: {latency['cycles']}")
-                        lat += latency['cycles']
+                        if latency['gress'] == "ingress":
+                            info_print(f"gress: {latency['gress']}, cycles: {latency['cycles']}")
+                            lat += latency['cycles']
             else:
                 debug_print(f"Missing metrics file: {metrics_file}")
 
