@@ -120,7 +120,7 @@ IR::KeyElement *TableGenerator::genKeyElement() {
     P4Scope::req.require_scalar = true;
     // no func call in key
     P4Scope::constraints.method_call_max_in_stat = 0;
-    auto *expr = target().expressionGenerator().genExpression(bitType);
+    auto *expr = target().expressionGenerator().genExpressionForKeyEle(bitType);
     printInfo("genKeyElement: expr:%s", expr->toString().c_str());
     P4Scope::constraints.method_call_max_in_stat = 1;
     P4Scope::req.require_scalar = false;

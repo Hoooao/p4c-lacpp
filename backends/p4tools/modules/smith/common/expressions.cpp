@@ -260,6 +260,86 @@ IR::Expression *ExpressionGenerator::genExpression(const IR::Type *tp) {
     return expr;
 }
 
+
+IR::Expression *ExpressionGenerator::genExpressionForKeyEle(const IR::Type *tp) {
+    IR::Expression *expr = nullptr;
+
+    if (const auto *tb = tp->to<IR::Type_Bits>()) {
+        std::vector<int64_t> percent = {Probabilities::get().EXPRESSION_BIT_VAR,
+                                        Probabilities::get().EXPRESSION_BIT_INT_LITERAL,
+                                        Probabilities::get().EXPRESSION_BIT_BIT_LITERAL,
+        };
+        int64_t c = Utils::getRandInt(percent);
+        switch (c) {
+            case 0: {
+                if (P4Scope::req.compile_time_known) {
+                    expr = genBitLiteral(tb);
+                } else {
+                    expr = pickBitVar(tb);
+                }
+            } break;
+            case 1: {
+                if (P4Scope::req.require_scalar) {
+                    expr = genBitLiteral(tb);
+                } else {
+                    expr = constructIntExpr();
+                    P4Scope::prop.width_unknown = true;
+                }
+            } break;
+            case 2: {
+                // pick a bit literal that matches the type
+                expr = genBitLiteral(tb);
+            } break;
+        }
+        
+    } else if (tp->is<IR::Type_InfInt>()) {
+        std::vector<int64_t> percent = {
+            Probabilities::get().EXPRESSION_INT_VAR, Probabilities::get().EXPRESSION_INT_INT_LITERAL};
+        switch (Utils::getRandInt(percent)) {
+            case 0: {
+                expr = pickIntVar();
+            } break;
+            case 1: {
+                // pick an int literal that matches the type
+                expr = genIntLiteral();
+            } break;
+        }
+    } else if (tp->is<IR::Type_Typedef>()) {
+        P4Scope::prop.depth = 1;
+        expr = genExpression(tp->to<IR::Type_Typedef>()->type);
+        P4Scope::prop.depth = 0;
+        // Generically perform explicit castings to all cases.
+        const auto *explicitType = new IR::Type_Name(IR::ID(tp->to<IR::Type_Typedef>()->name));
+        expr = new IR::Cast(explicitType, expr);
+    } else if (const auto *enumType = tp->to<IR::Type_Enum>()) {
+        if (enumType->members.empty()) {
+            BUG("Expression: Enum %s has no members", enumType->name.name);
+        }
+        const auto *enumChoice =
+            enumType->members.at(Utils::getRandInt(enumType->members.size() - 1));
+        expr = new IR::Member(enumType,
+                              new IR::PathExpression(enumType, new IR::Path(enumType->getName())),
+                              enumChoice->getName());
+    } else if (const auto *tn = tp->to<IR::Type_Name>()) {
+        std::vector<int64_t> percent = {Probabilities::get().EXPRESSION_STRUCT_VAR,
+                                        Probabilities::get().EXPRESSION_STRUCT_LITERAL};
+        bool useDefaultExpr = true;
+        if (Utils::getRandInt(percent) == 0 && P4Scope::checkLval(tn) 
+                                            && !P4Scope::req.compile_time_known) {
+            cstring lval = P4Scope::pickLval(tn);
+            expr = new IR::TypeNameExpression(lval);
+            useDefaultExpr = false;
+        }
+        if (useDefaultExpr || expr == nullptr) {
+            expr = genStructListExpr(tn);
+        }                           
+    } else {
+        BUG("Expression: Type %s not yet supported", tp->node_type_name());
+    }
+    return expr;
+}
+
+
 IR::MethodCallExpression *ExpressionGenerator::pickFunction(
     IR::IndexedVector<IR::Declaration> viable_functions, const IR::Type **ret_type) {
     // TODO(fruffy): Make this more sophisticated

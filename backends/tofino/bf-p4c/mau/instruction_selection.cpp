@@ -2570,9 +2570,7 @@ bool VerifyInstructionParams::preorder(const IR::Expression *expr_) {
 }
 
 bool VerifyInstructionParams::isParallel(const PHV::Field *field, const le_bitrange &bits) {
-    warning("inside isParallel");
     if (is_write) {
-        warning("inside is_write");
         bool append = true;
         // Ensures that the writes of ranges of field bits are either completely identical
         // or over mutually exclusive regions of that field, as those are too difficult
@@ -2581,19 +2579,15 @@ bool VerifyInstructionParams::isParallel(const PHV::Field *field, const le_bitra
             // Because EliminateAllButLastWrite has to come after this, due to the write
             // appearing in potentially reads
             if (bits == write_bits) {
-                warning("inside bits == write_bits");
                 append = false;
             } else if (!bits.intersectWith(write_bits).empty()) {
-                warning("inside bits != write_bits");
                 return false;
             }
         }
         if (append) (*writes)[field].push_back(bits);
     } else {
-        warning("inside !is_write");
         for (auto write_bits : (*writes)[field]) {
             if (!bits.intersectWith(write_bits).empty()) {
-                warning("inside !bits.intersectWith(write_bits).empty()");
                 return false;
             }
         }

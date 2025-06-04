@@ -123,6 +123,8 @@ class ExpressionGenerator : public Generator {
 
     virtual IR::Expression *genExpression(const IR::Type *tp);
 
+    virtual IR::Expression *genExpressionForKeyEle(const IR::Type *tp);
+
     virtual IR::ListExpression *genExpressionList(IR::Vector<IR::Type> types, bool only_lval);
 
     virtual IR::Expression *genInputArg(const IR::Parameter *param);

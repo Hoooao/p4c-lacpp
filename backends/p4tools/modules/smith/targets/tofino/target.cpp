@@ -426,14 +426,18 @@ IR::P4Control *TofinoTnaSmithTarget::generateIngressBlock() const {
         localDecls = declarationGenerator().genLocalControlDecls();
     }
     // apply body
-    auto *applyBlock = statementGenerator().genBlockStatement(false);
-    // hardcode the output port to be zero
-    auto *outputPort = new IR::PathExpression("ig_tm_md.ucast_egress_port");
-    auto *outputPortVal = new IR::Constant(IR::Type_InfInt::get(), 0);
-    auto *assign = new IR::AssignmentStatement(outputPort, outputPortVal);
-    // some hack to insert the expression at the beginning
-    auto it = applyBlock->components.begin();
-    applyBlock->components.insert(it, assign);
+
+    // Hao: stats in a ctrl apply will be wrapped into a table, we do not want that
+    //auto *applyBlock = statementGenerator().genBlockStatement(false);
+    IR::BlockStatement *applyBlock = new IR::BlockStatement(); 
+    // Hao: seems it was used for some testing, not needed for me
+    // // hardcode the output port to be zero
+    // auto *outputPort = new IR::PathExpression("ig_tm_md.ucast_egress_port");
+    // auto *outputPortVal = new IR::Constant(IR::Type_InfInt::get(), 0);
+    // auto *assign = new IR::AssignmentStatement(outputPort, outputPortVal);
+    // // some hack to insert the expression at the beginning
+    // auto it = applyBlock->components.begin();
+    // applyBlock->components.insert(it, assign);
 
     if(SmithOptions::get().enableDagGeneration){
         const auto skeleton = TableDepSkeleton::TableDepSkeleton::getSkeleton();

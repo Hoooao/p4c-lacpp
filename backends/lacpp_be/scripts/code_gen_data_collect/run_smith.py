@@ -10,7 +10,7 @@ from tqdm import tqdm
 import random
 
 def debug_print(*args, **kwargs):
-    if True:
+    if False:
         print(*args, **kwargs)
 
 def error_print(*args, **kwargs):
@@ -18,7 +18,7 @@ def error_print(*args, **kwargs):
         print(*args, **kwargs)
 
 def info_print(*args, **kwargs):
-    if True:
+    if False:
         print(*args, **kwargs)
 
 stop_ongoing_process = multiprocessing.Event()
@@ -62,13 +62,15 @@ def run_single_smith(smith_executable, p4c_barefoot):
                 log_file.write(f"\n\n\nsmith command: {' '.join(smith_exec)}\n")
                 log_file.write(f"p4c_barefoot command: {' '.join(bf_exec)}")
 
+            found_zero_errors = False
             with open(log_file_path, "r") as log_file:
-                log_contents = log_file.read()
-                if "0 errors" in log_contents and not timedout:
-                    debug_print(f"Success! Output stored in {folder_name}.")
-                    return [folder_name, attempts]  # Successful run
-                else:
-                    debug_print(f"Errors found in output. Deleting {folder_name} and retrying...")
+                found_zero_errors = any(line.startswith("0 errors") for line in log_file)
+
+            if found_zero_errors and not timedout:
+                debug_print(f"Success! Output stored in {folder_name}.")
+                return [folder_name, attempts]  # Successful run
+            else:
+                debug_print(f"Errors found in output. Deleting {folder_name} and retrying...")
         
         except Exception as e:
             error_print(f"Execution failed: {e}. Deleting {folder_name} and retrying...")
@@ -233,6 +235,36 @@ def run_p4c_build_logs(p4c_build_logs,relative_folder, num_workers, build_only_d
             except Exception as e:
                 print(f"{p4_file}: failed with exception: {e}")
 
+def rm_files_with_errors(dir):
+    """
+    Finds all files in the given directory that contain the word 'error' in their log.txt file.
+    """
+    error_files = []
+    for root, _, files in os.walk(dir):
+        if "opt.p4" in files:
+            log_file_path = os.path.join(root, "log.txt")
+            if os.path.exists(log_file_path):
+                found_zero_errors = False
+                with open(log_file_path, "r") as log_file:
+                    found_zero_errors = any(line.startswith("0 errors") for line in log_file)    
+                if not found_zero_errors:
+                    error_files.append(log_file_path)
+                    debug_print(f"Found error in {log_file_path}")                      
+            else:
+                print(f"Warning: log.txt not found in {root}. Skipping...")
+    if error_files:
+        print(f"Found {len(error_files)} files with errors:")
+        for file in error_files:
+            print(file)
+            # remove the folder with error
+            try:
+                shutil.rmtree(os.path.dirname(file))
+                print(f"Removed folder {os.path.dirname(file)}")
+            except Exception as e:
+                print(f"Error removing folder {os.path.dirname(file)}: {e}")
+    else:
+        print("No files with errors found.")
+
 def main():
     parser = argparse.ArgumentParser(description="Run 'smith' executable multiple times in parallel and store outputs.")
     parser.add_argument("-n", "--num-repetitions", type=int, help="Number of successful repetitions required.")
@@ -242,7 +274,8 @@ def main():
     parser.add_argument("-b", "--build-only", action="store_true", help="Build all p4 programs in current directory recursively.")
     parser.add_argument("-b-dir", "--build-only-dir", type=str, default="", help="build_p4_programs_recursive")
     parser.add_argument("--p4c-build-logs", type=str, default="", help="Full path to the 'p4c-build-logs' executable.")
-    
+    parser.add_argument("--remove-error-programs-dir", type=str, default="", help="Iterate all files found prog with error in log.txt")
+
     args = parser.parse_args()
     if  args.smith_executable != "" \
         and (os.path.exists(args.smith_executable) or shutil.which(args.smith_executable) is not None) \
@@ -258,6 +291,11 @@ def main():
     if args.p4c_build_logs != "" and os.path.exists(args.p4c_build_logs) and args.build_only_dir != "":
         run_p4c_build_logs(args.p4c_build_logs, "smith.tofino/pipe", args.workers, args.build_only_dir)
         return
+    
+    if args.remove_error_programs_dir != "" and os.path.exists(args.remove_error_programs_dir):
+        rm_files_with_errors(args.remove_error_programs_dir)
+        return
+        
     print("Nothing run, check the arguments")
 
 if __name__ == "__main__":
