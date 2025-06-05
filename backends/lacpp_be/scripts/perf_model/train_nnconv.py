@@ -30,7 +30,7 @@ class CodeGraphJSONDataset(Dataset):
     • Each *.json file must contain:
         - node_attr_normalized :  List[List[float]]
         - edge_index           :  List[List[int]]
-        - edge_attr            :  List[str]          (bit-strings like "101001")
+        - edge_attr            :  List[str]          (bit-strings like "101")
         - y_normalized         :  List[float]
     """
     def __init__(self, folder_path, dataset_number=0, is_validation=False):
@@ -47,13 +47,12 @@ class CodeGraphJSONDataset(Dataset):
         """
         # The bitmap was stored in string
         # format, so we need to convert it to a list of lists of ints.
-        # len(bitmap) is 20, as there are 20 dependencies, 
-        # TODO: summarize all dependencies into fewer,,
+        # len(bitmap) is 3, as there are 3 kinds of dependencies we care, 
         bitmap = []
         for bits in edge_attr_strings:
             # convert to list of int
             bits = [int(b) for b in bits]
-            bits = [0] * (20 - len(bits)) + bits
+            bits = [0] * (3 - len(bits)) + bits
             bitmap.append(bits)
         
 
@@ -115,7 +114,7 @@ class NNConvPerformanceModel(nn.Module):
     """
     def __init__(self,
                  in_dim: int        = 6,
-                 edge_dim: int      = 20,   # len(js["edge_attr"][0])
+                 edge_dim: int      = 3,   # len(js["edge_attr"][0])
                  hidden_dim: int    = 128,
                  out_dim: int       = 4):
         super().__init__()

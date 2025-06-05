@@ -26,37 +26,44 @@ def info_print(msg):
 ### Table Graph Processing BEGIN
 # dependancy bits
 DEPENDENCY_ATTRS = {
-    "NONE": 1,
-    "CONTROL_ACTION": (1 << 1),
-    "CONTROL_COND_TRUE": (1 << 2),
-    "CONTROL_COND_FALSE": (1 << 3),
-    "CONTROL_TABLE_HIT": (1 << 4),
-    "CONTROL_TABLE_MISS": (1 << 5),
-    "CONTROL_DEFAULT_NEXT_TABLE": (1 << 6),
-    "IXBAR_READ": (1 << 7),
-    "ACTION_READ": (1 << 8),
-    "OUTPUT": (1 << 9),
-    "REDUCTION_OR_READ": (1 << 10),
-    "REDUCTION_OR_OUTPUT": (1 << 11),
-    "CONT_CONFLICT": (1 << 12),
-    "ANTI_EXIT": (1 << 13),
-    "ANTI_TABLE_READ": (1 << 14),
-    "ANTI_ACTION_READ": (1 << 15),
-    "ANTI_NEXT_TABLE_DATA": (1 << 16),
-    "ANTI_NEXT_TABLE_CONTROL": (1 << 17),
-    "ANTI_NEXT_TABLE_METADATA": (1 << 18),
-    "CONTROL_EXIT": (1 << 19),
-    "CONCURRENT": 0
+    # "NONE": 1, These two does not show up
+    # "CONCURRENT": 0
+    "CONTROL_ACTION": 1,
+    "CONTROL_COND_TRUE": 1,
+    "CONTROL_COND_FALSE": 1,
+    "CONTROL_TABLE_HIT": 1,
+    "CONTROL_TABLE_MISS": 1,
+    "CONTROL_DEFAULT_NEXT_TABLE": 1,
+    "CONTROL_EXIT": 1,
+
+    "ANTI_EXIT": (1 << 1),
+    "ANTI_TABLE_READ": (1 << 1),
+    "ANTI_ACTION_READ": (1 << 1),
+    "ANTI_NEXT_TABLE_DATA": (1 << 1),
+    "ANTI_NEXT_TABLE_CONTROL": (1 << 1),
+    "ANTI_NEXT_TABLE_METADATA": (1 << 1),
+
+    "IXBAR_READ": (1 << 2),
+    "ACTION_READ": (1 << 2),
+    "OUTPUT": (1 << 2),
+
+    # ignore these 3, they are rare
+    # "REDUCTION_OR_READ": (1 << 10),
+    # "REDUCTION_OR_OUTPUT": (1 << 11),
+    # "CONT_CONFLICT": (1 << 12),
+
+
+
 }
 
 def dependency_to_bitvector(dep_str):
-    """Given a space-separated dependency string, return a 20-bit binary list."""
+    """Given a space-separated dependency string, return a 3-bit binary list."""
     bitmask = 0
     for token in dep_str.split():
         if token in DEPENDENCY_ATTRS:
             bitmask |= DEPENDENCY_ATTRS[token]
         else:
-            raise ValueError(f"Unknown dependency attribute: {token}")
+            debug_print(f"Unencoded dependency token: {token}")
     return bitmask
 
 def clean_node_name(raw_name):

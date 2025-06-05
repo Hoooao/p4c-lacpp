@@ -8,7 +8,7 @@ import time
 import torch.nn as nn
 from torch_geometric.nn import NNConv, global_mean_pool
 import argparse
-from train import NNConvPerformanceModel
+from train import NNConvPerformanceModel, edge_bits_to_tensor
 
 # === Config ===
 MODEL_PATH = "./b4_2000/performance_predictor_b4.pth"
@@ -35,19 +35,6 @@ model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
 model.to(device)
 model.eval()
 
-def edge_bits_to_tensor(edge_attr_strings):
-    """
-    Turn ["1001", "0110", ...]  →  [[1,0,0,1], [0,1,1,0], ...] (FloatTensor)
-    """
-    bitmap = []
-    for bits in edge_attr_strings:
-        # convert to list of int
-        bits = [int(b) for b in bits]
-        bits = [0] * (20 - len(bits)) + bits
-        bitmap.append(bits)
-    
-
-    return torch.tensor(bitmap, dtype=torch.float)
 
 def load_graph(file_path):
     with open(file_path) as f:
