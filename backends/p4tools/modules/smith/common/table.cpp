@@ -129,6 +129,7 @@ IR::KeyElement *TableGenerator::genKeyElement() {
     }else if (match_type == "ternary") {
         P4Scope::prop.ternary_used = true;
     }
+    printInfo("here 6");
     auto *key = new IR::KeyElement(expr, match, annotations);
 
     return key;

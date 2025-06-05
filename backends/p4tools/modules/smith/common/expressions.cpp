@@ -265,17 +265,11 @@ IR::Expression *ExpressionGenerator::genExpressionForKeyEle(const IR::Type *tp) 
     IR::Expression *expr = nullptr;
 
     if (const auto *tb = tp->to<IR::Type_Bits>()) {
-        std::vector<int64_t> percent = {Probabilities::get().EXPRESSION_BIT_VAR,
-                                        Probabilities::get().EXPRESSION_BIT_INT_LITERAL
-        };
-        int64_t c = Utils::getRandInt(percent);
-        switch (c) {
-            case 0: {
-                expr = pickBitVar(tb, false);
-            } break;
-        }
+        printInfo("here 1");
+        expr = pickBitVar(tb, false);
         printInfo("genExpressionForKeyEle: picked bit var: %s", expr->toString().c_str());
     } else if (tp->is<IR::Type_Typedef>()) {
+        printInfo("here 2");
         P4Scope::prop.depth = 1;
         expr = genExpression(tp->to<IR::Type_Typedef>()->type);
         P4Scope::prop.depth = 0;
@@ -285,6 +279,7 @@ IR::Expression *ExpressionGenerator::genExpressionForKeyEle(const IR::Type *tp) 
         printInfo("genExpressionForKeyEle: picked typedef: %s",
                   expr->toString().c_str());
     } else if (const auto *enumType = tp->to<IR::Type_Enum>()) {
+        printInfo("here 3");
         if (enumType->members.empty()) {
             BUG("Expression: Enum %s has no members", enumType->name.name);
         }
@@ -295,6 +290,7 @@ IR::Expression *ExpressionGenerator::genExpressionForKeyEle(const IR::Type *tp) 
                               enumChoice->getName());
         printInfo("genExpressionForKeyEle: picked enum: %s", expr->toString().c_str());
     } else if (const auto *tn = tp->to<IR::Type_Name>()) {
+        printInfo("here 5");
         std::vector<int64_t> percent = {Probabilities::get().EXPRESSION_STRUCT_VAR,
                                         Probabilities::get().EXPRESSION_STRUCT_LITERAL};
         bool useDefaultExpr = true;
