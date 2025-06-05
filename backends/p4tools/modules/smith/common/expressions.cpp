@@ -271,14 +271,10 @@ IR::Expression *ExpressionGenerator::genExpressionForKeyEle(const IR::Type *tp) 
         int64_t c = Utils::getRandInt(percent);
         switch (c) {
             case 0: {
-                expr = pickBitVar(tb);
-            } break;
-            case 1: {
-                expr = pickIntVar();
+                expr = pickBitVar(tb, false);
             } break;
         }
-    } else if (tp->is<IR::Type_InfInt>()) {
-        expr = pickIntVar();
+        printInfo("genExpressionForKeyEle: picked bit var: %s", expr->toString().c_str());
     } else if (tp->is<IR::Type_Typedef>()) {
         P4Scope::prop.depth = 1;
         expr = genExpression(tp->to<IR::Type_Typedef>()->type);
@@ -286,6 +282,8 @@ IR::Expression *ExpressionGenerator::genExpressionForKeyEle(const IR::Type *tp) 
         // Generically perform explicit castings to all cases.
         const auto *explicitType = new IR::Type_Name(IR::ID(tp->to<IR::Type_Typedef>()->name));
         expr = new IR::Cast(explicitType, expr);
+        printInfo("genExpressionForKeyEle: picked typedef: %s",
+                  expr->toString().c_str());
     } else if (const auto *enumType = tp->to<IR::Type_Enum>()) {
         if (enumType->members.empty()) {
             BUG("Expression: Enum %s has no members", enumType->name.name);
@@ -295,6 +293,7 @@ IR::Expression *ExpressionGenerator::genExpressionForKeyEle(const IR::Type *tp) 
         expr = new IR::Member(enumType,
                               new IR::PathExpression(enumType, new IR::Path(enumType->getName())),
                               enumChoice->getName());
+        printInfo("genExpressionForKeyEle: picked enum: %s", expr->toString().c_str());
     } else if (const auto *tn = tp->to<IR::Type_Name>()) {
         std::vector<int64_t> percent = {Probabilities::get().EXPRESSION_STRUCT_VAR,
                                         Probabilities::get().EXPRESSION_STRUCT_LITERAL};
@@ -307,7 +306,8 @@ IR::Expression *ExpressionGenerator::genExpressionForKeyEle(const IR::Type *tp) 
         }
         if (useDefaultExpr || expr == nullptr) {
             expr = genStructListExpr(tn);
-        }                           
+        }   
+        printInfo("genExpressionForKeyEle: picked struct: %s", expr->toString().c_str());                        
     } else {
         BUG("Expression: Type %s not yet supported", tp->node_type_name());
     }
@@ -732,7 +732,7 @@ IR::Expression *ExpressionGenerator::constructTernaryBitExpr(const IR::Type_Bits
     return expr;
 }
 
-IR::Expression *ExpressionGenerator::pickBitVar(const IR::Type_Bits *tb) {
+IR::Expression *ExpressionGenerator::pickBitVar(const IR::Type_Bits *tb, bool allow_fallback) {
     cstring nodeName = tb->node_type_name();
     auto availBitTypes = P4Scope::lvalMap[nodeName].size();
     if (P4Scope::checkLval(tb)) {
@@ -747,7 +747,8 @@ IR::Expression *ExpressionGenerator::pickBitVar(const IR::Type_Bits *tb) {
     }
 
     // fallback, just generate a literal
-    return genBitLiteral(tb);
+    if(allow_fallback) return genBitLiteral(tb);
+    return nullptr;
 }
 
 IR::Expression *ExpressionGenerator::constructBitExpr(const IR::Type_Bits *tb, bool is_arith) {

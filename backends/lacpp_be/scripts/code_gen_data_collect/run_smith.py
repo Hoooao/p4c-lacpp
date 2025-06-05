@@ -46,7 +46,7 @@ def run_single_smith(smith_executable, p4c_barefoot):
         timedout = False
         try:
             with open(log_file_path, "w") as log_file:
-                smith_exec = [smith_executable, "--target", "tofino", "--arch", "tna", "./smith.p4", "--generate-dag", "--dag-node-num", "10", "--dag-density", "0.6"]
+                smith_exec = [smith_executable, "--target", "tofino", "--arch", "tna", "./smith.p4", "--generate-dag", "--dag-node-num", "6", "--dag-density", "0.6"]
                 bf_exec = [p4c_barefoot, "./smith.p4", "-g", "--target", "tofino", "--arch", "tna", "--verbose", "--enable-event-logger", 
                            "--optimized-source","opt.p4", "-Ttable_dependency_graph:3,table_dependency_summary:3,table_placement:5"
                 ]
@@ -74,7 +74,7 @@ def run_single_smith(smith_executable, p4c_barefoot):
         
         except Exception as e:
             error_print(f"Execution failed: {e}. Deleting {folder_name} and retrying...")
-        shutil.rmtree(folder_name)  # Clean up before retrying
+        #shutil.rmtree(folder_name)  # Clean up before retrying
 
 def run_smith_parallel(num_repetitions, smith_executable, p4c_barefoot, num_workers):
     """

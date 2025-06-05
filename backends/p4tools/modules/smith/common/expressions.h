@@ -82,7 +82,7 @@ class ExpressionGenerator : public Generator {
     IR::Expression *constructTernaryBitExpr(const IR::Type_Bits *tb);
 
  public:
-    virtual IR::Expression *pickBitVar(const IR::Type_Bits *tb);
+    virtual IR::Expression *pickBitVar(const IR::Type_Bits *tb, bool allow_fallback = true);
 
     virtual IR::Expression *constructBitExpr(const IR::Type_Bits *tb, bool is_arith = false);
 
