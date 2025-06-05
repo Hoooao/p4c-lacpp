@@ -308,7 +308,7 @@ def extract_table_vector(table, actions_dict):
 
 def extract_node_features(p4_file,gnn_data):
     node_names = gnn_data["nodes"]
-    output_file = "node_features.json"
+    output_file = os.path.join(os.path.dirname(p4_file), "node_features.json")
     with open(output_file, 'w') as file:
         try:
             subprocess.run(
@@ -333,6 +333,7 @@ def extract_node_features(p4_file,gnn_data):
                 feature_vector = extract_table_vector(table, actions)
                 node_attr.append(feature_vector)
             elif "tbl_" in node:
+                # Hao: I later limited this case, no action in the apply (i think so..)
                 debug_print(f"Node {node} is an action table.")
                 feature_vector = [0, 0, 0, 0, 0, 1]
                 for action in actions:
@@ -345,6 +346,7 @@ def extract_node_features(p4_file,gnn_data):
                         break
                 node_attr.append(feature_vector)
             else:
+                print(f"Node {node} is not a table or action table.")
                 # set unknown table to 1
                 node_attr.append([0, 0, 0, 0, 0, 1])
         gnn_data["node_attr"] = node_attr

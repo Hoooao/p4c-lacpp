@@ -20,10 +20,11 @@ for root, dirs, files in os.walk(parser.parse_args().dir):
                     continue
                 num_total_nodes = len(data["nodes"])
                 unknown_cnt = 0
-                for node_attr in data["node_attr"]:
+                for i, node_attr in enumerate(data["node_attr"]):
                     if node_attr[5] == 1:
                         unknown_cnt += 1
-            ratio = (num_total_nodes - unknown_cnt) / num_total_nodes
+                        
+            ratio = unknown_cnt / num_total_nodes
             print(f"{file}: ratio: {ratio:.2f} unknown_cnt: {unknown_cnt} total: {num_total_nodes}")
 
                     

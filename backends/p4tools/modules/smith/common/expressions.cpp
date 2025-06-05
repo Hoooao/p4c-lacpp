@@ -266,44 +266,19 @@ IR::Expression *ExpressionGenerator::genExpressionForKeyEle(const IR::Type *tp) 
 
     if (const auto *tb = tp->to<IR::Type_Bits>()) {
         std::vector<int64_t> percent = {Probabilities::get().EXPRESSION_BIT_VAR,
-                                        Probabilities::get().EXPRESSION_BIT_INT_LITERAL,
-                                        Probabilities::get().EXPRESSION_BIT_BIT_LITERAL,
+                                        Probabilities::get().EXPRESSION_BIT_INT_LITERAL
         };
         int64_t c = Utils::getRandInt(percent);
         switch (c) {
             case 0: {
-                if (P4Scope::req.compile_time_known) {
-                    expr = genBitLiteral(tb);
-                } else {
-                    expr = pickBitVar(tb);
-                }
+                expr = pickBitVar(tb);
             } break;
             case 1: {
-                if (P4Scope::req.require_scalar) {
-                    expr = genBitLiteral(tb);
-                } else {
-                    expr = constructIntExpr();
-                    P4Scope::prop.width_unknown = true;
-                }
-            } break;
-            case 2: {
-                // pick a bit literal that matches the type
-                expr = genBitLiteral(tb);
-            } break;
-        }
-        
-    } else if (tp->is<IR::Type_InfInt>()) {
-        std::vector<int64_t> percent = {
-            Probabilities::get().EXPRESSION_INT_VAR, Probabilities::get().EXPRESSION_INT_INT_LITERAL};
-        switch (Utils::getRandInt(percent)) {
-            case 0: {
                 expr = pickIntVar();
             } break;
-            case 1: {
-                // pick an int literal that matches the type
-                expr = genIntLiteral();
-            } break;
         }
+    } else if (tp->is<IR::Type_InfInt>()) {
+        expr = pickIntVar();
     } else if (tp->is<IR::Type_Typedef>()) {
         P4Scope::prop.depth = 1;
         expr = genExpression(tp->to<IR::Type_Typedef>()->type);
