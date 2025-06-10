@@ -8,14 +8,14 @@ import time
 import torch.nn as nn
 from torch_geometric.nn import NNConv, global_mean_pool
 import argparse
-from train import NNConvPerformanceModel, edge_bits_to_tensor
+from train import NNConvPerformanceModel
 
 # === Config ===
-MODEL_PATH = "./b4_2000/performance_predictor_b4.pth"
-DATASET_PATH = "./dataset/part-5"
+MODEL_PATH = "./4k_b32_hid32_lr5_best_model.pth"
+DATASET_PATH = "./4k_dataset/part-1"
 USE_GPU = True
 SAVE_RESULTS = False  # Save predictions per file
-NORMALIZATION_STATS = "means_stds.json"  # optional
+NORMALIZATION_STATS = "./4k_dataset/means_stds.json"  # optional
 
 device = torch.device("cuda" if USE_GPU and torch.cuda.is_available() else "cpu")
 
@@ -35,6 +35,22 @@ model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
 model.to(device)
 model.eval()
 
+def edge_bits_to_tensor(edge_attr_strings):
+    """
+    Turn ["1001", "0110", ...]  →  [[1,0,0,1], [0,1,1,0], ...] (FloatTensor)
+    """
+    # The bitmap was stored in string
+    # format, so we need to convert it to a list of lists of ints.
+    # len(bitmap) is 3, as there are 3 kinds of dependencies we care, 
+    bitmap = []
+    for bits in edge_attr_strings:
+        # convert to list of int
+        bits = [int(b) for b in bits]
+        bits = [0] * (3 - len(bits)) + bits
+        bitmap.append(bits)
+    
+
+    return torch.tensor(bitmap, dtype=torch.float)
 
 def load_graph(file_path):
     with open(file_path) as f:

@@ -13,12 +13,12 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 
 USE_GPU = True
-BATCH_SIZES = [4] #[1,2,4,8,16,32,64]
+BATCH_SIZES = [32] #[1,2,4,8,16,32,64]
 EPOCHS = 100
 LEARNING_RATE = 0.0005
-DATASET_NUMBER = 4 # say 2, means include part-0, part-1, part-2
-PATIENCE = 12
-NAME = "hid64_b4"  # Name of the model, used for saving
+DATASET_NUMBER = 0 # say 2, means include part-0, part-1, part-2
+PATIENCE = 13
+NAME = "4k_b32_hid32_lr5"  # Name of the model, used for saving
 
 torch.set_num_threads(torch.get_num_threads())
 # Device selection
@@ -115,7 +115,7 @@ class NNConvPerformanceModel(nn.Module):
     def __init__(self,
                  in_dim: int        = 6,
                  edge_dim: int      = 3,   # len(js["edge_attr"][0])
-                 hidden_dim: int    = 128,
+                 hidden_dim: int    = 32,
                  out_dim: int       = 4):
         super().__init__()
         self.dropout = nn.Dropout(p=0.10)
@@ -163,10 +163,10 @@ class NNConvPerformanceModel(nn.Module):
     def forward(self, data):
         x, edge_index, edge_attr, batch = \
             data.x, data.edge_index, data.edge_attr, data.batch
-        x = self.dropout(x)
+        #x = self.dropout(x)
         x = self.conv1(x, edge_index, edge_attr).relu()
         x = self.conv2(x, edge_index, edge_attr).relu()
-        x = self.conv3(x, edge_index, edge_attr).relu()
+        #x = self.conv3(x, edge_index, edge_attr).relu()
 
         # graph-level read-out
         x = global_mean_pool(x, batch)
@@ -231,7 +231,7 @@ def train_model(model, train_loader, val_loader, batch_size=1):
 
 # Main
 if __name__ == "__main__":
-    folder_path = "./dataset"
+    folder_path = "./4k_dataset"
     dataset = CodeGraphJSONDataset(folder_path, DATASET_NUMBER)
     val_set = CodeGraphJSONDataset(folder_path, DATASET_NUMBER, is_validation=True)
     for batch_size in BATCH_SIZES:

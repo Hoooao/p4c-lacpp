@@ -110,6 +110,7 @@ def process_table_dependency_summary(filepath):
             dep_labels = [c for c in prefix.strip().replace(' ', '').strip()]
             dependency_matrix.append(dep_labels)
             table_list.append(table_name)
+            graph.add_node(table_name, label=table_name)
     # Build the graph
     for i, deps in enumerate(dependency_matrix):
         for j, label in enumerate(deps):

@@ -46,7 +46,7 @@ def run_single_smith(smith_executable, p4c_barefoot):
         timedout = False
         try:
             with open(log_file_path, "w") as log_file:
-                smith_exec = [smith_executable, "--target", "tofino", "--arch", "tna", "./smith.p4", "--generate-dag", "--dag-node-num", "6", "--dag-density", "0.6"]
+                smith_exec = [smith_executable, "--target", "tofino", "--arch", "tna", "./smith.p4", "--generate-dag", "--dag-node-num", "8", "--dag-density", "0.6"]
                 bf_exec = [p4c_barefoot, "./smith.p4", "-g", "--target", "tofino", "--arch", "tna", "--verbose", "--enable-event-logger", 
                            "--optimized-source","opt.p4", "-Ttable_dependency_graph:3,table_dependency_summary:3,table_placement:5"
                 ]
@@ -74,7 +74,7 @@ def run_single_smith(smith_executable, p4c_barefoot):
         
         except Exception as e:
             error_print(f"Execution failed: {e}. Deleting {folder_name} and retrying...")
-        #shutil.rmtree(folder_name)  # Clean up before retrying
+        shutil.rmtree(folder_name)  # Clean up before retrying
 
 def run_smith_parallel(num_repetitions, smith_executable, p4c_barefoot, num_workers):
     """
@@ -148,7 +148,7 @@ def compile_p4_file(p4_file, p4c_barefoot):
                 p4c_barefoot, os.path.basename(p4_file), "-g", "--target", "tofino", "--arch", "tna","--verbose", "--enable-event-logger", "--optimized-source","opt.p4", "-Ttable_dependency_graph:3,table_dependency_summary:3,table_placement:5"
                 ], stdout=log_file, stderr=log_file, check=True, cwd=os.path.dirname(p4_file), timeout=40)
         except Exception as e:
-            debug_print(f"Error compiling {p4_file}: {e}")
+            print(f"Error compiling {p4_file}: {e}")
             # remove the folder file if compilation fails -> too dangerous
             # try:
             #     shutil.rmtree(os.path.dirname(p4_file))
@@ -164,10 +164,15 @@ def build_p4_programs_recursive(p4c_barefoot, build_only_dir, num_workers):
         for file in files:
             if file.endswith(".p4"):
                 p4_files.append(os.path.join(root, file))
-    debug_print(f"Found {len(p4_files)} P4 programs. Compiling with {num_workers} workers...")
+    print(f"Found {len(p4_files)} P4 programs. Compiling with {num_workers} workers...")
+    process_bar = tqdm(total=len(p4_files), desc="Compiling P4 files", ncols=80)
     with ProcessPoolExecutor(max_workers=num_workers) as executor:
-        futures = {executor.submit(compile_p4_file, p4_file, p4c_barefoot) for p4_file in p4_files}
-        concurrent.futures.wait(futures)
+        futures = {executor.submit(compile_p4_file, p4_file, p4c_barefoot): p4_file for p4_file in p4_files}
+        for future in as_completed(futures):
+            process_bar.update(1)
+            process_bar.refresh()
+
+
 
 def run_single_p4c_build_logs(cmd, p4_file, relative_folder):
     try:
@@ -186,7 +191,7 @@ def run_single_p4c_build_logs(cmd, p4_file, relative_folder):
     except Exception as e:
         return (p4_file, f"unexpected error: {str(e)}")
         
-def run_p4c_build_logs(p4c_build_logs,relative_folder, num_workers, build_only_dir):
+def run_p4c_build_logs(p4c_build_logs, num_workers, build_only_dir):
     """
     Recursively searches for P4 programs and runs p4c-build-logs in each folder.
     """
@@ -197,17 +202,22 @@ def run_p4c_build_logs(p4c_build_logs,relative_folder, num_workers, build_only_d
         return
 
     p4_files = []
-    for root, _, files in os.walk(build_only_dir):
+    relative_folders = {}
+    for root, dirs, files in os.walk(build_only_dir):
+        file = ""
         for file in files:
             if file.endswith("opt.p4"):
-                p4_files.append(os.path.join(root, file))
+                file = os.path.join(root, file)
+                p4_files.append(file)
+                for dir in dirs:
+                    if dir.endswith(".tofino"):
+                        relative_folders[file] = dir + "/pipe"
+                        break
 
     print(f"Found {len(p4_files)} P4 programs. Running p4c-build-logs with {num_workers} workers...")
-
-
     link_phv_cmd = ["ln", "-s", os.path.join("./logs", "phv.json"), os.path.join("./phv.json")]
     for p4_file in p4_files:
-        subprocess.run(link_phv_cmd, cwd=os.path.join(os.path.dirname(p4_file), relative_folder
+        subprocess.run(link_phv_cmd, cwd=os.path.join(os.path.dirname(p4_file), relative_folders[p4_file]
         ))
     commands = [
         [
@@ -223,7 +233,7 @@ def run_p4c_build_logs(p4c_build_logs,relative_folder, num_workers, build_only_d
 
     with ProcessPoolExecutor(max_workers=num_workers) as executor:
         futures = {
-            executor.submit(run_single_p4c_build_logs, cmd, p4_file, relative_folder): p4_file
+            executor.submit(run_single_p4c_build_logs, cmd, p4_file, relative_folders[p4_file]): p4_file
             for cmd, p4_file in zip(commands, p4_files)
         }
 
@@ -289,7 +299,7 @@ def main():
         return
     
     if args.p4c_build_logs != "" and os.path.exists(args.p4c_build_logs) and args.build_only_dir != "":
-        run_p4c_build_logs(args.p4c_build_logs, "smith.tofino/pipe", args.workers, args.build_only_dir)
+        run_p4c_build_logs(args.p4c_build_logs, args.workers, args.build_only_dir)
         return
     
     if args.remove_error_programs_dir != "" and os.path.exists(args.remove_error_programs_dir):
