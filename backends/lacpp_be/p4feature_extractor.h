@@ -10,7 +10,8 @@
 
 namespace P4::P4LACPP{
 
-
+// key match name and size of key
+typedef std::pair<cstring, uint32_t> KeyInfo;
 enum class MatchTypes{
     EXACT,
     TERNARY,
@@ -34,7 +35,7 @@ struct tableInfo{
     cstring name;
     uint32_t size;
     std::vector<cstring> actions;
-    std::unordered_map<MatchTypes,std::vector<cstring>> matches;
+    std::unordered_map<MatchTypes,std::vector<KeyInfo>> matches;
 
     tableInfo() = default;
     tableInfo(cstring n_name):name(n_name), size(0){};
@@ -68,9 +69,13 @@ public:
  bool preorder(const IR::P4Action *c) override;
  bool preorder(const IR::P4Table *c) override;
 
+
+ // params of controls, not go for actions for now
+//  bool preorder(const IR::ParameterList *p) override;
+//  bool preorder(const IR::TableProperties *t) override;
 ////  TBD: currently no need to implement:
 //  bool preorder(const IR::TypeParameters *p) override;
-//  bool preorder(const IR::ParameterList *p) override;
+
 
 //  bool preorder(const IR::Method *p) override;
 //  bool preorder(const IR::Function *function) override;
@@ -79,7 +84,7 @@ public:
 // bool preorder(const IR::ActionList *v) override;
 // bool preorder(const IR::Key *v) override;
 // bool preorder(const IR::Property *p) override;
-// bool preorder(const IR::TableProperties *t) override;
+
 // bool preorder(const IR::EntriesList *l) override;
 // bool preorder(const IR::Entry *e) override;
 
@@ -100,6 +105,9 @@ private:
     void init_table_info(cstring new_table_name);
     void end_table_info();
 };
+
+
+
 };
 
 

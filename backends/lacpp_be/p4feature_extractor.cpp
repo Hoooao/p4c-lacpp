@@ -78,10 +78,11 @@ bool FE::preorder(const IR::P4Table *c){
         for(const auto ele: keys->keyElements){
             cstring type = ele->matchType->toString();
             cstring key = ele->expression->toString();
-            LOG2("   " << key <<" matchType: " << type);
-            if(type == "exact") matches[MatchTypes::EXACT].push_back(key);
-            else if(type == "ternary") matches[MatchTypes::TERNARY].push_back(key);
-            else if(type == "lpm") matches[MatchTypes::LPM].push_back(key);
+            uint32_t size = ele->expression->type->width_bits();
+            LOG2("   " << key <<" matchType: " << type << " size: " << size);
+            if(type == "exact") matches[MatchTypes::EXACT].push_back(std::make_pair(key,size));
+            else if(type == "ternary") matches[MatchTypes::TERNARY].push_back(std::make_pair(key,size));
+            else if(type == "lpm") matches[MatchTypes::LPM].push_back(std::make_pair(key,size));
             else BUG("Unknown match type");
         }
     }
