@@ -10,8 +10,67 @@
 
 namespace P4::P4LACPP{
 
-// key match name and size of key
-typedef std::pair<cstring, uint32_t> KeyInfo;
+// frontend also has a TypeMap, I defined this for simplicity
+// it is a tree structure: struct/header -> fields : types
+struct FieldTypeSizeInfo{
+    cstring field_name;
+    cstring type;
+    uint32_t size = 0;
+    FieldTypeSizeInfo(cstring f_name, cstring type_name , uint32_t s)
+        : field_name(f_name), type(type_name), size(s) {}
+    FieldTypeSizeInfo() = default;
+    FieldTypeSizeInfo(const FieldTypeSizeInfo &other)
+        : field_name(other.field_name), type(other.type), size(other.size) {}
+
+    cstring toString() const {
+        return field_name + " : " + type + " : " + std::to_string(size);
+    }
+};
+
+// field name: FieldTypeSizeInfo
+typedef std::unordered_map<cstring, FieldTypeSizeInfo> FieldSizeMap;
+// struct name: map of field name to FieldTypeSizeInfo
+typedef std::unordered_map<cstring, FieldSizeMap> StructFieldMap;
+class TypeMap{
+public:
+    TypeMap() = default;
+    // struct name: map of field name to type and size
+    StructFieldMap struct_fields;
+    StructFieldMap header_fields;
+
+    void addStructField(cstring struct_name, cstring field_name, cstring type, uint32_t size = 0) {
+        struct_fields[struct_name][field_name] = FieldTypeSizeInfo(field_name, type, size);
+    }
+    void addHeaderField(cstring header_name, cstring field_name, cstring type, uint32_t size = 0) {
+        header_fields[header_name][field_name] = FieldTypeSizeInfo(field_name, type, size);
+    }
+
+    bool hasStruct(cstring struct_name) {
+        return struct_fields.find(struct_name) != struct_fields.end();
+    }
+    bool hasHeader(cstring header_name) {
+        return header_fields.find(header_name) != header_fields.end();
+    }
+
+    void dump() const {
+        LOG1("TypeMap dump:");
+        for (const auto &[struct_name, fields] : struct_fields) {
+            LOG1("Struct: " << struct_name);
+            for (const auto &[field_name, info] : fields) {
+                LOG1("  " << info.toString());
+            }
+        }
+        for (const auto &[header_name, fields] : header_fields) {
+            LOG1("Header: " << header_name);
+            for (const auto &[field_name, info] : fields) {
+                LOG1("  " << info.toString());
+            }
+        }
+    }
+
+
+};
+
 enum class MatchTypes{
     EXACT,
     TERNARY,
@@ -35,7 +94,7 @@ struct tableInfo{
     cstring name;
     uint32_t size;
     std::vector<cstring> actions;
-    std::unordered_map<MatchTypes,std::vector<KeyInfo>> matches;
+    std::unordered_map<MatchTypes,std::vector<cstring>> matches;
 
     tableInfo() = default;
     tableInfo(cstring n_name):name(n_name), size(0){};
@@ -45,9 +104,12 @@ struct GressInfo{
     GressTypes type;
     std::unordered_map<cstring, actionInfo> actions;
     std::unordered_map<cstring, tableInfo> tables;
+    // local decls
+    std::unordered_map<cstring, cstring> field_to_type;
 
     GressInfo(GressTypes t):type(t){};
 };
+
 
 
 class P4FeatureExtractor : public Inspector{
@@ -68,7 +130,9 @@ public:
  bool preorder(const IR::P4Control *c) override;
  bool preorder(const IR::P4Action *c) override;
  bool preorder(const IR::P4Table *c) override;
-
+ // for match key size collection
+ bool preorder(const IR::Type_Struct *c) override;
+ bool preorder(const IR::Type_Header *c) override;
 
  // params of controls, not go for actions for now
 //  bool preorder(const IR::ParameterList *p) override;
@@ -97,6 +161,7 @@ private:
     GressTypes curGress = GressTypes::NONE;
     std::optional<actionInfo> curAct = std::nullopt;
     std::optional<tableInfo> curTable = std::nullopt;
+    TypeMap type_map;
 
 
     // helpers

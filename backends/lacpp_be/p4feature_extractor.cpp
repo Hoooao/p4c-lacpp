@@ -12,7 +12,8 @@ Visitor::profile_t FE::init_apply(const IR::Node *node){
 }
 
 void FE::end_apply(const IR::Node *) {
-    // do nothing rn
+    type_map.dump();
+    LOG1("Feature extraction end_apply");
 }
 
 // for now care only tables..
@@ -23,7 +24,8 @@ bool FE::preorder(const IR::Node *n){
 
 bool FE::preorder(const IR::P4Program *program){
     for (auto a : program->objects) {
-        if(a->is<IR::P4Control>()){
+        // and global bit fields??
+        if(a->is<IR::P4Control>() || a->is<IR::Type_Struct>() || a->is<IR::Type_Header>()){
             visit(a);
         }
     }
@@ -39,8 +41,19 @@ bool FE::preorder(const IR::P4Control *c){
         curGress = GressTypes::EGRESS;
         gresses.insert({GressTypes::EGRESS, {GressTypes::EGRESS}});
     }else return false; // do not traverse other control blocks for now!
+
+    auto params = c->type->to<IR::Type_Control>()->applyParams;
+    if(params != nullptr) {
+        LOG2("Parameters: ");
+        for(const auto &param : params->parameters) {
+            LOG2("   " << param->name.toString() << " type: " << param->type->toString());
+            gresses[curGress].field_to_type[param->name.toString()] = param->type->toString();
+        }
+    }
+
     return true;
 }
+
 bool FE::preorder(const IR::P4Action *c){
     const auto &name = c->name.toString();
     LOG1("In Action: " << name);
@@ -78,11 +91,10 @@ bool FE::preorder(const IR::P4Table *c){
         for(const auto ele: keys->keyElements){
             cstring type = ele->matchType->toString();
             cstring key = ele->expression->toString();
-            uint32_t size = ele->expression->type->width_bits();
-            LOG2("   " << key <<" matchType: " << type << " size: " << size);
-            if(type == "exact") matches[MatchTypes::EXACT].push_back(std::make_pair(key,size));
-            else if(type == "ternary") matches[MatchTypes::TERNARY].push_back(std::make_pair(key,size));
-            else if(type == "lpm") matches[MatchTypes::LPM].push_back(std::make_pair(key,size));
+            LOG2("   " << key <<" matchType: " << type);
+            if(type == "exact") matches[MatchTypes::EXACT].push_back(key);
+            else if(type == "ternary") matches[MatchTypes::TERNARY].push_back(key);
+            else if(type == "lpm") matches[MatchTypes::LPM].push_back(key);
             else BUG("Unknown match type");
         }
     }
@@ -93,10 +105,60 @@ bool FE::preorder(const IR::P4Table *c){
     return false;
 }
 
+
+bool FE::preorder(const IR::Type_Struct *c){
+    // print name and size and return
+    auto fields = c->fields;
+    LOG1("In Struct: " << c->name.toString());
+    if(type_map.hasStruct(c->name.toString())){
+        BUG("    Type already exists in type map: %1%", c->name.toString());
+        return false; // already processed
+    }
+    
+    for(auto f: fields){
+        auto type = f->type;
+        if(type->is<IR::Type_Name>()){
+            LOG1("    Field: "<< f->name.toString() << " type: " << type->toString());
+        }else if(type->is<IR::Type_Stack>()){
+            type = type->to<IR::Type_Stack>()->elementType;
+            LOG1("    Field: "<< f->name.toString() << " stack type: " << type->toString());
+        }else{
+            LOG1("    Field: "<< f->name.toString() << " size: " << f->type->width_bits());
+            // add to type map
+            type_map.addStructField(c->name.toString(), f->name.toString(), type->toString(), f->type->width_bits());
+        }
+       
+    }
+    return false;
+}
+bool FE::preorder(const IR::Type_Header *c){
+    // iterate through the fields and print name and size
+    auto fields = c->fields;
+    int width_bits = 0;
+    //LOG1("In Header: " << c->name.toString() << " size: " << c->width_bits());
+    LOG1("In Header: " << c->name.toString());
+    for(auto f: fields){
+        auto type = f->type;
+        if(type->is<IR::Type_Name>()){
+            LOG1("    Field: "<< f->name.toString() << " type: " << type->toString());
+        }else if(type->is<IR::Type_Stack>()){
+            type = type->to<IR::Type_Stack>()->elementType;
+            LOG1("    Field: "<< f->name.toString() << " stack type: " << type->toString() <<
+                 " size: " << f->type->width_bits());
+            width_bits = f->type->width_bits();
+        }else{
+            LOG1("    Field: "<< f->name.toString() << " size: " << f->type->width_bits());
+            width_bits = f->type->width_bits();
+        }
+        type_map.addHeaderField(c->name.toString(), f->name.toString(), type->toString(), width_bits);
+    }
+    return false;
+}
+
 // TBD: currently no need to implement:
 
 // bool FE::preorder(const IR::TypeParameters *p){}
-// bool FE::preorder(const IR::ParameterList *p){}
+
 
 // bool FE::preorder(const IR::Method *p){}
 // bool FE::preorder(const IR::Function *function){}
