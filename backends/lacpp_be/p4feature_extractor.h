@@ -16,6 +16,7 @@ struct FieldTypeSizeInfo{
     cstring field_name;
     cstring type;
     uint32_t size = 0;
+    
     FieldTypeSizeInfo(cstring f_name, cstring type_name , uint32_t s)
         : field_name(f_name), type(type_name), size(s) {}
     FieldTypeSizeInfo() = default;
@@ -37,20 +38,31 @@ public:
     // struct name: map of field name to type and size
     StructFieldMap struct_fields;
     StructFieldMap header_fields;
+    FieldSizeMap fields;
 
     void addStructField(cstring struct_name, cstring field_name, cstring type, uint32_t size = 0) {
-        struct_fields[struct_name][field_name] = FieldTypeSizeInfo(field_name, type, size);
+        struct_fields[struct_name].emplace(field_name, FieldTypeSizeInfo(field_name, type, size));
     }
     void addHeaderField(cstring header_name, cstring field_name, cstring type, uint32_t size = 0) {
-        header_fields[header_name][field_name] = FieldTypeSizeInfo(field_name, type, size);
+        header_fields[header_name].emplace(field_name, FieldTypeSizeInfo(field_name, type, size));
     }
 
-    bool hasStruct(cstring struct_name) {
+    void addField(cstring field_name, cstring type, uint32_t size = 0) {
+        fields.emplace(field_name, FieldTypeSizeInfo(field_name, type, size));
+    }
+
+    bool hasStruct(cstring struct_name) const {
         return struct_fields.find(struct_name) != struct_fields.end();
     }
-    bool hasHeader(cstring header_name) {
+    bool hasHeader(cstring header_name) const {
         return header_fields.find(header_name) != header_fields.end();
     }
+    bool hasField(cstring field_name) const {
+        return fields.find(field_name) != fields.end();
+    }
+
+    std::optional<FieldSizeMap> getFieldSizeMap(cstring struct_name) const;
+
 
     void dump() const {
         LOG1("TypeMap dump:");
@@ -65,6 +77,9 @@ public:
             for (const auto &[field_name, info] : fields) {
                 LOG1("  " << info.toString());
             }
+        }
+        for (const auto &[field_name, info] : fields) {
+            LOG1("Field: " << info.toString());
         }
     }
 
@@ -94,7 +109,7 @@ struct tableInfo{
     cstring name;
     uint32_t size;
     std::vector<cstring> actions;
-    std::unordered_map<MatchTypes,std::vector<cstring>> matches;
+    std::unordered_map<MatchTypes,std::vector<std::pair<cstring, uint32_t> >> matches;
 
     tableInfo() = default;
     tableInfo(cstring n_name):name(n_name), size(0){};
@@ -105,9 +120,12 @@ struct GressInfo{
     std::unordered_map<cstring, actionInfo> actions;
     std::unordered_map<cstring, tableInfo> tables;
     // local decls
-    std::unordered_map<cstring, cstring> field_to_type;
+    FieldSizeMap field_decls;
 
     GressInfo(GressTypes t):type(t){};
+    void addField(cstring field_name, cstring type, uint32_t size = 0) {
+        field_decls.emplace(field_name, FieldTypeSizeInfo(field_name, type, size));
+    }
 };
 
 
@@ -133,6 +151,7 @@ public:
  // for match key size collection
  bool preorder(const IR::Type_Struct *c) override;
  bool preorder(const IR::Type_Header *c) override;
+ bool preorder(const IR::Type_Typedef *c) override;
 
  // params of controls, not go for actions for now
 //  bool preorder(const IR::ParameterList *p) override;
@@ -169,6 +188,10 @@ private:
     void end_action_info();
     void init_table_info(cstring new_table_name);
     void end_table_info();
+    std::list<cstring> get_components(const IR::Expression *expr);
+    uint32_t resolve_non_stack_field_size(cstring field);
+    uint32_t resolve_stack_field_size(std::list<cstring> &components);
+    uint32_t resolve_key_ele_size(const IR::KeyElement *key);
 };
 
 
