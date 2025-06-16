@@ -71,7 +71,7 @@ const IR::Type *ExpressionGenerator::pickRndType(TyperefProbs type_probs) {
         type_probs.p4_bit,          type_probs.p4_signed_bit, type_probs.p4_varbit,
         type_probs.p4_int,          type_probs.p4_error,      type_probs.p4_bool,
         type_probs.p4_string,       type_probs.p4_enum,       type_probs.p4_header,
-        type_probs.p4_header_stack, type_probs.p4_struct,     type_probs.p4_header_union,
+        type_probs.p4_struct,     type_probs.p4_header_union,
         type_probs.p4_tuple,        type_probs.p4_void,       type_probs.p4_match_kind};
 
     const std::vector<int64_t> &basetypeProbs = {
@@ -137,10 +137,6 @@ const IR::Type *ExpressionGenerator::pickRndType(TyperefProbs type_probs) {
             break;
         }
         case 9: {
-            tp = target().declarationGenerator().genHeaderStackType();
-            break;
-        }
-        case 10: {
             // struct
             auto lTypes = P4Scope::getDecls<IR::Type_Struct>();
             if (lTypes.empty()) {
@@ -157,20 +153,20 @@ const IR::Type *ExpressionGenerator::pickRndType(TyperefProbs type_probs) {
             }
             break;
         }
-        case 11: {
+        case 10: {
             // header union, this is not supported right now
             break;
         }
-        case 12: {
+        case 11: {
             // tuple, this is not supported right now
             break;
         }
-        case 13: {
+        case 12: {
             // void
             tp = IR::Type_Void::get();
             break;
         }
-        case 14: {
+        case 13: {
             // match kind, this is not supported right now
             break;
         }
@@ -1272,52 +1268,9 @@ size_t split(const std::string &txt, std::vector<cstring> &strs, char ch) {
     return strs.size();
 }
 
-IR::Expression *ExpressionGenerator::editHdrStack(cstring lval) {
-    // Check if there is a stack bracket inside the string.
-    // Also, if we can not have variables inside the header stack index,
-    // then just return the original expression.
-    // FIXME: terrible but at least works for now
-    if ((lval.find('[') == nullptr) || P4Scope::constraints.const_header_stack_index) {
-        return new IR::PathExpression(lval);
-    }
-
-    std::vector<cstring> splitStr;
-    int size = split(lval.c_str(), splitStr, '.');
-    if (size < 1) {
-        BUG("Unexpected split size. %d", size);
-    }
-    auto sIter = std::begin(splitStr);
-    IR::Expression *expr = new IR::PathExpression(*sIter);
-    for (advance(sIter, 1); sIter != splitStr.end(); ++sIter) {
-        // if there is an index, convert it towards the proper expression
-        auto subStr = *sIter;
-        const auto *hdrBrkt = subStr.find('[');
-        if (hdrBrkt != nullptr) {
-            auto stackStr = subStr.substr(static_cast<size_t>(hdrBrkt - subStr.c_str() + 1));
-            const auto *stackSzEnd = stackStr.find(']');
-            if (stackSzEnd == nullptr) {
-                BUG("There should be a closing bracket.");
-            }
-            int stackSz = std::stoi(stackStr.before(stackSzEnd).c_str());
-            expr = new IR::Member(expr, subStr.before(hdrBrkt));
-            auto *tb = IR::Type_Bits::get(3, false);
-            IR::Expression *idx = genExpression(tb);
-            auto *args = new IR::Vector<IR::Argument>();
-            args->push_back(new IR::Argument(idx));
-            args->push_back(new IR::Argument(new IR::Constant(tb, stackSz)));
-            idx = new IR::MethodCallExpression(new IR::PathExpression("max"), args);
-
-            expr = new IR::ArrayIndex(expr, idx);
-        } else {
-            expr = new IR::Member(expr, subStr);
-        }
-    }
-    return expr;
-}
-
 IR::Expression *ExpressionGenerator::pickLvalOrSlice(const IR::Type *tp) {
     cstring lvalStr = P4Scope::pickLval(tp, true);
-    IR::Expression *expr = editHdrStack(lvalStr);
+    IR::Expression *expr = new IR::PathExpression(lvalStr);
     expr->type = tp;
 
     if (const auto *tb = tp->to<IR::Type_Bits>()) {

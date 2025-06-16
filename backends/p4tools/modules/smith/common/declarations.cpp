@@ -76,7 +76,6 @@ IR::Declaration_Constant *DeclarationGenerator::genConstantDeclaration() {
         Probabilities::get().CONSTANTDECLARATION_BASETYPE_STRING,
         Probabilities::get().CONSTANTDECLARATION_DERIVED_ENUM,
         Probabilities::get().CONSTANTDECLARATION_DERIVED_HEADER,
-        Probabilities::get().CONSTANTDECLARATION_DERIVED_HEADER_STACK,
         Probabilities::get().CONSTANTDECLARATION_DERIVED_STRUCT,
         Probabilities::get().CONSTANTDECLARATION_DERIVED_HEADER_UNION,
         Probabilities::get().CONSTANTDECLARATION_DERIVED_TUPLE,
@@ -367,7 +366,6 @@ IR::Method *DeclarationGenerator::genExternDeclaration() {
         Probabilities::get().FUNCTIONDECLARATION_BASETYPE_STRING,
         Probabilities::get().FUNCTIONDECLARATION_DERIVED_ENUM,
         Probabilities::get().FUNCTIONDECLARATION_DERIVED_HEADER,
-        Probabilities::get().FUNCTIONDECLARATION_DERIVED_HEADER_STACK,
         Probabilities::get().FUNCTIONDECLARATION_DERIVED_STRUCT,
         Probabilities::get().FUNCTIONDECLARATION_DERIVED_HEADER_UNION,
         Probabilities::get().FUNCTIONDECLARATION_DERIVED_TUPLE,
@@ -399,7 +397,6 @@ IR::Function *DeclarationGenerator::genFunctionDeclaration() {
         Probabilities::get().FUNCTIONDECLARATION_BASETYPE_STRING,
         Probabilities::get().FUNCTIONDECLARATION_DERIVED_ENUM,
         Probabilities::get().FUNCTIONDECLARATION_DERIVED_HEADER,
-        Probabilities::get().FUNCTIONDECLARATION_DERIVED_HEADER_STACK,
         Probabilities::get().FUNCTIONDECLARATION_DERIVED_STRUCT,
         Probabilities::get().FUNCTIONDECLARATION_DERIVED_HEADER_UNION,
         Probabilities::get().FUNCTIONDECLARATION_DERIVED_TUPLE,
@@ -448,7 +445,6 @@ IR::Type_Header *DeclarationGenerator::genHeaderTypeDeclaration() {
         Probabilities::get().HEADERTYPEDECLARATION_BASETYPE_STRING,
         Probabilities::get().HEADERTYPEDECLARATION_DERIVED_ENUM,
         Probabilities::get().HEADERTYPEDECLARATION_DERIVED_HEADER,
-        Probabilities::get().HEADERTYPEDECLARATION_DERIVED_HEADER_STACK,
         Probabilities::get().HEADERTYPEDECLARATION_DERIVED_STRUCT,
         Probabilities::get().HEADERTYPEDECLARATION_DERIVED_HEADER_UNION,
         Probabilities::get().HEADERTYPEDECLARATION_DERIVED_TUPLE,
@@ -522,21 +518,7 @@ IR::Type_HeaderUnion *DeclarationGenerator::genHeaderUnionDeclaration() {
     return ret;
 }
 
-IR::Type *DeclarationGenerator::genHeaderStackType() {
-    auto lTypes = P4Scope::getDecls<IR::Type_Header>();
-    if (lTypes.empty()) {
-        BUG("Creating a header stacks assumes at least one declared header!");
-    }
-    const auto *hdrTp = lTypes.at(Utils::getRandInt(0, lTypes.size() - 1));
-    auto stackSize = Utils::getRandInt(1, MAX_HEADER_STACK_SIZE);
-    auto *hdrTypeName = new IR::Type_Name(hdrTp->name);
-    auto *ret =
-        new IR::Type_Stack(hdrTypeName, new IR::Constant(IR::Type_InfInt::get(), stackSize));
 
-    P4Scope::addToScope(ret);
-
-    return ret;
-}
 
 IR::Type_Struct *DeclarationGenerator::genStructTypeDeclaration() {
     cstring name = getRandomString(6);
@@ -552,7 +534,6 @@ IR::Type_Struct *DeclarationGenerator::genStructTypeDeclaration() {
         Probabilities::get().STRUCTTYPEDECLARATION_BASETYPE_STRING,
         Probabilities::get().STRUCTTYPEDECLARATION_DERIVED_ENUM,
         Probabilities::get().STRUCTTYPEDECLARATION_DERIVED_HEADER,
-        Probabilities::get().STRUCTTYPEDECLARATION_DERIVED_HEADER_STACK,
         Probabilities::get().STRUCTTYPEDECLARATION_DERIVED_STRUCT,
         Probabilities::get().STRUCTTYPEDECLARATION_DERIVED_HEADER_UNION,
         Probabilities::get().STRUCTTYPEDECLARATION_DERIVED_TUPLE,
@@ -594,29 +575,17 @@ IR::Type_Struct *DeclarationGenerator::genHeaderStruct() {
     size_t len = Utils::getRandInt(1, 5);
     // we can only generate very specific types for headers
     // header, header stack, header union
-    std::vector<int64_t> percent = {Probabilities::get().STRUCTTYPEDECLARATION_HEADERS_HEADER,
-                                    Probabilities::get().STRUCTTYPEDECLARATION_HEADERS_STACK};
+    // Hao: not generating stack anymore.
     for (size_t i = 0; i < len; i++) {
         cstring fieldName = getRandomString(4);
         IR::Type *tp = nullptr;
-        switch (Utils::getRandInt(percent)) {
-            case 0: {
-                // TODO(fruffy): We have to assume that this works
-                auto lTypes = P4Scope::getDecls<IR::Type_Header>();
-                if (lTypes.empty()) {
-                    BUG("structTypeDeclaration: No available header for Headers!");
-                }
-                const auto *candidateType = lTypes.at(Utils::getRandInt(0, lTypes.size() - 1));
-                tp = new IR::Type_Name(candidateType->name.name);
-                break;
-            }
-            case 1: {
-                tp = genHeaderStackType();
-                // Right now there is now way to initialize a header stack
-                // So we have to add the entire structure to the banned expressions
-                P4Scope::notInitializedStructs.insert(cstring("Headers"));
-            }
+        // TODO(fruffy): We have to assume that this works
+        auto lTypes = P4Scope::getDecls<IR::Type_Header>();
+        if (lTypes.empty()) {
+            BUG("structTypeDeclaration: No available header for Headers!");
         }
+        const auto *candidateType = lTypes.at(Utils::getRandInt(0, lTypes.size() - 1));
+        tp = new IR::Type_Name(candidateType->name.name);
         fields.push_back(new IR::StructField(fieldName, tp));
     }
     auto *ret = new IR::Type_Struct("Headers", fields);
@@ -665,8 +634,7 @@ IR::Type_Declaration *DeclarationGenerator::genTypeDeclaration() {
 
 const IR::Type *DeclarationGenerator::genType() {
     std::vector<int64_t> percent = {Probabilities::get().TYPEDEFDECLARATION_BASE,
-                                    Probabilities::get().TYPEDEFDECLARATION_STRUCTLIKE,
-                                    Probabilities::get().TYPEDEFDECLARATION_STACK};
+                                    Probabilities::get().TYPEDEFDECLARATION_STRUCTLIKE};
 
     std::vector<int64_t> typeProbs = {Probabilities::get().TYPEDEFDECLARATION_BASETYPE_BOOL,
                                       Probabilities::get().TYPEDEFDECLARATION_BASETYPE_ERROR,
@@ -689,10 +657,6 @@ const IR::Type *DeclarationGenerator::genType() {
             }
             const auto *candidateType = lTypes.at(Utils::getRandInt(0, lTypes.size() - 1));
             tp = new IR::Type_Name(candidateType->name.name);
-            break;
-        }
-        case 2: {
-            // tp = headerStackType::gen();
             break;
         }
     }
@@ -734,7 +698,6 @@ IR::Declaration_Variable *DeclarationGenerator::genVariableDeclaration() {
         Probabilities::get().VARIABLEDECLARATION_BASETYPE_STRING,
         Probabilities::get().VARIABLEDECLARATION_DERIVED_ENUM,
         Probabilities::get().VARIABLEDECLARATION_DERIVED_HEADER,
-        Probabilities::get().VARIABLEDECLARATION_DERIVED_HEADER_STACK,
         Probabilities::get().VARIABLEDECLARATION_DERIVED_STRUCT,
         Probabilities::get().VARIABLEDECLARATION_DERIVED_HEADER_UNION,
         Probabilities::get().VARIABLEDECLARATION_DERIVED_TUPLE,
@@ -751,10 +714,7 @@ IR::Declaration_Variable *DeclarationGenerator::genVariableDeclaration() {
         auto *expr = target().expressionGenerator().genExpression(tp);
         P4Scope::constraints.method_call_max_in_stat = 1;
         ret = new IR::Declaration_Variable(name, tp, expr);
-    } else if (tp->is<IR::Type_Stack>()) {
-        // header stacks do !have an initializer yet
-        ret = new IR::Declaration_Variable(name, tp);
-    } else {
+    }  else {
         BUG("Type %s not supported!", tp->node_type_name());
     }
 
@@ -780,7 +740,6 @@ IR::Parameter *DeclarationGenerator::genTypedParameter(bool if_none_dir) {
             Probabilities::get().PARAMETER_NONEDIR_BASETYPE_STRING,
             Probabilities::get().PARAMETER_NONEDIR_DERIVED_ENUM,
             Probabilities::get().PARAMETER_NONEDIR_DERIVED_HEADER,
-            Probabilities::get().PARAMETER_NONEDIR_DERIVED_HEADER_STACK,
             Probabilities::get().PARAMETER_NONEDIR_DERIVED_STRUCT,
             Probabilities::get().PARAMETER_NONEDIR_DERIVED_HEADER_UNION,
             Probabilities::get().PARAMETER_NONEDIR_DERIVED_TUPLE,
@@ -799,7 +758,6 @@ IR::Parameter *DeclarationGenerator::genTypedParameter(bool if_none_dir) {
             Probabilities::get().PARAMETER_BASETYPE_STRING,
             Probabilities::get().PARAMETER_DERIVED_ENUM,
             Probabilities::get().PARAMETER_DERIVED_HEADER,
-            Probabilities::get().PARAMETER_DERIVED_HEADER_STACK,
             Probabilities::get().PARAMETER_DERIVED_STRUCT,
             Probabilities::get().PARAMETER_DERIVED_HEADER_UNION,
             Probabilities::get().PARAMETER_DERIVED_TUPLE,

@@ -10,7 +10,11 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
-NODE_ATTRIBUTES = {0: "size", 1: "op_num_sum", 2: "lpm_count", 3: "exact_count", 4: "ternary_count", 5: "unknown"}
+NODE_ATTRIBUTES = {0: "size", 1: "op_num_sum", 
+                   2: "lpm_count", 3: "lpm_size",
+                   4: "exact_count", 5: "exact_size",
+                   6: "ternary_count", 7: "ternary_size",
+                   8: "unknown"}
 # note: latency is only that of ingress, we don't consider egree rn
 LABEL_ATTRIBUTES = {0: "mau_len", 1: "latency", 2: "sram", 3: "tcam"}
 
@@ -290,25 +294,38 @@ def extract_table_vector(table, actions_dict):
         op_num_sum += act_meta.get("op_num", 0)
 
     lpm_count = 0
+    lpm_size = 0
     exact_count = 0
+    exact_size = 0
     ternary_count = 0
+    ternary_size = 0
 
     for match in matches:
         match_type = match[0]
+        keys = match[1]
+        size = 0
+        for e in keys:
+            size+=e[1]
         if match_type == "lpm":
-            lpm_count += len(match[1])
+            lpm_count += len(keys)
+            lpm_size = size
         elif match_type == "exact":
-            exact_count += len(match[1])
+            exact_count += len(keys)
+            exact_size = size
         elif match_type == "ternary":
-            ternary_count += len(match[1])
+            ternary_count += len(keys)
+            ternary_size = size
     # unknown table
     unknown = 0
     feature_vector = [
         size,
         op_num_sum,
         lpm_count,
+        lpm_size,
         exact_count,
+        exact_size,
         ternary_count,
+        ternary_size,
         unknown
     ]
     debug_print(f"Table: {table}, Feature vector: {feature_vector}")
@@ -343,7 +360,7 @@ def extract_node_features(p4_file,gnn_data):
             elif "tbl_" in node:
                 # Hao: I later limited this case, no action in the apply (i think so..)
                 debug_print(f"Node {node} is an action table.")
-                feature_vector = [0, 0, 0, 0, 0, 1]
+                feature_vector = [0, 0, 0, 0, 0, 0, 0, 0, 1]
                 for action in actions:
                     # check if the string with tbl_ removed is in the action name
                     if node[4:] in action:
@@ -356,7 +373,7 @@ def extract_node_features(p4_file,gnn_data):
             else:
                 print(f"Node {node} is not a table or action table.")
                 # set unknown table to 1
-                node_attr.append([0, 0, 0, 0, 0, 1])
+                node_attr.append([0, 0, 0, 0, 0, 0, 0, 0, 1])
         gnn_data["node_attr"] = node_attr
     return gnn_data
     

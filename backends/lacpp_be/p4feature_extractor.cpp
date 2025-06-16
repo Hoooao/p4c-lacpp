@@ -119,7 +119,7 @@ std::list<cstring> FE::get_components(const IR::Expression *expr) {
             components.push_front(member->member.toString());
             expr = member->expr;
         } else if(auto ar = expr->to<IR::ArrayIndex>()){
-            // stacks like hdr.ipv4[0].dstAddr, not quite sure this
+            // strutishs like hdr.ipv4[0].dstAddr, not quite sure this
             // is actually used in manual progs..
             // perhaps I should remove this in smith as well?
             expr = ar->left;
@@ -130,7 +130,7 @@ std::list<cstring> FE::get_components(const IR::Expression *expr) {
     }
     return components;
 }
-uint32_t FE::resolve_non_stack_field_size(cstring field) {
+uint32_t FE::resolve_non_strutish_field_size(cstring field) {
     // return field from type_map(including typedefs) or local decls
     // Note: the "field" can also be a typedef name!
     auto gress_decls = gresses.at(curGress).field_decls;
@@ -159,26 +159,26 @@ uint32_t FE::resolve_non_stack_field_size(cstring field) {
     return 0; // should not reach here
 }
 
-uint32_t FE::resolve_stack_field_size(std::list<cstring> &components){
-    cstring stack_var = components.front();
+uint32_t FE::resolve_strutish_field_size(std::list<cstring> &components){
+    cstring strutish_var = components.front();
     components.pop_front();
     auto& gress = gresses.at(curGress);
-    // root stack type
-    cstring type = gress.field_decls.at(stack_var).type;
+    // root strutish type
+    cstring type = gress.field_decls.at(strutish_var).type;
     
     while(!components.empty()){
-        // Note: the last field can be a non-stack type,
-        //  so we have getFieldSizeMap also check the non-stack field map
+        // Note: the last field can be a non-strutish type,
+        //  so we have getFieldSizeMap also check the non-strutish field map
         auto fsm = type_map.getFieldSizeMap(type);
         if(fsm == std::nullopt){
-            BUG("Field size map not found for stack type: %1%", type);
+            BUG("Field size map not found for strutish type: %1%", type);
         }
         cstring field = components.front();
         components.pop_front();
         auto ele = fsm->find(field);
         if(ele == fsm->end()){
             type_map.dump();
-            BUG("Field %1% not found in stack type %2%", field, type);
+            BUG("Field %1% not found in strutish type %2%", field, type);
         }
         FieldTypeSizeInfo &info = ele->second;
         if(info.size > 0 || info.type == "bit<0>") { //bit<0> is used for padding
@@ -189,16 +189,16 @@ uint32_t FE::resolve_stack_field_size(std::list<cstring> &components){
             type = info.type;
         }           
     }
-    return resolve_non_stack_field_size(type); // last field can be non-stack type
+    return resolve_non_strutish_field_size(type); // last field can be non-strutish type
 } 
 
 uint32_t FE::resolve_key_ele_size(const IR::KeyElement *key) {
     std::list<cstring> components = get_components(key->expression);
-    // non-stack types
+    // non-strutish types
     if(components.size() == 1) {
-        return resolve_non_stack_field_size(components.front());
+        return resolve_non_strutish_field_size(components.front());
     }
-    return resolve_stack_field_size(components);
+    return resolve_strutish_field_size(components);
     
     return 0;
 }

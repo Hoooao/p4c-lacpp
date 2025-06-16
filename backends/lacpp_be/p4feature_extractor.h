@@ -189,12 +189,11 @@ private:
     void init_table_info(cstring new_table_name);
     void end_table_info();
     std::list<cstring> get_components(const IR::Expression *expr);
-    uint32_t resolve_non_stack_field_size(cstring field);
-    uint32_t resolve_stack_field_size(std::list<cstring> &components);
+    // structish means struct and header
+    uint32_t resolve_non_strutish_field_size(cstring field);
+    uint32_t resolve_strutish_field_size(std::list<cstring> &components);
     uint32_t resolve_key_ele_size(const IR::KeyElement *key);
 };
-
-
 
 };
 

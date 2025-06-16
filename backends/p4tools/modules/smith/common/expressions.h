@@ -25,7 +25,6 @@ using TyperefProbs = struct TyperefProbs {
     // derived types
     int64_t p4_enum;
     int64_t p4_header;
-    int64_t p4_header_stack;
     int64_t p4_struct;
     int64_t p4_header_union;
     int64_t p4_tuple;
@@ -37,10 +36,9 @@ using TyperefProbs = struct TyperefProbs {
         ss << "p4_bit=" << p4_bit << " p4_signed_bit=" << p4_signed_bit
            << " p4_varbit=" << p4_varbit << " p4_int=" << p4_int << " p4_error=" << p4_error
            << " p4_bool=" << p4_bool << " p4_string=" << p4_string << " p4_enum=" << p4_enum
-           << " p4_header=" << p4_header << " p4_header_stack=" << p4_header_stack
-           << " p4_struct=" << p4_struct << " p4_header_union=" << p4_header_union
-           << " p4_tuple=" << p4_tuple << " p4_void=" << p4_void
-           << " p4_match_kind=" << p4_match_kind;
+           << " p4_header=" << p4_header << " p4_struct=" << p4_struct 
+           << " p4_header_union=" << p4_header_union << " p4_tuple=" << p4_tuple 
+           << " p4_void=" << p4_void << " p4_match_kind=" << p4_match_kind;
         return ss.str();
     }
 };
@@ -104,8 +102,6 @@ class ExpressionGenerator : public Generator {
 
  private:
     IR::ListExpression *genStructListExpr(const IR::Type_Name *tn);
-
-    IR::Expression *editHdrStack(cstring lval);
 
     // for constrain the number of func call in a stat
     std::vector<uint16_t> storeFunctionProb();

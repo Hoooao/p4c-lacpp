@@ -60,8 +60,6 @@ class DeclarationGenerator : public Generator {
 
     static constexpr size_t MAX_HEADER_STACK_SIZE = 10;
 
-    virtual IR::Type *genHeaderStackType();
-
     virtual IR::Type_Struct *genStructTypeDeclaration();
 
     virtual IR::Type_Struct *genHeaderStruct();
