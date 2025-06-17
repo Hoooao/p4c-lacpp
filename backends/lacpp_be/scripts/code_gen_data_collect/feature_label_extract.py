@@ -250,10 +250,11 @@ def plot_distribution(data, prefix):
         plt.xlabel(f"{name}")
         plt.ylabel("Frequency")
         plt.grid(True)
+        os.makedirs("dist_figs", exist_ok=True)
         if prefix == "node_attr":
-            plt.savefig(f"{name}_distribution.png")
+            plt.savefig(f"dist_figs/{name}_distribution.png")
         else:
-            plt.savefig(f"{name}_distribution.png")
+            plt.savefig(f"dist_figs/{name}_distribution.png")
         plt.close()
 
 def normalize_node_attr_and_label(directory):
