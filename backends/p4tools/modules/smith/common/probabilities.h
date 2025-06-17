@@ -360,6 +360,10 @@ struct Declarations {
     uint16_t MIN_TABLE = 0;
     uint16_t MAX_TABLE = 3;
 
+    uint16_t MIN_KEY_ELE = 1;
+    uint16_t MAX_KEY_ELE = 5;
+
+
     static Declarations &get() {
         static Declarations INSTANCE;
         return INSTANCE;

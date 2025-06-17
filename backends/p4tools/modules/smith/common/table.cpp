@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <set>
 #include <utility>
+#include <unordered_set>
 
 #include "backends/p4tools/common/lib/logging.h"
 #include "backends/p4tools/common/lib/util.h"
@@ -47,13 +48,27 @@ IR::Key *TableGenerator::genKeyElementList(size_t len) {
         Probabilities::get().TABLE_DEPENDENCY_ENFORCE,
         Probabilities::get().TABLE_DEPENDENCY_NOT_ENFORCE
     });
+    std::vector<const IR::Expression*> usedKeys(Declarations::get().MAX_KEY_ELE+1);
+    uint32_t usedKeysIndex = 0;
     if(enforce==0 && SmithOptions::get().enableDagGeneration && TableDepSkeleton::TableDepSkeleton::getSkeleton()!=nullptr){
         const auto tn = TableDepSkeleton::TableDepSkeleton::getSkeleton()->currentNode;
         for(const auto &fields: tn->parentsWritten){
             // choose one fields to match, sufficient for dependancy
             if(fields.size() == 0) continue;
             const auto field = fields.at(Utils::getRandInt(0, fields.size() - 1));
-            auto *key = genKeyElement(field->expression);
+            auto* expr = field->expression;
+            bool dup = false;
+            for (size_t i = 0; i < usedKeysIndex; i++) {
+                if (usedKeys[i] == expr) {
+                    dup = true;
+                    break;
+                }
+            }
+            if (dup) {
+                continue;
+            }
+            usedKeys[usedKeysIndex++] = expr;
+            auto *key = genKeyElement(expr);
             tn->fieldsMatched.push_back(field);
             keys.push_back(key);
             break;
@@ -62,9 +77,18 @@ IR::Key *TableGenerator::genKeyElementList(size_t len) {
 
     for (size_t i = keys.size(); i < len; i++) {
         IR::KeyElement *key = genKeyElement();
-        if (key == nullptr) {
+        auto *expr = key->expression;
+        bool dup = false;
+        for (size_t i = 0; i < usedKeysIndex; i++) {
+            if (usedKeys[i] == expr) {
+                dup = true;
+                break;
+            }
+        }
+        if (dup) {
             continue;
         }
+        usedKeys[usedKeysIndex++] = expr;
         // @name
         // Tao: actually, this may never happen
         const auto *keyAnno = key->getAnnotations().at(0);
@@ -150,7 +174,7 @@ IR::KeyElement *TableGenerator::genKeyElement(const IR::Expression* expr) {
 
 IR::Property *TableGenerator::genKeyProperty() {
     cstring name = IR::TableProperties::keyPropertyName;
-    auto *keys = genKeyElementList(Utils::getRandInt(0, 5));
+    auto *keys = genKeyElementList(Utils::getRandInt(Declarations::get().MIN_KEY_ELE, Declarations::get().MAX_KEY_ELE));
     P4Scope::prop.lpm_used = false;
     P4Scope::prop.ternary_used = false;
     // isConstant --> false

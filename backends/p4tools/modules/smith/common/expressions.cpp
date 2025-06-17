@@ -78,7 +78,7 @@ const IR::Type *ExpressionGenerator::pickRndType(TyperefProbs type_probs) {
         type_probs.p4_bool, type_probs.p4_error,      type_probs.p4_int,   type_probs.p4_string,
         type_probs.p4_bit,  type_probs.p4_signed_bit, type_probs.p4_varbit};
 
-    if (typeProbsVector.size() != 15) {
+    if (typeProbsVector.size() != 14) {
         BUG("pickRndType: Type probabilities must be exact");
     }
     const IR::Type *tp = nullptr;
