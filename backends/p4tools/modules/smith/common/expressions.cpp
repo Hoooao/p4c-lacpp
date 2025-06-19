@@ -496,8 +496,7 @@ IR::Expression *ExpressionGenerator::constructBinaryBitExpr(const IR::Type_Bits 
                                     Probabilities::get().EXPRESSION_BIT_BINARY_RSHIFT,
                                     Probabilities::get().EXPRESSION_BIT_BINARY_BAND,
                                     Probabilities::get().EXPRESSION_BIT_BINARY_BOR,
-                                    Probabilities::get().EXPRESSION_BIT_BINARY_BXOR,
-                                    Probabilities::get().EXPRESSION_BIT_BINARY_CONCAT};
+                                    Probabilities::get().EXPRESSION_BIT_BINARY_BXOR};
 
     switch (Utils::getRandInt(percent)) {
         case 0: {
@@ -643,29 +642,6 @@ IR::Expression *ExpressionGenerator::constructBinaryBitExpr(const IR::Type_Bits 
             IR::Expression *right = constructBitExpr(tb);
             // pick an binary Xor that matches the type
             expr = new IR::BXor(tb, left, right);
-        } break;
-        case 12: {
-            // pick an concatenation that matches the type
-            size_t typeWidth = tb->width_bits();
-            size_t split = Utils::getRandInt(1, typeWidth - 1);
-            // TODO(fruffy): lazy fallback
-            if (split >= typeWidth) {
-                return genBitLiteral(tb);
-            }
-            const auto *tl = IR::Type_Bits::get(typeWidth - split, false);
-            const auto *tr = IR::Type_Bits::get(split, false);
-            // width must be known so we cast
-            IR::Expression *left = constructBitExpr(tl);
-            if (P4Scope::prop.width_unknown) {
-                left = new IR::Cast(tl, left);
-                P4Scope::prop.width_unknown = false;
-            }
-            IR::Expression *right = constructBitExpr(tr);
-            if (P4Scope::prop.width_unknown) {
-                right = new IR::Cast(tr, right);
-                P4Scope::prop.width_unknown = false;
-            }
-            expr = new IR::Concat(tb, left, right);
         } break;
     }
     return expr;

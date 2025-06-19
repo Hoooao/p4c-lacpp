@@ -21,16 +21,37 @@ LABEL_ATTRIBUTES = {0: "mau_len", 1: "latency", 2: "sram", 3: "tcam"}
 P4LACPP = "p4lacpp"  # Path to the p4lacpp executable (in $PATH)
 
 def debug_print(msg):
-    # Uncomment the next line to enable debug printing
     #print(f"DEBUG: {msg}")
     pass
 def info_print(msg):
     #print(f"INFO: {msg}")
     pass
+
+def process_table_name(table_name):
+    # tables names are changed for the convinience of the comipler. 
+    # Here are all the rules:
+    # 1. append _\d, like table_0, table_1, etc.
+    # 2. append $action, like 
+    #    table$action, table_0$action, etc.
+    # 3. prefixes for control blocks, like ingress.table
+    # We need to remove these suffixes to get the original table name.
+    # note: @name pragma overwrites the name, but smith uses it that fits these rules.
+    table_name = table_name.split('.')[-1] 
+    # note: this is in resources.json, but now we use power.json for collecting sram
+    #  which does not make $action explicit, so skip..
+    # if table_name.endswith('$action'):
+    #     table_name = table_name[:-len('$action')]
+    # This is bad, but should works? I never saw more than _1..
+    if table_name.endswith('_0'):
+        table_name = table_name[:-len('_0')]
+    if table_name.endswith('_1'):
+        table_name = table_name[:-len('_1')]
+    return table_name
+
 ### Table Graph Processing BEGIN
 # dependancy bits
 DEPENDENCY_ATTRS = {
-    # "NONE": 1, These two does not show up
+    # "NONE": 1, These two do not show up
     # "CONCURRENT": 0
     "CONTROL_ACTION": 1,
     "CONTROL_COND_TRUE": 1,
@@ -55,9 +76,6 @@ DEPENDENCY_ATTRS = {
     # "REDUCTION_OR_READ": (1 << 10),
     # "REDUCTION_OR_OUTPUT": (1 << 11),
     # "CONT_CONFLICT": (1 << 12),
-
-
-
 }
 
 def dependency_to_bitvector(dep_str):
@@ -110,7 +128,7 @@ def process_table_dependency_summary(filepath):
             parts = line.split("^")
             prefix = parts[0].strip()
             table_info = parts[1].strip().split(":")[0].strip().split("-")[-1].strip()
-            table_name = clean_node_name(table_info)
+            table_name = process_table_name(clean_node_name(table_info))
             dep_labels = [c for c in prefix.strip().replace(' ', '').strip()]
             dependency_matrix.append(dep_labels)
             table_list.append(table_name)
@@ -147,6 +165,53 @@ def process_table_dependency_summary(filepath):
 ### Table Graph Processing END
 
 ### JSON Processing
+
+# get the memo usage for each table
+def process_power_json(power_json_file, node_list):
+    with open(power_json_file, 'r') as f:
+        data = json.load(f)
+    
+    sram_per_table = {}
+    tcam_per_table = {}
+    for table in data['tables']:
+        tbl_name = process_table_name(table['name'])
+        mau_stages = table['stages']
+        for stage in mau_stages:
+            memos = stage['memories']
+            for m in memos:
+                num = m['num_memories']
+                if m['memory_type'] == 'sram':
+                    if tbl_name not in sram_per_table:
+                        sram_per_table[tbl_name] = num
+                    else:
+                        sram_per_table[tbl_name] += num
+                elif m['memory_type'] == 'tcam':
+                    if tbl_name not in tcam_per_table:
+                        tcam_per_table[tbl_name] = num
+                    else:
+                        tcam_per_table[tbl_name] += num
+                else:
+                    print(f"Unknown memory type {m['memory_type']} for table {tbl_name}")
+    debug_print(f"SRAM per table: {sram_per_table}")
+    debug_print(f"TCAM per table: {tcam_per_table}")
+    # order it based on the node list
+    sram_list = []
+    tcam_list = []
+    for node in node_list:
+        tbl_name = node
+        if tbl_name in sram_per_table:
+            debug_print(f"Table {tbl_name} found in SRAM data: {sram_per_table[tbl_name]}")
+            sram_list.append(sram_per_table[tbl_name])
+        else:
+            # Hao: seems any table will have at least one sram used, make sure its the case!
+            debug_print(f"Table {tbl_name} not found in SRAM data, setting to 1.")
+            sram_list.append(1)
+        if tbl_name in tcam_per_table:
+            tcam_list.append(tcam_per_table[tbl_name])
+        else:
+            debug_print(f"Table {tbl_name} not found in TCAM data, setting to 0.")
+            tcam_list.append(0)
+    return sram_list, tcam_list
 
 # currently we only want mau usage from the resources.json file
 def process_resource_json(json_file):
@@ -230,6 +295,10 @@ def normalize_and_update_files(file_paths, node_mean, node_std, label_mean, labe
         if "node_attr" in data:
             x = np.array(data["node_attr"], dtype=np.float32)
             data["node_attr_normalized"] = ((x - node_mean) / node_std).tolist()
+            for i, e in enumerate(x):
+                if e[-1] == 1:
+                    # this is an unknown table, we don't normalize this field..
+                    data["node_attr_normalized"][i][-1] = 1
 
         if "y" in data and isinstance(data["y"], list):
             y = np.array(data["y"], dtype=np.float32)
@@ -285,7 +354,7 @@ def normalize_node_attr_and_label(directory):
 
 ### Node feature extraction
 def extract_table_vector(table, actions_dict):
-    size = table.get("size", 0)
+    entry_size = table.get("size", 0)
     actions = table.get("actions", [])
     matches = table.get("matches", [])
 
@@ -319,7 +388,7 @@ def extract_table_vector(table, actions_dict):
     # unknown table
     unknown = 0
     feature_vector = [
-        size,
+        entry_size,
         op_num_sum,
         lpm_count,
         lpm_size,
@@ -333,6 +402,7 @@ def extract_table_vector(table, actions_dict):
     return feature_vector
 
 def extract_node_features(p4_file,gnn_data):
+    # nodes extracted from table_dep_summary.log
     node_names = gnn_data["nodes"]
     output_file = os.path.join(os.path.dirname(p4_file), "node_features.json")
     with open(output_file, 'w') as file:
@@ -350,6 +420,8 @@ def extract_node_features(p4_file,gnn_data):
         # TODO: egress
         ingress = data.get("ingress", {})
         tables = ingress.get("tables", {})
+        tables = {process_table_name(k): v for k, v in tables.items()}
+
         actions = ingress.get("actions", {})
         node_attr = []
 
@@ -372,7 +444,8 @@ def extract_node_features(p4_file,gnn_data):
                         break
                 node_attr.append(feature_vector)
             else:
-                print(f"Node {node} is not a table or action table.")
+                #like $precompute tables
+                debug_print(f"Node {node} is not a table or action table.")
                 # set unknown table to 1
                 node_attr.append([0, 0, 0, 0, 0, 0, 0, 0, 1])
         gnn_data["node_attr"] = node_attr
@@ -386,6 +459,7 @@ def process_single_p4_folder(root):
         resource_file = os.path.join(root, "smith.tofino/pipe", "logs/resources.json")
         metrics_file = os.path.join(root, "smith.tofino/pipe", "metrics.json")
         dependency_file = os.path.join(root, "smith.tofino/pipe/logs", "table_dependency_summary.log")
+        power_file = os.path.join(root, "smith.tofino/pipe/logs", "power.json")
 
         mau_len = 0
         lat = 0
@@ -401,7 +475,7 @@ def process_single_p4_folder(root):
                 info_print(f"Size of 'mau_stages' in {resource_file}: {size}")
                 mau_len = size
         else:
-            debug_print(f"Missing resource file: {resource_file}")
+            raise FileNotFoundError(f"Resource file not found: {resource_file}")
 
         if os.path.exists(metrics_file):
             [latencies, sram, tcam] = process_metrics_json(metrics_file)
@@ -411,17 +485,26 @@ def process_single_p4_folder(root):
                         info_print(f"gress: {latency['gress']}, cycles: {latency['cycles']}")
                         lat += latency['cycles']
         else:
-            debug_print(f"Missing metrics file: {metrics_file}")
+            raise FileNotFoundError(f"Metrics file not found: {metrics_file}")
 
         if os.path.exists(dependency_file):
             gnn_data = process_table_dependency_summary(dependency_file)
             debug_print(f"Processed table dependency summary: {gnn_data}")
         else:
-            debug_print(f"Missing dependency file: {dependency_file}")
+            raise FileNotFoundError(f"Dependency file not found: {dependency_file}")
+        
+        if os.path.exists(power_file):
+            sram_list, tcam_list = process_power_json(power_file, gnn_data["nodes"])
+            debug_print(f"Processed power JSON: SRAM {sram_list}, TCAM {tcam_list}")
+        else:
+            debug_print(f"Missing power file: {power_file}")
+            raise FileNotFoundError(f"Power file not found: {power_file}")
 
         gnn_data = extract_node_features(os.path.join(root, "opt.p4"), gnn_data)
         gnn_data["y"] = [mau_len, lat, sram, tcam]
-
+        # add per table memo to gnn_data, also labels
+        gnn_data["sram"] = sram_list
+        gnn_data["tcam"] = tcam_list
         output_file = os.path.join(root, "data.json")
         save_to_json(gnn_data, output_file)
 
@@ -445,11 +528,12 @@ def process_p4_folders(root_dir, num_workers=4):
         for future in as_completed(futures):
             process_bar.update(1)
             folder = futures[future]
-            try:
-                result = future.result()
-                info_print(f"Finished {result[0]}: {result[1]}")
-            except Exception as e:
-                print(f"Failed processing {folder}: {e}")
+            result = future.result()
+            if result[1] == "success":
+                info_print(f"Successfully processed {folder}")
+            else:   
+                raise Exception(result[1])
+
 
 def copy_p4_programs_to_dataset(root_dir):
     """
