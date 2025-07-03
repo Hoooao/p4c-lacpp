@@ -97,7 +97,22 @@ bool FE::preorder(const IR::P4Action *c){
     const auto &name = c->name.toString();
     LOG1("In Action: " << name);
     init_action_info(name);
-    // TODO(Hao): extract param? get the number of ops not loc. 
+    const IR::ParameterList *params = c->parameters;
+    uint32_t size = 0;
+    for(auto &param: params->parameters){
+        auto &t = param->type;
+        if(t->is<IR::Type_Bits>()){
+            size = t->to<IR::Type_Bits>()->size;
+            curAct.value().params_sizes.push_back(size);
+        }else if(t->is<IR::Type_Name>()){
+            size = resolve_non_strutish_field_size(t->toString());
+            curAct.value().params_sizes.push_back(size);
+        }else{
+            LOG1("Unknown parameter type in action: " << t->toString());
+        }
+        LOG2("Parameter: " << param->name.toString() << " type: " << t->toString() <<
+             " size: " << size);
+    }
     // only count the number of statOrDeclt for now.. 
     curAct.value().op_num = c->body->components.size();
     LOG2("Op num:" << curAct.value().op_num);
@@ -167,7 +182,7 @@ uint32_t FE::resolve_strutish_field_size(std::list<cstring> &components){
     cstring type = gress.field_decls.at(strutish_var).type;
     
     while(!components.empty()){
-        // Note: the last field can be a non-strutish type,
+        // Note: the last field can have a non-strutish type,
         //  so we have getFieldSizeMap also check the non-strutish field map
         auto fsm = type_map.getFieldSizeMap(type);
         if(fsm == std::nullopt){
@@ -295,7 +310,7 @@ bool FE::preorder(const IR::Type_Header *c){
 
 bool FE::preorder(const IR::Type_Typedef *c){
     // e.g. typedef DigestType_t bit<32>;
-    // just add to the field map
+    // just add to the field map, maybe change for readability..?
     LOG1("In Typedef: " << c->name.toString() << " type: " << c->type->toString());
     if(c->type->is<IR::Type_Bits>()){
         type_map.addField(c->name.toString(), c->type->toString(), c->type->width_bits());
@@ -397,7 +412,11 @@ std::string to_string(const GressTypes& g) {
 }
 
 void to_json(json& j, const actionInfo& a) {
-    j = json{{"name", a.name}, {"op_num", a.op_num}};
+    uint32_t total_size = 0;
+    for(auto &size: a.params_sizes){
+        total_size += size;
+    }
+    j = json{{"name", a.name}, {"op_num", a.op_num}, {"params_size", total_size}};
 }
 
 void to_json(json& j, const tableInfo& t) {

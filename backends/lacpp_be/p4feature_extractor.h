@@ -10,8 +10,6 @@
 
 namespace P4::P4LACPP{
 
-// frontend also has a TypeMap, I defined this for simplicity
-// it is a tree structure: struct/header -> fields : types
 struct FieldTypeSizeInfo{
     cstring field_name;
     cstring type;
@@ -28,10 +26,12 @@ struct FieldTypeSizeInfo{
     }
 };
 
-// field name: FieldTypeSizeInfo
+// field name to FieldTypeSizeInfo
 typedef std::unordered_map<cstring, FieldTypeSizeInfo> FieldSizeMap;
-// struct name: map of field name to FieldTypeSizeInfo
+// struct name to map of field name to FieldTypeSizeInfo
 typedef std::unordered_map<cstring, FieldSizeMap> StructFieldMap;
+
+// frontend also has a TypeMap, I defined this for simplicity
 class TypeMap{
 public:
     TypeMap() = default;
@@ -101,6 +101,7 @@ enum class GressTypes{
 struct actionInfo{
     cstring name;
     uint32_t op_num;
+    std::vector<uint32_t> params_sizes;
     actionInfo() = default;
     actionInfo(cstring n_name):name(n_name), op_num(0){};
 };

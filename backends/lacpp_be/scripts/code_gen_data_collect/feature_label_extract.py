@@ -14,7 +14,8 @@ NODE_ATTRIBUTES = {0: "size", 1: "op_num_sum",
                    2: "lpm_count", 3: "lpm_size",
                    4: "exact_count", 5: "exact_size",
                    6: "ternary_count", 7: "ternary_size",
-                   8: "unknown"}
+                   8: "max_act_param_size",
+                   9: "unknown"}
 # note: latency is only that of ingress, we don't consider egree rn
 LABEL_ATTRIBUTES = {0: "mau_len", 1: "latency", 2: "sram", 3: "tcam"}
 
@@ -357,11 +358,13 @@ def extract_table_vector(table, actions_dict):
     entry_size = table.get("size", 0)
     actions = table.get("actions", [])
     matches = table.get("matches", [])
+    max_act_param_size = 0
 
     op_num_sum = 0
     for act in actions:
-        act_meta = actions_dict.get(act, {"op_num": 0})
-        op_num_sum += act_meta.get("op_num", 0)
+        act_meta = actions_dict.get(act)
+        op_num_sum += act_meta.get("op_num")
+        max_act_param_size = max(max_act_param_size, act_meta.get("params_size"))
 
     lpm_count = 0
     lpm_size = 0
@@ -396,6 +399,7 @@ def extract_table_vector(table, actions_dict):
         exact_size,
         ternary_count,
         ternary_size,
+        max_act_param_size,
         unknown
     ]
     debug_print(f"Table: {table}, Feature vector: {feature_vector}")
