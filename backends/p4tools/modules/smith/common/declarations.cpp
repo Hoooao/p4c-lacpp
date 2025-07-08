@@ -206,11 +206,12 @@ IR::IndexedVector<IR::Declaration> DeclarationGenerator::instantiateTableNode(st
     }
 
     // Vars:generate new vars for flavor~
-    auto vars = Utils::getRandInt(Declarations::get().MIN_VAR, Declarations::get().MAX_VAR);
-    for (int i = 0; i <= vars; i++) {
-        auto *varDecl = genVariableDeclaration();
-        localDecls.push_back(varDecl);
-    }
+    // Actually, not to, cuz it produces extra tables: tofino wraps ops into tables (no key)
+    // auto vars = Utils::getRandInt(Declarations::get().MIN_VAR, Declarations::get().MAX_VAR);
+    // for (int i = 0; i <= vars; i++) {
+    //     auto *varDecl = genVariableDeclaration();
+    //     localDecls.push_back(varDecl);
+    // }
 
     // Actions: it has to use the knowledge of parent node for dependancy->write/read
     auto actions =
