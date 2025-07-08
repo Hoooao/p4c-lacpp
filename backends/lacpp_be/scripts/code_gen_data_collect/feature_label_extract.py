@@ -364,7 +364,7 @@ def extract_table_vector(table, actions_dict):
     for act in actions:
         act_meta = actions_dict.get(act)
         op_num_sum += act_meta.get("op_num")
-        max_act_param_size = max(max_act_param_size, act_meta.get("params_size"))
+        max_act_param_size = max(max_act_param_size, act_meta.get("params_size", 0))
 
     lpm_count = 0
     lpm_size = 0
@@ -437,7 +437,8 @@ def extract_node_features(p4_file,gnn_data):
             elif "tbl_" in node:
                 # Hao: I later limited this case, no action in the apply (i think so..)
                 debug_print(f"Node {node} is an action table.")
-                feature_vector = [0, 0, 0, 0, 0, 0, 0, 0, 1]
+                feature_vector = list([0] * len(NODE_ATTRIBUTES))
+                feature_vector[-1] = 1  # set unknown table to 1
                 for action in actions:
                     # check if the string with tbl_ removed is in the action name
                     if node[4:] in action:
@@ -450,8 +451,9 @@ def extract_node_features(p4_file,gnn_data):
             else:
                 #like $precompute tables
                 debug_print(f"Node {node} is not a table or action table.")
-                # set unknown table to 1
-                node_attr.append([0, 0, 0, 0, 0, 0, 0, 0, 1])
+                feature_vector = list([0] * len(NODE_ATTRIBUTES))
+                feature_vector[-1] = 1  # set unknown table to 1
+                node_attr.append(feature_vector)
         gnn_data["node_attr"] = node_attr
     return gnn_data
     

@@ -602,7 +602,7 @@ const IR::P4Program *TofinoTnaSmithTarget::generateP4Program() const {
     int callableDecls =
         Utils::getRandInt(Declarations::get().MIN_CALLABLES, Declarations::get().MAX_CALLABLES);
     for (int i = 0; i < callableDecls; ++i) {
-        std::vector<int64_t> percent = {60, 25, 0, 15};
+        std::vector<int64_t> percent = {60, 25, 0, 0};
         switch (Utils::getRandInt(percent)) {
             case 0: {
                 objects->push_back(declarationGenerator().genFunctionDeclaration());
