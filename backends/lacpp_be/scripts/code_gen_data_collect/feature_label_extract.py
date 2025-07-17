@@ -14,7 +14,7 @@ NODE_ATTRIBUTES = {0: "size", 1: "op_num_sum",
                    2: "lpm_count", 3: "lpm_size",
                    4: "exact_count", 5: "exact_size",
                    6: "ternary_count", 7: "ternary_size",
-                   8: "max_act_param_size",
+                   8: "max_act_param_andliteral_size",
                    9: "unknown"}
 # note: latency is only that of ingress, we don't consider egree rn
 LABEL_ATTRIBUTES = {0: "mau_len", 1: "latency", 2: "sram", 3: "tcam"}
@@ -358,13 +358,18 @@ def extract_table_vector(table, actions_dict):
     entry_size = table.get("size", 0)
     actions = table.get("actions", [])
     matches = table.get("matches", [])
-    max_act_param_size = 0
+    max_act_param_and_literal_size = 0
 
     op_num_sum = 0
     for act in actions:
         act_meta = actions_dict.get(act)
         op_num_sum += act_meta.get("op_num")
-        max_act_param_size = max(max_act_param_size, act_meta.get("params_size", 0))
+        s = act_meta.get("params_size", 0)
+        for literal in act_meta.get("constants", []):
+            for size, _ in literal:
+                s += size
+        max_act_param_and_literal_size = max(max_act_param_and_literal_size, s)
+            
 
     lpm_count = 0
     lpm_size = 0
@@ -399,7 +404,7 @@ def extract_table_vector(table, actions_dict):
         exact_size,
         ternary_count,
         ternary_size,
-        max_act_param_size,
+        max_act_param_and_literal_size,
         unknown
     ]
     debug_print(f"Table: {table}, Feature vector: {feature_vector}")
@@ -506,7 +511,8 @@ def process_single_p4_folder(root):
             debug_print(f"Missing power file: {power_file}")
             raise FileNotFoundError(f"Power file not found: {power_file}")
 
-        gnn_data = extract_node_features(os.path.join(root, "opt.p4"), gnn_data)
+        # use opt.p4 or SubstitutePackedHeaders_11_PostMidEndLast.p4?
+        gnn_data = extract_node_features(os.path.join(root, "smith-0001-SubstitutePackedHeaders_11_PostMidEndLast.p4"), gnn_data)
         gnn_data["y"] = [mau_len, lat, sram, tcam]
         # add per table memo to gnn_data, also labels
         gnn_data["sram"] = sram_list

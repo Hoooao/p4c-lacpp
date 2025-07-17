@@ -93,12 +93,104 @@ bool FE::preorder(const IR::P4Control *c){
     return true;
 }
 
+
+std::pair<std::optional<uint32_t>, std::optional<std::string>> FE::parse_constant(const IR::Constant *constant) {
+    // e.g. 16w1234
+    std::string value = constant->toString().c_str();
+    auto pos = value.find('w');
+    if(pos != std::string::npos) {
+        auto size_str = value.substr(0, pos);
+        auto size = std::stoul(size_str);
+        auto val_str = value.substr(pos + 1);
+        return std::make_pair(std::optional<uint32_t>(size), std::optional<std::string>(val_str));
+    } else {
+        LOG1("Constant without w: " << value);
+        return {std::nullopt, value};
+    }
+}
+
+void FE::resolve_action_expression(const IR::Expression *expr, std::vector<std::pair<uint32_t, std::string>>& constants) {
+    // the right hand side of an assignment can be:
+    // 1. a constant, e.g., 16w1234
+    // 2. Operation
+    // 3. a header field/metadata
+    // We only care 1 and 2
+    // return a vector of pairs, where each pair is (width, value) of the constants
+    //  constant alone is easy, as the source fragment retain the width,
+    //  but operation for some reason trimmed the "w" part, so we need to infer the width with the other operand.
+
+    std::pair<std::optional<uint32_t>, std::optional<std::string>> res;
+    if (auto constant = expr->to<IR::Constant>()) {
+        res = parse_constant(constant);
+        if (res.first.has_value() && res.second.has_value()) {
+            constants.push_back({res.first.value(), res.second.value()});
+        } else{
+            LOG1("Constant without width: " << constant->srcInfo.srcBrief.string());
+        }
+    }
+    
+    const IR::Expression *width_infer = nullptr;
+    // TODO(Hao): support for unary as well later? not common for consts
+    if (auto op = expr->to<IR::Operation_Binary>()) {
+        // e.g. 16w1234 + h.ipv4.dstAddr, we assume no nesting!
+        if(op->left->is<IR::Constant>()) {
+            res = parse_constant(op->left->to<IR::Constant>());
+            width_infer = op->right;
+        } else if(op->right->is<IR::Constant>()) {
+            res = parse_constant(op->right->to<IR::Constant>());
+            width_infer = op->left;   
+        }
+    }
+    if(width_infer != nullptr && !res.first.has_value()) {
+        auto components = get_components(width_infer);
+        if(components.size() == 1) {
+            res.first = resolve_non_strutish_field_size(components.front());
+        } else {
+            res.first = resolve_strutish_field_size(components);
+        }
+    }
+    if(res.first.has_value() && res.second.has_value()) {
+        constants.push_back({res.first.value(), res.second.value()});
+    } else {
+        LOG1("Failed to resolve width for expression: " << expr->toString());
+    }
+}
+void FE::get_action_constants(const IR::IndexedVector<IR::StatOrDecl> *c){
+    // collects the constants in a action.
+    // Note: we assume that 
+    // 1. the source is optimized by folding/propagations, 
+    // 2. the constants are in the format of <width>w<value>, e.g., 16w1234, that's how we get the size
+    // 3. no function calls (they should be inlined)
+    // 4. value is base 10
+    // 5. no op nesting with depth > 1. 
+    std::vector<std::pair<uint32_t, std::string>>constants;
+    for (const auto &stat : *c) {
+        if(auto assign = stat->to<IR::AssignmentStatement>()) {
+            // e.g. h.ipv4.dstAddr = 16w1234;
+            LOG2("Assignment: " << assign->toString());
+            resolve_action_expression(assign->right, constants);
+        }else{
+            LOG1("Unprocessed stat type in action: " << stat->node_type_name());
+        }
+    }
+    if(curAct.has_value()) {
+        curAct.value().constants = std::move(constants);
+        LOG2("Action constants for " << curAct.value().name << ":");
+        for(const auto &c: curAct.value().constants) {
+            LOG2("  width: " << c.first << ", value: " << c.second);
+        }
+    } else {
+        LOG1("No current action to add constants to");
+    }
+}
+
 bool FE::preorder(const IR::P4Action *c){
     const auto &name = c->name.toString();
     LOG1("In Action: " << name);
     init_action_info(name);
     const IR::ParameterList *params = c->parameters;
     uint32_t size = 0;
+    std::vector<cstring> param_names;
     for(auto &param: params->parameters){
         auto &t = param->type;
         if(t->is<IR::Type_Bits>()){
@@ -110,12 +202,21 @@ bool FE::preorder(const IR::P4Action *c){
         }else{
             LOG1("Unknown parameter type in action: " << t->toString());
         }
+        // store the parameter info
+        gresses.at(curGress).addField(param->name.toString(), t->toString(), size);
+        param_names.push_back(param->name.toString());
         LOG2("Parameter: " << param->name.toString() << " type: " << t->toString() <<
              " size: " << size);
     }
-    // only count the number of statOrDeclt for now.. 
+    
     curAct.value().op_num = c->body->components.size();
     LOG2("Op num:" << curAct.value().op_num);
+    get_action_constants(&c->body->components);
+
+    // remove the parameters from the field map
+    for(const auto &name: param_names) {
+        gresses.at(curGress).removeField(name);
+    }
     end_action_info();
     return false;
 }
@@ -416,7 +517,8 @@ void to_json(json& j, const actionInfo& a) {
     for(auto &size: a.params_sizes){
         total_size += size;
     }
-    j = json{{"name", a.name}, {"op_num", a.op_num}, {"params_size", total_size}};
+    j = json{{"name", a.name}, {"op_num", a.op_num}, {"params_size", total_size},
+        {"constants", a.constants}};
 }
 
 void to_json(json& j, const tableInfo& t) {

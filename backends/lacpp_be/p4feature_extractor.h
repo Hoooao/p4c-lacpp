@@ -102,6 +102,7 @@ struct actionInfo{
     cstring name;
     uint32_t op_num;
     std::vector<uint32_t> params_sizes;
+    std::vector<std::pair<uint32_t, std::string>> constants;
     actionInfo() = default;
     actionInfo(cstring n_name):name(n_name), op_num(0){};
 };
@@ -126,6 +127,9 @@ struct GressInfo{
     GressInfo(GressTypes t):type(t){};
     void addField(cstring field_name, cstring type, uint32_t size = 0) {
         field_decls.emplace(field_name, FieldTypeSizeInfo(field_name, type, size));
+    }
+    void removeField(cstring field_name) {
+        field_decls.erase(field_name);
     }
 };
 
@@ -190,6 +194,9 @@ private:
     void init_table_info(cstring new_table_name);
     void end_table_info();
     std::list<cstring> get_components(const IR::Expression *expr);
+    std::pair<std::optional<uint32_t>, std::optional<std::string>> parse_constant(const IR::Constant *constant);
+    void resolve_action_expression(const IR::Expression *expr, std::vector<std::pair<uint32_t, std::string>>& constants);
+    void get_action_constants(const IR::IndexedVector<IR::StatOrDecl> *c);
     // structish means struct and header
     uint32_t resolve_non_strutish_field_size(cstring field);
     uint32_t resolve_strutish_field_size(std::list<cstring> &components);

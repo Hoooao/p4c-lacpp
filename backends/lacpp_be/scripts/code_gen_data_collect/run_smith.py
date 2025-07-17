@@ -22,7 +22,7 @@ def info_print(*args, **kwargs):
         print(*args, **kwargs)
 
 stop_ongoing_process = multiprocessing.Event()
-
+ 
 def run_single_smith(smith_executable, p4c_barefoot):
     """
     Runs a single instance of 'smith' until it succeeds.
