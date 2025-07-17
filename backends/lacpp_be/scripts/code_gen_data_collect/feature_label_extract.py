@@ -14,7 +14,7 @@ NODE_ATTRIBUTES = {0: "size", 1: "op_num_sum",
                    2: "lpm_count", 3: "lpm_size",
                    4: "exact_count", 5: "exact_size",
                    6: "ternary_count", 7: "ternary_size",
-                   8: "max_act_param_andliteral_size",
+                   8: "max_act_param_and_literal_size",
                    9: "unknown"}
 # note: latency is only that of ingress, we don't consider egree rn
 LABEL_ATTRIBUTES = {0: "mau_len", 1: "latency", 2: "sram", 3: "tcam"}
@@ -22,10 +22,10 @@ LABEL_ATTRIBUTES = {0: "mau_len", 1: "latency", 2: "sram", 3: "tcam"}
 P4LACPP = "p4lacpp"  # Path to the p4lacpp executable (in $PATH)
 
 def debug_print(msg):
-    print(f"DEBUG: {msg}")
+    #print(f"DEBUG: {msg}")
     pass
 def info_print(msg):
-    print(f"INFO: {msg}")
+    #print(f"INFO: {msg}")
     pass
 
 def process_table_name(table_name):
@@ -365,9 +365,8 @@ def extract_table_vector(table, actions_dict):
         act_meta = actions_dict.get(act)
         op_num_sum += act_meta.get("op_num")
         s = act_meta.get("params_size", 0)
-        for literal in act_meta.get("constants", []):
-            for size, _ in literal:
-                s += size
+        for size, _  in act_meta.get("constants", []):
+            s += size
         max_act_param_and_literal_size = max(max_act_param_and_literal_size, s)
             
 
