@@ -246,6 +246,7 @@ std::list<cstring> FE::get_components(const IR::Expression *expr) {
         }else{
             // i am not supporting Constant anymore in smith.., and skip slicing
             LOG1("Unknown expression type "<< expr->node_type_name() <<" in key element:" << expr->toString());
+            return {};
         }
     }
     return components;
