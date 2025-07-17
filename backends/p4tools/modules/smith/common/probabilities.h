@@ -306,9 +306,9 @@ struct Probabilities {
 
 
     // Probabilities for the types of match in table declarations
-    uint16_t TABLEDECLARATION_MATCH_EXACT = 60;
-    uint16_t TABLEDECLARATION_MATCH_LPM = 20;
-    uint16_t TABLEDECLARATION_MATCH_TERNARY = 20;
+    uint16_t TABLEDECLARATION_MATCH_EXACT = 100;
+    uint16_t TABLEDECLARATION_MATCH_LPM = 0;
+    uint16_t TABLEDECLARATION_MATCH_TERNARY = 00;
 
     uint16_t TABLEDECLARATION_SIZE_512 = 54;
     uint16_t TABLEDECLARATION_SIZE_1024 = 20;
