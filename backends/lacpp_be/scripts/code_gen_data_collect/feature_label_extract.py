@@ -543,6 +543,7 @@ def process_p4_folders(root_dir, num_workers=4):
             if result[1] == "success":
                 info_print(f"Successfully processed {folder}")
             else:   
+                print(f"Error processing {folder}: {result[1]}")
                 raise Exception(result[1])
 
 

@@ -240,8 +240,8 @@ std::list<cstring> FE::get_components(const IR::Expression *expr) {
             // perhaps I should remove this in smith as well?
             expr = ar->left;
         }else{
-            // i am not supporting Constant anymore in smith..
-            BUG("Unknown expression type in key element: %1%", expr->node_type_name());
+            // i am not supporting Constant anymore in smith.., and skip slicing
+            LOG1("Unknown expression type "<< expr->node_type_name() <<" in key element:" << expr->toString());
         }
     }
     return components;
