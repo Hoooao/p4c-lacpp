@@ -22,10 +22,10 @@ LABEL_ATTRIBUTES = {0: "mau_len", 1: "latency", 2: "sram", 3: "tcam"}
 P4LACPP = "p4lacpp"  # Path to the p4lacpp executable (in $PATH)
 
 def debug_print(msg):
-    #print(f"DEBUG: {msg}")
+    print(f"DEBUG: {msg}")
     pass
 def info_print(msg):
-    #print(f"INFO: {msg}")
+    print(f"INFO: {msg}")
     pass
 
 def process_table_name(table_name):
@@ -512,7 +512,7 @@ def process_single_p4_folder(root):
             raise FileNotFoundError(f"Power file not found: {power_file}")
 
         # use opt.p4 or SubstitutePackedHeaders_11_PostMidEndLast.p4?
-        gnn_data = extract_node_features(os.path.join(root, "smith-0001-SubstitutePackedHeaders_11_PostMidEndLast.p4"), gnn_data)
+        gnn_data = extract_node_features(os.path.join(root, "opt.p4"), gnn_data)
         gnn_data["y"] = [mau_len, lat, sram, tcam]
         # add per table memo to gnn_data, also labels
         gnn_data["sram"] = sram_list
