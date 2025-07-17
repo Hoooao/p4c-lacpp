@@ -143,6 +143,10 @@ void FE::resolve_action_expression(const IR::Expression *expr, std::vector<std::
     }
     if(width_infer != nullptr && !res.first.has_value()) {
         auto components = get_components(width_infer);
+        if(components.empty()) {
+            LOG1("Failed to resolve width for expression: " << width_infer->toString());
+            return; // unidentified components
+        }
         if(components.size() == 1) {
             res.first = resolve_non_strutish_field_size(components.front());
         } else {
@@ -310,13 +314,16 @@ uint32_t FE::resolve_strutish_field_size(std::list<cstring> &components){
 
 uint32_t FE::resolve_key_ele_size(const IR::KeyElement *key) {
     std::list<cstring> components = get_components(key->expression);
+    if(components.empty()) {
+        LOG1("Failed to resolve key element size for expression: " << key->expression->toString());
+        return 0; // unidentified components
+    }
     // non-strutish types
     if(components.size() == 1) {
         return resolve_non_strutish_field_size(components.front());
     }
     return resolve_strutish_field_size(components);
     
-    return 0;
 }
 
 bool FE::preorder(const IR::P4Table *c){
