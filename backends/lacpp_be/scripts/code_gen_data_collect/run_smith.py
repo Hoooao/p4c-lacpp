@@ -48,8 +48,7 @@ def run_single_smith(smith_executable, p4c_barefoot):
             with open(log_file_path, "w") as log_file:
                 smith_exec = [smith_executable, "--target", "tofino", "--arch", "tna", "./smith.p4", "--generate-dag", "--dag-node-num", "6", "--dag-density", "0.6"]
                 bf_exec = [p4c_barefoot, "./smith.p4", "-g", "--target", "tofino", "--arch", "tna", "--verbose", "--enable-event-logger", 
-                           "--optimized-source","opt.p4", "-Ttable_dependency_graph:3,table_dependency_summary:3,table_placement:5",
-                           "--top4","SubstitutePackedHeaders_11_PostMidEndLast"
+                           "--optimized-source","opt.p4", "-Ttable_dependency_graph:3,table_dependency_summary:3,table_placement:5"
                 ]
 
                 subprocess.run(smith_exec,
@@ -148,8 +147,7 @@ def compile_p4_file(p4_file, p4c_barefoot):
             subprocess.run([
                 p4c_barefoot, os.path.basename(p4_file), "-g", "--target", "tofino", "--arch", "tna","--verbose", 
                 "--enable-event-logger", "--optimized-source","opt.p4", 
-                "-Ttable_dependency_graph:3,table_dependency_summary:3,table_placement:5",
-                "--top4", "SubstitutePackedHeaders_11_PostMidEndLast"
+                "-Ttable_dependency_graph:3,table_dependency_summary:3,table_placement:5"
                 ], stdout=log_file, stderr=log_file, check=True, cwd=os.path.dirname(p4_file), timeout=40)
         except Exception as e:
             print(f"Error compiling {p4_file}: {e}")
