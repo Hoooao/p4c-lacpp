@@ -135,18 +135,24 @@ IR::P4Action *StatementGenerator::genActionStatWithParamCoupled() {
     size_t totalParams = Utils::getRandInt(0, 5);
     IR::IndexedVector<IR::Parameter> params;
     IR::IndexedVector<IR::StatOrDecl> stats;
-    
-    for(int i = 0; i < totalParams; i++) {
+    std::set<cstring> paramNames;
+    for(size_t i = 0; i < totalParams; i++) {
         // lval type
         const auto *bitType = P4Scope::pickDeclaredBitType(true);
         if (bitType == nullptr) {
             BUG("bitType in ActionStatWithParamCoupled should not be nullptr!");
         }
+        auto *left = target().expressionGenerator().pickLvalOrSlice(bitType);
+        if(paramNames.find(left->toString()) != paramNames.end()) {
+            continue;
+        }
+        paramNames.insert(left->toString());
+
+        
         cstring name = getRandomString(4);
         auto param = new IR::Parameter(name,  IR::Direction::None, bitType);
         params.push_back(param);
         
-        auto *left = target().expressionGenerator().pickLvalOrSlice(bitType);
         auto *right = new IR::PathExpression(name);
         auto assign = new IR::AssignmentStatement(left, right);
         stats.push_back(assign);
