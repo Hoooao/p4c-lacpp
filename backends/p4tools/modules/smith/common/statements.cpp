@@ -127,6 +127,36 @@ IR::BlockStatement *StatementGenerator::genBlockStatement(bool is_in_func) {
     return new IR::BlockStatement(statOrDecls);
 }
 
+IR::P4Action *StatementGenerator::genActionStatWithParamCoupled() {
+    P4Scope::startLocalScope();
+    // 1. pick header
+    // 2. generate params that are header sizes
+    // 3. generate a block statement, where they gets assigned
+    size_t totalParams = Utils::getRandInt(0, 5);
+    IR::IndexedVector<IR::Parameter> params;
+    IR::IndexedVector<IR::StatOrDecl> stats;
+    
+    for(int i = 0; i < totalParams; i++) {
+        // lval type
+        const auto *bitType = P4Scope::pickDeclaredBitType(true);
+        if (bitType == nullptr) {
+            BUG("bitType in ActionStatWithParamCoupled should not be nullptr!");
+        }
+        cstring name = getRandomString(4);
+        auto param = new IR::Parameter(name,  IR::Direction::None, bitType);
+        params.push_back(param);
+        
+        auto *left = target().expressionGenerator().pickLvalOrSlice(bitType);
+        auto *right = new IR::PathExpression(name);
+        auto assign = new IR::AssignmentStatement(left, right);
+        stats.push_back(assign);
+    }
+
+    P4Scope::endLocalScope();
+    cstring name = getRandomString(5);
+    return new IR::P4Action(name,new IR::ParameterList(params), new IR::BlockStatement(stats));
+}
+
 IR::IfStatement *StatementGenerator::genConditionalStatement(bool is_in_func) {
     IR::Expression *cond = nullptr;
     IR::Statement *ifTrue = nullptr;

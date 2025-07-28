@@ -19,6 +19,8 @@ class StatementGenerator : public Generator {
 
     virtual IR::BlockStatement *genBlockStatement(bool is_in_func);
 
+    IR::P4Action* genActionStatWithParamCoupled();
+
     virtual IR::IfStatement *genConditionalStatement(bool is_in_func);
 
     static void removeLval(const IR::Expression *left, const IR::Type *type);

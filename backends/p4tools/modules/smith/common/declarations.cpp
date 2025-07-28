@@ -105,24 +105,29 @@ IR::Declaration_Constant *DeclarationGenerator::genConstantDeclaration() {
 }
 
 IR::P4Action *DeclarationGenerator::genActionDeclaration() {
-    //TODO(Hao): add support to Write-after actions here
-    cstring name = getRandomString(5);
-    IR::ParameterList *params = nullptr;
-    IR::BlockStatement *blk = nullptr;
-    P4Scope::startLocalScope();
-    P4Scope::prop.in_action = true;
-    params = genParameterList();
+    // Hao: for single table SRAM analysis
+    bool use_coupled_gen = true;
+    IR::P4Action *ret = nullptr;
+    if(use_coupled_gen){
+        ret = target().statementGenerator().genActionStatWithParamCoupled();
+    }else{
+        //TODO(Hao): add support to Write-after actions here
+        cstring name = getRandomString(5);
+        IR::ParameterList *params = nullptr;
+        IR::BlockStatement *blk = nullptr;
+        P4Scope::startLocalScope();
+        P4Scope::prop.in_action = true;
+        params = genParameterList();
+        blk = target().statementGenerator().genBlockStatement(false);
+        ret = new IR::P4Action(name, params, blk);
 
-    blk = target().statementGenerator().genBlockStatement(false);
-
-    auto *ret = new IR::P4Action(name, params, blk);
-
-    P4Scope::prop.in_action = false;
-    P4Scope::endLocalScope();
-    // collect vars defined in control scope or larger that is used in this action
-    if(SmithOptions::get().enableDagGeneration && TableDepSkeleton::TableDepSkeleton::getSkeleton()!=nullptr){
-        const auto tn = TableDepSkeleton::TableDepSkeleton::getSkeleton()->currentNode;
-        tn->extractFieldsWrittenInBlock(blk);
+        P4Scope::prop.in_action = false;
+        P4Scope::endLocalScope();
+        // collect vars defined in control scope or larger that is used in this action
+        if(SmithOptions::get().enableDagGeneration && TableDepSkeleton::TableDepSkeleton::getSkeleton()!=nullptr){
+            const auto tn = TableDepSkeleton::TableDepSkeleton::getSkeleton()->currentNode;
+            tn->extractFieldsWrittenInBlock(blk);
+        }
     }
 
     P4Scope::addToScope(ret);
