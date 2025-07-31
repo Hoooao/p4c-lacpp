@@ -105,7 +105,8 @@ IR::Declaration_Constant *DeclarationGenerator::genConstantDeclaration() {
 }
 
 IR::P4Action *DeclarationGenerator::genActionDeclaration() {
-    // Hao: for single table SRAM analysis
+    // Hao: for single table SRAM analysis, we only generate 
+    // actions that have assignments of params in it
     bool use_coupled_gen = true;
     IR::P4Action *ret = nullptr;
     if(use_coupled_gen){

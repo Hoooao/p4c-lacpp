@@ -214,7 +214,7 @@ def process_power_json(power_json_file, node_list):
             tcam_list.append(0)
     return sram_list, tcam_list
 
-# currently we only want mau usage from the resources.json file
+# currently we only want mau usage and sram_usage_from_resource from the resources.json file
 def process_resource_json(json_file):
     """
     Reads a JSON file and fetches the size of the list at 'resources' -> 'mau' -> 'mau_stages'.
@@ -226,16 +226,16 @@ def process_resource_json(json_file):
             mau_stages = data.get("resources", {}).get("mau", {}).get("mau_stages", [])
             
             if isinstance(mau_stages, list):
-                return len(mau_stages)
+                return len(mau_stages), len(mau_stages[0].get("rams", {}).get("srams", []))
             else:
                 print(f"Error in {json_file}: 'mau_stages' is not a list.")
-                return -1
+                return -1,-1
     except (FileNotFoundError, json.JSONDecodeError) as e:
         print(f"Error reading {json_file}: {e}")
-        return -1
+        return -1,-1
     except Exception as e:
         print(f"Unexpected error in {json_file}: {e}")
-        return -1
+        return -1,-1
 
 def process_metrics_json(json_file):
     try:
@@ -480,7 +480,7 @@ def process_single_p4_folder(root):
         debug_print(f"Processing P4 folder: {root}")
 
         if os.path.exists(resource_file):
-            size = process_resource_json(resource_file)
+            size, sram_usage_from_resource = process_resource_json(resource_file)
             if size != -1:
                 info_print(f"Size of 'mau_stages' in {resource_file}: {size}")
                 mau_len = size
@@ -514,7 +514,8 @@ def process_single_p4_folder(root):
         gnn_data = extract_node_features(os.path.join(root, "opt.p4"), gnn_data)
         gnn_data["y"] = [mau_len, lat, sram, tcam]
         # add per table memo to gnn_data, also labels
-        gnn_data["sram"] = sram_list
+        # gnn_data["sram"] = sram_list # not using sram from power for now
+        gnn_data["sram"] = [sram_usage_from_resource]
         gnn_data["tcam"] = tcam_list
         output_file = os.path.join(root, "data.json")
         save_to_json(gnn_data, output_file)

@@ -131,7 +131,7 @@ IR::P4Action *StatementGenerator::genActionStatWithParamCoupled() {
     P4Scope::startLocalScope();
     // 1. pick header
     // 2. generate params that are header sizes
-    // 3. generate a block statement, where they gets assigned
+    // 3. generate a block statement, where they get assigned
     size_t totalParams = Utils::getRandInt(0, 5);
     IR::IndexedVector<IR::Parameter> params;
     IR::IndexedVector<IR::StatOrDecl> stats;

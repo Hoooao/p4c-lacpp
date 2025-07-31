@@ -33,8 +33,9 @@ struct Probabilities {
     uint16_t STATEMENT_FOR_IN = 1;
 
     // probabilities to pick a slice when requesting an lval
-    uint16_t SCOPE_LVAL_PATH = 90;
-    uint16_t SCOPE_LVAL_SLICE = 10;
+    // Hao: no slice, tofino has some opt on it, not predictable..
+    uint16_t SCOPE_LVAL_PATH = 100;
+    uint16_t SCOPE_LVAL_SLICE = 0;
 
     // probabilities for statements or declarations
     uint16_t STATEMENTORDECLARATION_VAR = 10;
