@@ -135,27 +135,37 @@ IR::P4Action *StatementGenerator::genActionStatWithParamCoupled() {
     size_t totalParams = Utils::getRandInt(0, 5);
     IR::IndexedVector<IR::Parameter> params;
     IR::IndexedVector<IR::StatOrDecl> stats;
-    std::set<cstring> paramNames;
+    std::set<cstring> lval_names;
+    std::vector<int64_t> percent = {80,10,10};
     for(size_t i = 0; i < totalParams; i++) {
         // lval type
         const auto *bitType = P4Scope::pickDeclaredBitType(true);
         if (bitType == nullptr) {
             BUG("bitType in ActionStatWithParamCoupled should not be nullptr!");
         }
-        auto *left = target().expressionGenerator().pickLvalOrSlice(bitType);
-        if(paramNames.find(left->toString()) != paramNames.end()) {
-            continue;
+        // a param could be appled to multiple lvals
+        auto num = Utils::getRandInt(percent) + 1;
+        std::vector<IR::Expression *> lvals;
+        for (int j = 0; j < num; j++) {
+            auto *lval = target().expressionGenerator().pickLvalOrSlice(bitType);
+            if(lval ==nullptr || lval_names.find(lval->toString()) != lval_names.end()) {
+                continue;
+            }
+            lval_names.insert(lval->toString());
+            if (lval != nullptr) {
+                lvals.push_back(lval);
+            }
         }
-        paramNames.insert(left->toString());
 
-        
         cstring name = getRandomString(4);
         auto param = new IR::Parameter(name,  IR::Direction::None, bitType);
         params.push_back(param);
         
-        auto *right = new IR::PathExpression(name);
-        auto assign = new IR::AssignmentStatement(left, right);
-        stats.push_back(assign);
+        for (const auto *lval : lvals) {
+            auto *right = new IR::PathExpression(name);
+            auto assign = new IR::AssignmentStatement(lval, right);
+            stats.push_back(assign);
+        }
     }
 
     P4Scope::endLocalScope();
