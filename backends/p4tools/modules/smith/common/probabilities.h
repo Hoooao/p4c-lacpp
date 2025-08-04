@@ -259,8 +259,8 @@ struct Probabilities {
     uint16_t STRUCTTYPEDECLARATION_TYPE_VOID = 0;
     uint16_t STRUCTTYPEDECLARATION_TYPE_MATCH_KIND = 0;
     // probabilities for types in struct structures
-    uint16_t TYPEDECLARATION_HEADER = 75;
-    uint16_t TYPEDECLARATION_STRUCT = 25;
+    uint16_t TYPEDECLARATION_HEADER = 100; // Hao: made 100
+    uint16_t TYPEDECLARATION_STRUCT = 0;
     uint16_t TYPEDECLARATION_UNION = 0;
 
     // probabilities for types in struct structures
@@ -338,7 +338,7 @@ struct Probabilities {
 struct Declarations {
     // minimum and maximum number of type declarations
     uint16_t MIN_TYPE = 1;
-    uint16_t MAX_TYPE = 8;
+    uint16_t MAX_TYPE = 30; // Hao: made 30 for analysis of header usage in actions.
 
     // minimum and maximum number of statements in a block statement
     uint16_t BLOCKSTATEMENT_MIN_STAT = 3;

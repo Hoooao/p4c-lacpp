@@ -156,7 +156,9 @@ IR::P4Action *StatementGenerator::genActionStatWithParamCoupled() {
                 lvals.push_back(lval);
             }
         }
-
+        if (lvals.empty()) {
+            continue;
+        }
         cstring name = getRandomString(4);
         auto param = new IR::Parameter(name,  IR::Direction::None, bitType);
         params.push_back(param);
