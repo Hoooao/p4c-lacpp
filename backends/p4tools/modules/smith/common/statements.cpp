@@ -34,7 +34,7 @@ IR::Statement *StatementGenerator::genStatement(bool is_in_func) {
         Probabilities::get().STATEMENT_ASSIGNMENTORMETHODCALL,
         Probabilities::get().STATEMENT_IF,
         Probabilities::get().STATEMENT_RETURN,
-        pctExit,
+        pctExit,max
         Probabilities::get().STATEMENT_BLOCK,
         // Add the for-loop statement and
         // the for-in-loop statement generation percentages.

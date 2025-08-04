@@ -22,15 +22,15 @@ struct Probabilities {
     uint16_t ASSIGNMENTORMETHODCALLSTATEMENT_METHOD_BUILT_IN = 1;
 
     // probabilities for statements
-    uint16_t STATEMENT_SWITCH = 5;
-    uint16_t STATEMENT_ASSIGNMENTORMETHODCALL = 85;
-    uint16_t STATEMENT_IF = 3;
+    uint16_t STATEMENT_SWITCH = 0;
+    uint16_t STATEMENT_ASSIGNMENTORMETHODCALL = 96;
+    uint16_t STATEMENT_IF = 0;
     uint16_t STATEMENT_RETURN = 2;
     uint16_t STATEMENT_EXIT = 0;
     uint16_t STATEMENT_BLOCK = 2;
     // Add probabilities for for-loop and for-in-loop statement(s).
-    uint16_t STATEMENT_FOR = 1;
-    uint16_t STATEMENT_FOR_IN = 1;
+    uint16_t STATEMENT_FOR = 0;
+    uint16_t STATEMENT_FOR_IN = 0;
 
     // probabilities to pick a slice when requesting an lval
     // Hao: no slice, tofino has some opt on it, not predictable..
@@ -342,7 +342,7 @@ struct Declarations {
 
     // minimum and maximum number of statements in a block statement
     uint16_t BLOCKSTATEMENT_MIN_STAT = 3;
-    uint16_t BLOCKSTATEMENT_MAX_STAT = 10;
+    uint16_t BLOCKSTATEMENT_MAX_STAT = 200;
 
     // minimum and maximum number of callable declarations
     uint16_t MIN_CALLABLES = 0;
