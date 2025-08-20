@@ -342,7 +342,7 @@ struct Declarations {
 
     // minimum and maximum number of statements in a block statement
     uint16_t BLOCKSTATEMENT_MIN_STAT = 3;
-    uint16_t BLOCKSTATEMENT_MAX_STAT = 200;
+    uint16_t BLOCKSTATEMENT_MAX_STAT = 10;
 
     // minimum and maximum number of callable declarations
     uint16_t MIN_CALLABLES = 0;

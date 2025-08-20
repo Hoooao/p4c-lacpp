@@ -363,7 +363,7 @@ def extract_table_vector(table, actions_dict):
     op_num_sum = 0
     for act in actions:
         act_meta = actions_dict.get(act)
-        op_num_sum += act_meta.get("op_num")
+        op_num_sum = max(op_num_sum, act_meta.get("op_num", 0)) # we use the max of them
         s = act_meta.get("params_size", 0)
         # not adding, for the purpose of having multiple assignments of the same param in a action!
         # for size, _  in act_meta.get("constants", []):
