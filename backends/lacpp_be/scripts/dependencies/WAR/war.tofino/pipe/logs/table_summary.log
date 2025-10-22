@@ -1,0 +1,40 @@
+	foreach_alloc slice: H16 bit[8..0] <-- egress::eg_intr_md.egress_port<9> ^0 ^bit[0..15] intrinsic no_split deparsed_bottom_bits deparsed_to_tm [0:8] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: B16 bit[3..0] <-- egress::hdr.min_parse_depth_padding_0.$stkvalid<4> meta pov no_split [0:3] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: B16 bit[3] <-- egress::hdr.min_parse_depth_padding_0[0].$valid<1> pov [0:0] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TW0 bit[31..0] <-- egress::hdr.min_parse_depth_padding_0[0].packet_payload<88> ^0 ^bit[0..87] deparsed exact_containers [0:31] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TW1 bit[31..0] <-- egress::hdr.min_parse_depth_padding_0[0].packet_payload<88> ^0 ^bit[0..55] deparsed exact_containers [32:63] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TH12 bit[15..0] <-- egress::hdr.min_parse_depth_padding_0[0].packet_payload<88> ^0 ^bit[0..23] deparsed exact_containers [64:79] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TB0 bit[7..0] <-- egress::hdr.min_parse_depth_padding_0[0].packet_payload<88> ^0 ^bit[0..7] deparsed exact_containers [80:87] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: B16 bit[2] <-- egress::hdr.min_parse_depth_padding_0[1].$valid<1> pov [0:0] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TW2 bit[31..0] <-- egress::hdr.min_parse_depth_padding_0[1].packet_payload<88> ^0 ^bit[0..87] deparsed exact_containers [0:31] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TW3 bit[31..0] <-- egress::hdr.min_parse_depth_padding_0[1].packet_payload<88> ^0 ^bit[0..55] deparsed exact_containers [32:63] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TH13 bit[15..0] <-- egress::hdr.min_parse_depth_padding_0[1].packet_payload<88> ^0 ^bit[0..23] deparsed exact_containers [64:79] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TB1 bit[7..0] <-- egress::hdr.min_parse_depth_padding_0[1].packet_payload<88> ^0 ^bit[0..7] deparsed exact_containers [80:87] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: B16 bit[1] <-- egress::hdr.min_parse_depth_padding_0[2].$valid<1> pov [0:0] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TH0 bit[15..0] <-- egress::hdr.min_parse_depth_padding_0[2].packet_payload<88> ^0 ^bit[0..87] deparsed exact_containers [0:15] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TH1 bit[15..0] <-- egress::hdr.min_parse_depth_padding_0[2].packet_payload<88> ^0 ^bit[0..71] deparsed exact_containers [16:31] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TH2 bit[15..0] <-- egress::hdr.min_parse_depth_padding_0[2].packet_payload<88> ^0 ^bit[0..55] deparsed exact_containers [32:47] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TH3 bit[15..0] <-- egress::hdr.min_parse_depth_padding_0[2].packet_payload<88> ^0 ^bit[0..39] deparsed exact_containers [48:63] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TH14 bit[15..0] <-- egress::hdr.min_parse_depth_padding_0[2].packet_payload<88> ^0 ^bit[0..23] deparsed exact_containers [64:79] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TB2 bit[7..0] <-- egress::hdr.min_parse_depth_padding_0[2].packet_payload<88> ^0 ^bit[0..7] deparsed exact_containers [80:87] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: B16 bit[0] <-- egress::hdr.min_parse_depth_padding_0[3].$valid<1> pov [0:0] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TH4 bit[15..0] <-- egress::hdr.min_parse_depth_padding_0[3].packet_payload<88> ^0 ^bit[0..87] deparsed exact_containers [0:15] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TH5 bit[15..0] <-- egress::hdr.min_parse_depth_padding_0[3].packet_payload<88> ^0 ^bit[0..71] deparsed exact_containers [16:31] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TW8 bit[31..0] <-- egress::hdr.min_parse_depth_padding_0[3].packet_payload<88> ^0 ^bit[0..55] deparsed exact_containers [32:63] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TH15 bit[15..0] <-- egress::hdr.min_parse_depth_padding_0[3].packet_payload<88> ^0 ^bit[0..23] deparsed exact_containers [64:79] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TB3 bit[7..0] <-- egress::hdr.min_parse_depth_padding_0[3].packet_payload<88> ^0 ^bit[0..7] deparsed exact_containers [80:87] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: H0 bit[9..0] <-- ingress::$tmp2<10> meta mirror%{10:ingress::ig_intr_md_for_dprsr.mirror_type#0}% no_split exact_containers [0:9] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: B1 bit[1] <-- ingress::hdr.a.$valid<1> pov [0:0] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	foreach_alloc slice: B1 bit[2] <-- ingress::hdr.b.$valid<1> pov [0:0] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+	foreach_alloc slice: B1 bit[3] <-- ingress::hdr.c.$valid<1> pov [0:0] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+	foreach_alloc slice: B1 bit[0] <-- ingress::hdr.eth_hdr.$valid<1> pov [0:0] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TW5 bit[31..0] <-- ingress::hdr.eth_hdr.dst_addr<48> ^0 ^bit[0..111] deparsed exact_containers [0:31] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TH8 bit[15..0] <-- ingress::hdr.eth_hdr.dst_addr<48> ^0 ^bit[0..79] deparsed exact_containers [32:47] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TH6 bit[15..0] <-- ingress::hdr.eth_hdr.eth_type<16> ^0 ^bit[0..175] deparsed exact_containers [0:15] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TW4 bit[31..0] <-- ingress::hdr.eth_hdr.src_addr<48> ^0 ^bit[0..159] deparsed exact_containers [0:31] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: TH7 bit[15..0] <-- ingress::hdr.eth_hdr.src_addr<48> ^0 ^bit[0..127] deparsed exact_containers [32:47] live at [-1r, 2w] } 0 units {}
+	foreach_alloc slice: B0 bit[2..0] <-- ingress::ig_intr_md_for_dprsr.mirror_type<3> meta intrinsic solitary no_split deparsed_bottom_bits [0:2] live at [-1r, 2w] } 0 units {}

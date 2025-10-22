@@ -1,0 +1,97 @@
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+Allocating bits for container : H2
+  AllocContext: Context [ TABLE tbl_set_b_w_c_0 ], use: w
+  Writes: 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2
+
+  Fields: 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2
+
+  	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+  Write slices in container: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+
+  Container field: ingress::hdr.b.first
+    	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+    Alloc Container: H2, isUninitializedRead: N, slice: bit[15..0]
+    Meta mutex with ingress::hdr.b.first is 0
+    Dark Mutex with ingress::hdr.b.first is 0
+    For field ingress::hdr.b.first  mutex control:0 meta:0 dark:0 noMutex: 1 bits: bit[15..0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Allocating bits for container : H2
+  AllocContext: Context [ TABLE tbl_set_b_0 ], use: w
+  Writes: 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2
+
+  Fields: 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2
+
+  	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+  Write slices in container: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+
+  Container field: ingress::hdr.b.first
+    	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+    Alloc Container: H2, isUninitializedRead: N, slice: bit[15..0]
+    Meta mutex with ingress::hdr.b.first is 0
+    Dark Mutex with ingress::hdr.b.first is 0
+    For field ingress::hdr.b.first  mutex control:0 meta:0 dark:0 noMutex: 1 bits: bit[15..0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+Allocating bits for container : H2
+  AllocContext: Context [ TABLE tbl_set_b_w_c_0 ], use: w
+  Writes: 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2
+
+  Fields: 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2
+
+  	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+  Write slices in container: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+
+  Container field: ingress::hdr.b.first
+    	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+    Alloc Container: H2, isUninitializedRead: N, slice: bit[15..0]
+    Meta mutex with ingress::hdr.b.first is 0
+    Dark Mutex with ingress::hdr.b.first is 0
+    For field ingress::hdr.b.first  mutex control:0 meta:0 dark:0 noMutex: 1 bits: bit[15..0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Allocating bits for container : H2
+  AllocContext: Context [ TABLE tbl_set_b_0 ], use: w
+  Writes: 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2
+
+  Fields: 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2
+
+  	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+  Write slices in container: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+
+  Container field: ingress::hdr.b.first
+    	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+    Alloc Container: H2, isUninitializedRead: N, slice: bit[15..0]
+    Meta mutex with ingress::hdr.b.first is 0
+    Dark Mutex with ingress::hdr.b.first is 0
+    For field ingress::hdr.b.first  mutex control:0 meta:0 dark:0 noMutex: 1 bits: bit[15..0]
+Generating dependency graph json
+tbl_set_b_w_c_0 --- OUTPUT --> tbl_set_b_0
+ Adding Dep Field: hdr.b.first[15:0] (ingress)
+tbl_set_b_w_c_0 --- ANTI_NEXT_TABLE_DATA --> tbl_set_b_0
+ Adding Dep Field: hdr.b.first[15:0] (ingress)
+tbl_set_b_w_c_0_SOURCE ---  ($default) --> tbl_set_b_0
+tbl_set_b_0 ---  ($default) --> SINK
+Data dependency edge not found
+Data dependency edge not found
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }

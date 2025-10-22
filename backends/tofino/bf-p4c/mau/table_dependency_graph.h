@@ -613,6 +613,10 @@ class TableGraphEdge {
     bool is_critical = false;
 
     std::vector<TableGraphField> dep_fields;
+    std::unordered_map<
+        cstring,
+        std::vector<std::pair<ordered_set<const IR::MAU::Action *>, 
+                              ordered_set<const IR::MAU::Action *>>>> dep_fields_to_actions; 
     std::vector<cstring> tags;
     bool condition_value;
     DependencyGraph::dependencies_t label;
@@ -635,6 +639,57 @@ class TableGraphEdge {
         LOG5(" Adding Dep Field: " << f.name << "[" << f.hi << ":" << f.lo << "] (" << f.gress
                                    << ")");
         return true;
+    }
+
+    // Hao: output act name as well if exists
+    bool add_dep_field_w_action(const PHV::Field *s, 
+                    std::pair<ordered_set<const IR::MAU::Action *>,
+                              ordered_set<const IR::MAU::Action *>> actions) {
+        if (!s) return false;
+
+        TableGraphField f;
+        f.name = cstring::to_cstring(canon_name(s->name));
+        f.gress = toString(s->gress);
+        f.lo = 0;
+        f.hi = s->size - 1;
+        dep_fields.push_back(f);
+        // a field could be associated with multiple sets of actions
+        dep_fields_to_actions[f.name].push_back(actions);
+        LOG5(" Adding Dep Field: " << f.name << "[" << f.hi << ":" << f.lo << "] (" << f.gress
+                                   << ")");
+        return true;
+    }
+
+    void add_dep_fields_w_actions_json(Util::JsonObject *edgeMdJson) {
+        Util::JsonArray *edgeMdDepFields = new Util::JsonArray();
+        if (dep_fields.size() > 0) {
+            for (auto field : dep_fields) {
+                Util::JsonObject *edgeMdDepField = new Util::JsonObject();
+                edgeMdDepField->emplace("gress"_cs, field.gress);
+                edgeMdDepField->emplace("field_name"_cs, field.name);
+                edgeMdDepField->emplace("start_bit"_cs, field.lo);
+                edgeMdDepField->emplace("width"_cs, field.hi - field.lo + 1);
+                edgeMdDepFields->append(edgeMdDepField);
+                auto const &actions = dep_fields_to_actions[field.name];
+                if (actions.size() > 0) {
+                    Util::JsonArray *edgeMdDepFieldActions = new Util::JsonArray();
+                    for (auto action_pair : actions) {
+                        Util::JsonObject *edgeMdDepFieldAction = new Util::JsonObject();
+                        Util::JsonArray *upstreamActions = new Util::JsonArray();
+                        for (auto act : action_pair.first)
+                            upstreamActions->append(cstring::to_cstring(canon_name(act->name)));
+                        edgeMdDepFieldAction->emplace("upstream_actions"_cs, upstreamActions);
+                        Util::JsonArray *downstreamActions = new Util::JsonArray();
+                        for (auto act : action_pair.second)
+                            downstreamActions->append(cstring::to_cstring(canon_name(act->name)));
+                        edgeMdDepFieldAction->emplace("downstream_actions"_cs, downstreamActions);
+                        edgeMdDepFieldActions->append(edgeMdDepFieldAction);
+                    }
+                    edgeMdDepField->emplace("actions"_cs, edgeMdDepFieldActions);
+                }
+            }
+        }
+        edgeMdJson->emplace("dep_fields"_cs, edgeMdDepFields);
     }
 
     void add_dep_fields_json(Util::JsonObject *edgeMdJson) {
@@ -704,16 +759,16 @@ class TableGraphEdge {
 
         switch (label) {
             case DependencyGraph::IXBAR_READ:
-                add_dep_fields_json(edgeMdJson);
+                add_dep_fields_w_actions_json(edgeMdJson);
                 break;
 
             case DependencyGraph::ACTION_READ:
-                add_dep_fields_json(edgeMdJson);
+                add_dep_fields_w_actions_json(edgeMdJson);
                 add_action_name_json(edgeMdJson);
                 break;
 
             case DependencyGraph::OUTPUT:
-                add_dep_fields_json(edgeMdJson);
+                add_dep_fields_w_actions_json(edgeMdJson);
                 break;
 
             case DependencyGraph::CONT_CONFLICT:
@@ -731,7 +786,7 @@ class TableGraphEdge {
             case DependencyGraph::ANTI_NEXT_TABLE_CONTROL:
             case DependencyGraph::ANTI_NEXT_TABLE_METADATA:
                 add_anti_type_json(edgeMdJson);
-                add_dep_fields_json(edgeMdJson);
+                add_dep_fields_w_actions_json(edgeMdJson);
                 break;
 
             case DependencyGraph::ANTI_EXIT:

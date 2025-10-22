@@ -1,0 +1,261 @@
+{
+  "graphs" : [
+    {
+      "metadata" : {
+        "gress" : "ingress",
+        "description" : "Before Table Placement Round 1",
+        "placement_complete" : false
+      },
+      "nodes" : [
+        {
+          "id" : "0",
+          "metadata" : {
+            "tables" : [
+              {
+                "name" : "ingress.tbl_set_b_w_c",
+                "table_type" : "match",
+                "match_type" : "exact"
+              }
+            ],
+            "min_stage" : 0,
+            "dep_chain" : 1
+          }
+        },
+        {
+          "id" : "1",
+          "metadata" : {
+            "tables" : [
+              {
+                "name" : "ingress.tbl_set_b",
+                "table_type" : "match",
+                "match_type" : "exact"
+              }
+            ],
+            "min_stage" : 1,
+            "dep_chain" : 0
+          }
+        },
+        {
+          "id" : "2",
+          "metadata" : {
+            "tables" : [
+              {
+                "name" : "SINK",
+                "table_type" : "condition",
+                "condition" : "<null>"
+              }
+            ],
+            "min_stage" : -1,
+            "dep_chain" : -1
+          }
+        }
+      ],
+      "edges" : [
+        {
+          "id" : "0",
+          "source" : "0",
+          "target" : "1",
+          "metadata" : {
+            "type" : "action",
+            "sub_type" : "output",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.b.first",
+                "start_bit" : 0,
+                "width" : 16,
+                "actions" : [
+                  {
+                    "upstream_actions" : ["ingress.set_b_w_c"],
+                    "downstream_actions" : ["ingress.set_b"]
+                  }
+                ]
+              }
+            ],
+            "is_critical" : true,
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "1",
+          "source" : "0",
+          "target" : "1",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "anti",
+            "anti_type" : "next_table_data",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.b.first",
+                "start_bit" : 0,
+                "width" : 16,
+                "actions" : [
+                  {
+                    "upstream_actions" : ["ingress.set_b_w_c"],
+                    "downstream_actions" : ["ingress.set_b"]
+                  }
+                ]
+              }
+            ],
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "2",
+          "source" : "0",
+          "target" : "1",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "default_next_table",
+            "is_critical" : true,
+            "tags" : ["flow"]
+          }
+        },
+        {
+          "id" : "3",
+          "source" : "1",
+          "target" : "2",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "default_next_table",
+            "tags" : ["flow"]
+          }
+        }
+      ]
+    },
+    {
+      "metadata" : {
+        "gress" : "ingress",
+        "description" : "After Table Placement Round 1",
+        "placement_complete" : true
+      },
+      "nodes" : [
+        {
+          "id" : "0",
+          "metadata" : {
+            "placement" : {
+              "logical_table_id" : 0,
+              "stage_number" : 0
+            },
+            "tables" : [
+              {
+                "name" : "ingress.tbl_set_b_w_c",
+                "table_type" : "match",
+                "match_type" : "exact"
+              }
+            ],
+            "min_stage" : 0,
+            "dep_chain" : 1
+          }
+        },
+        {
+          "id" : "1",
+          "metadata" : {
+            "placement" : {
+              "logical_table_id" : 0,
+              "stage_number" : 1
+            },
+            "tables" : [
+              {
+                "name" : "ingress.tbl_set_b",
+                "table_type" : "match",
+                "match_type" : "exact"
+              }
+            ],
+            "min_stage" : 1,
+            "dep_chain" : 0
+          }
+        },
+        {
+          "id" : "2",
+          "metadata" : {
+            "tables" : [
+              {
+                "name" : "SINK",
+                "table_type" : "condition",
+                "condition" : "<null>"
+              }
+            ],
+            "min_stage" : -1,
+            "dep_chain" : -1
+          }
+        }
+      ],
+      "edges" : [
+        {
+          "id" : "0",
+          "source" : "0",
+          "target" : "1",
+          "metadata" : {
+            "type" : "action",
+            "sub_type" : "output",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.b.first",
+                "start_bit" : 0,
+                "width" : 16,
+                "actions" : [
+                  {
+                    "upstream_actions" : ["ingress.set_b_w_c"],
+                    "downstream_actions" : ["ingress.set_b"]
+                  }
+                ]
+              }
+            ],
+            "is_critical" : true,
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "1",
+          "source" : "0",
+          "target" : "1",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "anti",
+            "anti_type" : "next_table_data",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.b.first",
+                "start_bit" : 0,
+                "width" : 16,
+                "actions" : [
+                  {
+                    "upstream_actions" : ["ingress.set_b_w_c"],
+                    "downstream_actions" : ["ingress.set_b"]
+                  }
+                ]
+              }
+            ],
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "2",
+          "source" : "0",
+          "target" : "1",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "default_next_table",
+            "is_critical" : true,
+            "tags" : ["flow"]
+          }
+        },
+        {
+          "id" : "3",
+          "source" : "1",
+          "target" : "2",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "default_next_table",
+            "tags" : ["flow"]
+          }
+        }
+      ]
+    }
+  ],
+  "schema_version" : "1.0.1"
+}

@@ -1,0 +1,94 @@
+{
+  "tables" : [
+    {
+      "name" : "ingress.tbl_init",
+      "actions" : [
+        {
+          "name" : "ingress.set_a",
+          "primitives" : [
+            {
+              "name" : "ModifyFieldPrimitive",
+              "operation" : "set",
+              "dst" : {
+                "type" : "phv",
+                "name" : "hdr.a.first"
+              },
+              "dst_mask" : {
+                "type" : "immediate",
+                "name" : "65535"
+              },
+              "src1" : {
+                "type" : "action_param",
+                "name" : "val"
+              }
+            }
+          ]
+        },
+        {
+          "name" : "NoAction",
+          "primitives" : []
+        }
+      ]
+    },
+    {
+      "name" : "ingress.tbl_match_a",
+      "actions" : [
+        {
+          "name" : "ingress.set_b",
+          "primitives" : [
+            {
+              "name" : "ModifyFieldPrimitive",
+              "operation" : "set",
+              "dst" : {
+                "type" : "phv",
+                "name" : "hdr.b.first"
+              },
+              "dst_mask" : {
+                "type" : "immediate",
+                "name" : "65535"
+              },
+              "src1" : {
+                "type" : "action_param",
+                "name" : "val"
+              }
+            }
+          ]
+        },
+        {
+          "name" : "NoAction",
+          "primitives" : []
+        }
+      ]
+    },
+    {
+      "name" : "ingress.tbl_write_a",
+      "actions" : [
+        {
+          "name" : "ingress.set_a",
+          "primitives" : [
+            {
+              "name" : "ModifyFieldPrimitive",
+              "operation" : "set",
+              "dst" : {
+                "type" : "phv",
+                "name" : "hdr.a.first"
+              },
+              "dst_mask" : {
+                "type" : "immediate",
+                "name" : "65535"
+              },
+              "src1" : {
+                "type" : "action_param",
+                "name" : "val"
+              }
+            }
+          ]
+        },
+        {
+          "name" : "NoAction",
+          "primitives" : []
+        }
+      ]
+    }
+  ]
+}

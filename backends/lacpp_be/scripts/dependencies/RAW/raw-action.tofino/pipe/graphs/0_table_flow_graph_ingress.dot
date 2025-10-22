@@ -1,0 +1,26 @@
+digraph ingress {
+tbl_init_0 [ shape=record, style="filled", fillcolor=cornsilk, label="tbl_init_0\l\l
+M:\l
+ hdr.d.first\l
+\lW:\l
+ hdr.a.first\l
+ "];
+tbl_write_a_0 [ shape=record, style="filled", fillcolor=cornsilk, label="tbl_write_a_0\l\l
+M:\l
+ hdr.c.first\l
+\lW:\l
+ hdr.a.first\l
+ "];
+tbl_read_a_0 [ shape=record, style="filled", fillcolor=cornsilk, label="tbl_read_a_0\l\l
+M:\l
+ hdr.e.first\l
+\lR:\l
+ hdr.a.first\l
+\lW:\l
+ hdr.b.first\l
+ "];
+    PARSER -> tbl_init_0
+    tbl_init_0 -> tbl_write_a_0
+    tbl_write_a_0 -> tbl_read_a_0
+    tbl_read_a_0 -> DEPARSER
+}

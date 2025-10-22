@@ -1,0 +1,423 @@
+version:
+  run_id: "779caf4ffcc44557"
+  target: Tofino
+error_mode: propagate_and_disable
+phv ingress:
+  hdr.eth_hdr.dst_addr.0-31: TW5
+  hdr.eth_hdr.dst_addr.32-47: TH8
+  hdr.eth_hdr.src_addr.0-31: TW4
+  hdr.eth_hdr.src_addr.32-47: TH7
+  hdr.eth_hdr.eth_type: TH6
+  hdr.a.first: H1
+  hdr.b.first: H2
+  hdr.c.first: H3
+  hdr.d.first: H4
+  hdr.e.first: H5
+  ig_intr_md_for_dprsr.mirror_type: {  stage 12: B0(0..2) } 
+  $tmp2: {  stage 12: H0(0..9) } 
+  hdr.eth_hdr.$valid: B1(0)
+  hdr.a.$valid: {  stage 0: B1(1) } 
+  hdr.b.$valid: {  stage 0: B1(2) } 
+  hdr.c.$valid: {  stage 0: B1(3) } 
+  hdr.d.$valid: {  stage 0: B1(4) } 
+  hdr.e.$valid: {  stage 0: B1(5) } 
+  context_json:
+    B0:
+    - { name : ig_intr_md_for_dprsr.mirror_type, live_start : deparser, live_end : deparser, mutually_exclusive_with: [  ] }
+    B1:
+    - { name : hdr.eth_hdr.$valid, live_start : parser, live_end : deparser, mutually_exclusive_with: [  ] }
+    - { name : hdr.a.$valid, live_start : parser, live_end : 0, mutually_exclusive_with: [  ] }
+    - { name : hdr.b.$valid, live_start : parser, live_end : 0, mutually_exclusive_with: [  ] }
+    - { name : hdr.c.$valid, live_start : parser, live_end : 0, mutually_exclusive_with: [  ] }
+    - { name : hdr.d.$valid, live_start : parser, live_end : 0, mutually_exclusive_with: [  ] }
+    - { name : hdr.e.$valid, live_start : parser, live_end : 0, mutually_exclusive_with: [  ] }
+    H0:
+    - { name : $tmp2, live_start : deparser, live_end : deparser, mutually_exclusive_with: [  ] }
+    H1:
+    - { name : hdr.a.first, live_start : parser, live_end : deparser, mutually_exclusive_with: [  ] }
+    H2:
+    - { name : hdr.b.first, live_start : parser, live_end : deparser, mutually_exclusive_with: [  ] }
+    H3:
+    - { name : hdr.c.first, live_start : parser, live_end : deparser, mutually_exclusive_with: [  ] }
+    H4:
+    - { name : hdr.d.first, live_start : parser, live_end : deparser, mutually_exclusive_with: [  ] }
+    H5:
+    - { name : hdr.e.first, live_start : parser, live_end : deparser, mutually_exclusive_with: [  ] }
+phv egress:
+  eg_intr_md.egress_port: H16(0..8)
+  hdr.min_parse_depth_padding_0$0.packet_payload.0-31: TW0
+  hdr.min_parse_depth_padding_0$0.packet_payload.32-63: TW1
+  hdr.min_parse_depth_padding_0$0.packet_payload.64-79: TH12
+  hdr.min_parse_depth_padding_0$0.packet_payload.80-87: TB0
+  hdr.min_parse_depth_padding_0$1.packet_payload.0-31: TW2
+  hdr.min_parse_depth_padding_0$1.packet_payload.32-63: TW3
+  hdr.min_parse_depth_padding_0$1.packet_payload.64-79: TH13
+  hdr.min_parse_depth_padding_0$1.packet_payload.80-87: TB1
+  hdr.min_parse_depth_padding_0$2.packet_payload.0-15: TH0
+  hdr.min_parse_depth_padding_0$2.packet_payload.16-31: TH1
+  hdr.min_parse_depth_padding_0$2.packet_payload.32-47: TH2
+  hdr.min_parse_depth_padding_0$2.packet_payload.48-63: TH3
+  hdr.min_parse_depth_padding_0$2.packet_payload.64-79: TH14
+  hdr.min_parse_depth_padding_0$2.packet_payload.80-87: TB2
+  hdr.min_parse_depth_padding_0$3.packet_payload.0-15: TH4
+  hdr.min_parse_depth_padding_0$3.packet_payload.16-31: TH5
+  hdr.min_parse_depth_padding_0$3.packet_payload.32-63: TW8
+  hdr.min_parse_depth_padding_0$3.packet_payload.64-79: TH15
+  hdr.min_parse_depth_padding_0$3.packet_payload.80-87: TB3
+  hdr.min_parse_depth_padding_0.$stkvalid: B16(0..3)
+  hdr.min_parse_depth_padding_0$0.$valid: {  stage 12: B16(3) } 
+  hdr.min_parse_depth_padding_0$1.$valid: {  stage 12: B16(2) } 
+  hdr.min_parse_depth_padding_0$2.$valid: {  stage 12: B16(1) } 
+  hdr.min_parse_depth_padding_0$3.$valid: B16(0)
+  context_json:
+    B16:
+    - { name : hdr.min_parse_depth_padding_0$3.$valid, live_start : parser, live_end : deparser, mutually_exclusive_with: [  ] }
+    - { name : hdr.min_parse_depth_padding_0.$stkvalid, live_start : parser, live_end : deparser, mutually_exclusive_with: [  ] }
+    - { name : hdr.min_parse_depth_padding_0$0.$valid, live_start : deparser, live_end : deparser, mutually_exclusive_with: [  ] }
+    - { name : hdr.min_parse_depth_padding_0$1.$valid, live_start : deparser, live_end : deparser, mutually_exclusive_with: [  ] }
+    - { name : hdr.min_parse_depth_padding_0$2.$valid, live_start : deparser, live_end : deparser, mutually_exclusive_with: [  ] }
+    H16:
+    - { name : eg_intr_md.egress_port, live_start : parser, live_end : deparser, mutually_exclusive_with: [  ] }
+parser ingress:
+  start: $entry_point.start
+  init_zero: [ B0, H0, B1 ]
+  hdr_len_adj: 16
+  states:
+    $entry_point.start:
+      *:
+        8..9: TH8  # ingress::hdr.eth_hdr.dst_addr[47:32].32-47
+        10..13: TW5  # ingress::hdr.eth_hdr.dst_addr[31:0].0-31
+        14..15: TH7  # ingress::hdr.eth_hdr.src_addr[47:32].32-47
+        16..19: TW4  # ingress::hdr.eth_hdr.src_addr[31:0].0-31
+        20..21: TH6  # ingress::hdr.eth_hdr.eth_type
+        22..23: H1  # ingress::hdr.a.first
+        B1: 63
+            # - value 1 -> B1 bit[0]: ingress::hdr.eth_hdr.$valid
+            # - value 1 -> B1 bit[1]: ingress::hdr.a.$valid
+            # - value 1 -> B1 bit[2]: ingress::hdr.b.$valid
+            # - value 1 -> B1 bit[3]: ingress::hdr.c.$valid
+            # - value 1 -> B1 bit[4]: ingress::hdr.d.$valid
+            # - value 1 -> B1 bit[5]: ingress::hdr.e.$valid
+        shift: 24
+        buf_req: 24
+        next: $entry_point.start.$split_0
+    $entry_point.start.$split_0:
+      *:
+        0..1: H2  # ingress::hdr.b.first
+        2..3: H3  # ingress::hdr.c.first
+        4..5: H4  # ingress::hdr.d.first
+        6..7: H5  # ingress::hdr.e.first
+        shift: 8
+        buf_req: 8
+        next: end
+deparser ingress:
+  dictionary:
+    TH8: B1(0)  # ingress::hdr.eth_hdr.dst_addr.32-47 if ingress::hdr.eth_hdr.$valid
+    TW5: B1(0)  # ingress::hdr.eth_hdr.dst_addr.0-31 if ingress::hdr.eth_hdr.$valid
+    TH7: B1(0)  # ingress::hdr.eth_hdr.src_addr.32-47 if ingress::hdr.eth_hdr.$valid
+    TW4: B1(0)  # ingress::hdr.eth_hdr.src_addr.0-31 if ingress::hdr.eth_hdr.$valid
+    TH6: B1(0)  # ingress::hdr.eth_hdr.eth_type if ingress::hdr.eth_hdr.$valid
+    H1: B1(0)  # ingress::hdr.a.first if ingress::hdr.eth_hdr.$valid
+    H2: B1(0)  # ingress::hdr.b.first if ingress::hdr.eth_hdr.$valid
+    H3: B1(0)  # ingress::hdr.c.first if ingress::hdr.eth_hdr.$valid
+    H4: B1(0)  # ingress::hdr.d.first if ingress::hdr.eth_hdr.$valid
+    H5: B1(0)  # ingress::hdr.e.first if ingress::hdr.eth_hdr.$valid
+  mirror:
+    select: B0(0..2)  # bit[2..0]: ingress::ig_intr_md_for_dprsr.mirror_type
+    0:
+      - H0(0..9)  # bit[9..0]: ingress::$tmp2
+parser egress:
+  start: $entry_point.start.min_parse_depth_accept_initial
+  init_zero: [ B16 ]
+  bitwise_or: [ B16 ]
+  hdr_len_adj: 27
+  meta_opt: 8191
+  states:
+    $entry_point.start.min_parse_depth_accept_initial:
+      *:
+        counter:
+          imm: 38
+        0..1: H16  # bit[7..15] -> H16 bit[8..0]: egress::eg_intr_md.egress_port
+        intr_md: 9
+        shift: 27
+        buf_req: 27
+        next: $entry_point.start.min_parse_depth_accept_initial.$ctr_stall0
+    $entry_point.start.min_parse_depth_accept_initial.$ctr_stall0:
+      *:
+        buf_req: 0
+        next: $entry_point.start.min_parse_depth_accept_initial.$split_0
+    $entry_point.start.min_parse_depth_accept_initial.$split_0:
+      match: [ ctr_neg, ctr_zero ]
+      0x0:
+        counter: dec 11
+        0: TB0  # egress::hdr.min_parse_depth_padding_0[0].packet_payload[87:80].80-87
+        1..2: TH12  # egress::hdr.min_parse_depth_padding_0[0].packet_payload[79:64].64-79
+        3..6: TW1  # egress::hdr.min_parse_depth_padding_0[0].packet_payload[63:32].32-63
+        7..10: TW0  # egress::hdr.min_parse_depth_padding_0[0].packet_payload[31:0].0-31
+        B16: 8  # value 8 -> B16 bit[3..0]: egress::hdr.min_parse_depth_padding_0.$stkvalid
+        shift: 11
+        buf_req: 11
+        next: min_parse_depth_accept_loop.$split_0
+      0b**:
+        buf_req: 0
+        next: end
+    min_parse_depth_accept_loop.$split_0:
+      match: [ ctr_neg, ctr_zero ]
+      option: ignore_max_depth
+      0x0:
+        counter: dec 11
+        0: TB1  # egress::hdr.min_parse_depth_padding_0[1].packet_payload[87:80].80-87
+        1..2: TH13  # egress::hdr.min_parse_depth_padding_0[1].packet_payload[79:64].64-79
+        3..6: TW3  # egress::hdr.min_parse_depth_padding_0[1].packet_payload[63:32].32-63
+        7..10: TW2  # egress::hdr.min_parse_depth_padding_0[1].packet_payload[31:0].0-31
+        B16: 4  # value 4 -> B16 bit[3..0]: egress::hdr.min_parse_depth_padding_0.$stkvalid
+        shift: 11
+        buf_req: 11
+        next: min_parse_depth_accept_loop.$it1.$split_0
+      0b**:
+        buf_req: 0
+        next: end
+    min_parse_depth_accept_loop.$it1.$split_0:
+      match: [ ctr_neg, ctr_zero ]
+      option: ignore_max_depth
+      0x0:
+        counter: dec 11
+        0: TB2  # egress::hdr.min_parse_depth_padding_0[2].packet_payload[87:80].80-87
+        1..2: TH14  # egress::hdr.min_parse_depth_padding_0[2].packet_payload[79:64].64-79
+        3..4: TH3  # egress::hdr.min_parse_depth_padding_0[2].packet_payload[63:48].48-63
+        5..6: TH2  # egress::hdr.min_parse_depth_padding_0[2].packet_payload[47:32].32-47
+        7..8: TH1  # egress::hdr.min_parse_depth_padding_0[2].packet_payload[31:16].16-31
+        B16: 2  # value 2 -> B16 bit[3..0]: egress::hdr.min_parse_depth_padding_0.$stkvalid
+        shift: 9
+        buf_req: 9
+        next: min_parse_depth_accept_loop.$it2.$split_0
+      0b**:
+        buf_req: 0
+        next: end
+    min_parse_depth_accept_loop.$it2.$split_0:
+      match: [ ctr_neg, ctr_zero ]
+      option: ignore_max_depth
+      0x0:
+        counter: dec 11
+        0..1: TH0  # egress::hdr.min_parse_depth_padding_0[2].packet_payload[15:0].0-15
+        2: TB3  # egress::hdr.min_parse_depth_padding_0[3].packet_payload[87:80].80-87
+        3..4: TH15  # egress::hdr.min_parse_depth_padding_0[3].packet_payload[79:64].64-79
+        5..8: TW8  # egress::hdr.min_parse_depth_padding_0[3].packet_payload[63:32].32-63
+        9..10: TH5  # egress::hdr.min_parse_depth_padding_0[3].packet_payload[31:16].16-31
+        11..12: TH4  # egress::hdr.min_parse_depth_padding_0[3].packet_payload[15:0].0-15
+        B16: 1  # value 1 -> B16 bit[3..0]: egress::hdr.min_parse_depth_padding_0.$stkvalid
+        shift: 13
+        buf_req: 13
+        next: end
+      0b**:
+        0..1: TH0  # egress::hdr.min_parse_depth_padding_0[2].packet_payload[15:0].0-15
+        shift: 2
+        buf_req: 2
+        next: end
+deparser egress:
+  dictionary:
+    TB0: B16(3)  # egress::hdr.min_parse_depth_padding_0[0].packet_payload.80-87 if egress::hdr.min_parse_depth_padding_0[0].$valid
+    TH12: B16(3)  # egress::hdr.min_parse_depth_padding_0[0].packet_payload.64-79 if egress::hdr.min_parse_depth_padding_0[0].$valid
+    TW1: B16(3)  # egress::hdr.min_parse_depth_padding_0[0].packet_payload.32-63 if egress::hdr.min_parse_depth_padding_0[0].$valid
+    TW0: B16(3)  # egress::hdr.min_parse_depth_padding_0[0].packet_payload.0-31 if egress::hdr.min_parse_depth_padding_0[0].$valid
+    TB1: B16(2)  # egress::hdr.min_parse_depth_padding_0[1].packet_payload.80-87 if egress::hdr.min_parse_depth_padding_0[1].$valid
+    TH13: B16(2)  # egress::hdr.min_parse_depth_padding_0[1].packet_payload.64-79 if egress::hdr.min_parse_depth_padding_0[1].$valid
+    TW3: B16(2)  # egress::hdr.min_parse_depth_padding_0[1].packet_payload.32-63 if egress::hdr.min_parse_depth_padding_0[1].$valid
+    TW2: B16(2)  # egress::hdr.min_parse_depth_padding_0[1].packet_payload.0-31 if egress::hdr.min_parse_depth_padding_0[1].$valid
+    TB2: B16(1)  # egress::hdr.min_parse_depth_padding_0[2].packet_payload.80-87 if egress::hdr.min_parse_depth_padding_0[2].$valid
+    TH14: B16(1)  # egress::hdr.min_parse_depth_padding_0[2].packet_payload.64-79 if egress::hdr.min_parse_depth_padding_0[2].$valid
+    TH3: B16(1)  # egress::hdr.min_parse_depth_padding_0[2].packet_payload.48-63 if egress::hdr.min_parse_depth_padding_0[2].$valid
+    TH2: B16(1)  # egress::hdr.min_parse_depth_padding_0[2].packet_payload.32-47 if egress::hdr.min_parse_depth_padding_0[2].$valid
+    TH1: B16(1)  # egress::hdr.min_parse_depth_padding_0[2].packet_payload.16-31 if egress::hdr.min_parse_depth_padding_0[2].$valid
+    TH0: B16(1)  # egress::hdr.min_parse_depth_padding_0[2].packet_payload.0-15 if egress::hdr.min_parse_depth_padding_0[2].$valid
+    TB3: B16(0)  # egress::hdr.min_parse_depth_padding_0[3].packet_payload.80-87 if egress::hdr.min_parse_depth_padding_0[3].$valid
+    TH15: B16(0)  # egress::hdr.min_parse_depth_padding_0[3].packet_payload.64-79 if egress::hdr.min_parse_depth_padding_0[3].$valid
+    TW8: B16(0)  # egress::hdr.min_parse_depth_padding_0[3].packet_payload.32-63 if egress::hdr.min_parse_depth_padding_0[3].$valid
+    TH5: B16(0)  # egress::hdr.min_parse_depth_padding_0[3].packet_payload.16-31 if egress::hdr.min_parse_depth_padding_0[3].$valid
+    TH4: B16(0)  # egress::hdr.min_parse_depth_padding_0[3].packet_payload.0-15 if egress::hdr.min_parse_depth_padding_0[3].$valid
+  egress_unicast_port: H16(0..8)  # bit[8..0]: egress::eg_intr_md.egress_port
+stage 0 ingress:
+  phase0_match SwitchIngressParser.$PORT_METADATA:
+    p4:
+      name: SwitchIngressParser.$PORT_METADATA
+      size: 288
+      preferred_match_type: exact
+      match_type: exact
+    size: 288
+    p4_param_order:
+      ig_intr_md.ingress_port: { type: exact, size: 9 }
+    format: {ig_intr_md: 0..63}
+    constant_value: 0
+    actions:
+      set_port_metadata:
+      - handle: 0x20000000
+      - p4_param_order: { ig_intr_md: 64 } 
+  exact_match tbl_init_0 0:
+    p4: { name: ingress.tbl_init, size: 512 }
+    p4_param_order: 
+      hdr.d.first: { type: exact, size: 16, full_size: 16, key_name: "h.d.first" }
+    row: 7
+    bus: 0
+    column: [ 2, 3, 4, 5 ]
+    stash: 
+      row: [ 7 ]
+      col: [ 2 ]
+      unit: [ 0 ]
+    ways:
+      - { group: 0, index: 0..9, select: 40..51 & 0x0, rams: [[7, 2]] }
+      - { group: 0, index: 10..19, select: 40..51 & 0x0, rams: [[7, 3]] }
+      - { group: 0, index: 20..29, select: 40..51 & 0x0, rams: [[7, 4]] }
+      - { group: 0, index: 30..39, select: 40..51 & 0x0, rams: [[7, 5]] }
+    input_xbar:
+      exact group 0: { 0: hdr.d.first }
+      hash 0:
+        0..7: random(hdr.d.first(10..15)) ^ hdr.d.first(0..7)
+        8..9: random(hdr.d.first(10..15)) ^ hdr.d.first(8..9)
+        11..18: random(hdr.d.first(10..15)) ^ hdr.d.first(0..7)
+        19: random(hdr.d.first(10..15)) ^ hdr.d.first(8)
+        10: random(hdr.d.first(10..15)) ^ hdr.d.first(9)
+        22..29: random(hdr.d.first(10..15)) ^ hdr.d.first(0..7)
+        20..21: random(hdr.d.first(10..15)) ^ hdr.d.first(8..9)
+        33..39: random(hdr.d.first(10..15)) ^ hdr.d.first(0..6)
+        30: random(hdr.d.first(10..15)) ^ hdr.d.first(7)
+        31..32: random(hdr.d.first(10..15)) ^ hdr.d.first(8..9)
+      hash group 0:
+        table: [0]
+        seed: 0xc27f351091
+    format: { immediate(0): 0..15, version(0): 112..115, match(0): 50..55, immediate(1): 16..31, version(1): 116..119, match(1): 58..63, immediate(2): 32..47, version(2): 120..123, match(2): 66..71 }
+    match: [ hdr.d.first(10..15) ]
+    match_group_map: [ [ 0, 1, 2 ] ]
+    hit: [  tbl_write_a_0 ]
+    miss:  tbl_write_a_0
+    action_bus: { 32..33 : immediate(0..15) }
+    instruction: tbl_init_0($DEFAULT, $DEFAULT)
+    actions:
+      ingress.set_a(0, 1):
+      - p4_param_order: { val: 16 }
+      - hit_allowed: { allowed: true }
+      - default_action: { allowed: true }
+      - handle: 0x20000001
+      - next_table: 0
+      - { val_1: immediate(0..15), val: val_1 }
+      - set hdr.a.first, val
+      NoAction(-1, 0):
+      - hit_allowed: { allowed: false, reason: user_indicated_default_only }
+      - default_only_action: { allowed: true }
+      - handle: 0x20000002
+      - next_table: 0
+      - {  }
+    default_only_action: NoAction
+stage 1 ingress:
+  dependency: action
+  exact_match tbl_write_a_0 0:
+    p4: { name: ingress.tbl_write_a, size: 512 }
+    p4_param_order: 
+      hdr.c.first: { type: exact, size: 16, full_size: 16, key_name: "h.c.first" }
+    row: 7
+    bus: 0
+    column: [ 2, 3, 4, 5 ]
+    stash: 
+      row: [ 7 ]
+      col: [ 2 ]
+      unit: [ 0 ]
+    ways:
+      - { group: 0, index: 0..9, select: 40..51 & 0x0, rams: [[7, 2]] }
+      - { group: 0, index: 10..19, select: 40..51 & 0x0, rams: [[7, 3]] }
+      - { group: 0, index: 20..29, select: 40..51 & 0x0, rams: [[7, 4]] }
+      - { group: 0, index: 30..39, select: 40..51 & 0x0, rams: [[7, 5]] }
+    input_xbar:
+      exact group 0: { 0: hdr.c.first }
+      hash 0:
+        0..7: random(hdr.c.first(10..15)) ^ hdr.c.first(0..7)
+        8..9: random(hdr.c.first(10..15)) ^ hdr.c.first(8..9)
+        11..18: random(hdr.c.first(10..15)) ^ hdr.c.first(0..7)
+        19: random(hdr.c.first(10..15)) ^ hdr.c.first(8)
+        10: random(hdr.c.first(10..15)) ^ hdr.c.first(9)
+        22..29: random(hdr.c.first(10..15)) ^ hdr.c.first(0..7)
+        20..21: random(hdr.c.first(10..15)) ^ hdr.c.first(8..9)
+        33..39: random(hdr.c.first(10..15)) ^ hdr.c.first(0..6)
+        30: random(hdr.c.first(10..15)) ^ hdr.c.first(7)
+        31..32: random(hdr.c.first(10..15)) ^ hdr.c.first(8..9)
+      hash group 0:
+        table: [0]
+        seed: 0xbc63abbd62
+    format: { immediate(0): 0..15, version(0): 112..115, match(0): 50..55, immediate(1): 16..31, version(1): 116..119, match(1): 58..63, immediate(2): 32..47, version(2): 120..123, match(2): 66..71 }
+    match: [ hdr.c.first(10..15) ]
+    match_group_map: [ [ 0, 1, 2 ] ]
+    hit: [  tbl_read_a_0 ]
+    miss:  tbl_read_a_0
+    action_bus: { 32..33 : immediate(0..15) }
+    instruction: tbl_write_a_0($DEFAULT, $DEFAULT)
+    actions:
+      ingress.set_a(0, 1):
+      - p4_param_order: { val: 16 }
+      - hit_allowed: { allowed: true }
+      - default_action: { allowed: true }
+      - handle: 0x20000003
+      - next_table: 0
+      - { val_2: immediate(0..15), val: val_2 }
+      - set hdr.a.first, val
+      NoAction(-1, 0):
+      - hit_allowed: { allowed: false, reason: user_indicated_default_only }
+      - default_only_action: { allowed: true }
+      - handle: 0x20000004
+      - next_table: 0
+      - {  }
+    default_only_action: NoAction
+stage 2 ingress:
+  dependency: action
+  exact_match tbl_read_a_0 0:
+    p4: { name: ingress.tbl_read_a, size: 512 }
+    p4_param_order: 
+      hdr.e.first: { type: exact, size: 16, full_size: 16, key_name: "h.e.first" }
+    row: 7
+    bus: 0
+    column: [ 2, 3, 4, 5 ]
+    stash: 
+      row: [ 7 ]
+      col: [ 2 ]
+      unit: [ 0 ]
+    ways:
+      - { group: 0, index: 0..9, select: 40..51 & 0x0, rams: [[7, 2]] }
+      - { group: 0, index: 10..19, select: 40..51 & 0x0, rams: [[7, 3]] }
+      - { group: 0, index: 20..29, select: 40..51 & 0x0, rams: [[7, 4]] }
+      - { group: 0, index: 30..39, select: 40..51 & 0x0, rams: [[7, 5]] }
+    input_xbar:
+      exact group 0: { 0: hdr.e.first }
+      hash 0:
+        0..7: random(hdr.e.first(10..15)) ^ hdr.e.first(0..7)
+        8..9: random(hdr.e.first(10..15)) ^ hdr.e.first(8..9)
+        11..18: random(hdr.e.first(10..15)) ^ hdr.e.first(0..7)
+        19: random(hdr.e.first(10..15)) ^ hdr.e.first(8)
+        10: random(hdr.e.first(10..15)) ^ hdr.e.first(9)
+        22..29: random(hdr.e.first(10..15)) ^ hdr.e.first(0..7)
+        20..21: random(hdr.e.first(10..15)) ^ hdr.e.first(8..9)
+        33..39: random(hdr.e.first(10..15)) ^ hdr.e.first(0..6)
+        30: random(hdr.e.first(10..15)) ^ hdr.e.first(7)
+        31..32: random(hdr.e.first(10..15)) ^ hdr.e.first(8..9)
+      hash group 0:
+        table: [0]
+        seed: 0x254863c0e9
+    format: { version(0): 112..115, match(0): 34..39, version(1): 116..119, match(1): 42..47, version(2): 120..123, match(2): 50..55, version(3): 124..127, match(3): 58..63, version(4): 0..3, match(4): 66..71 }
+    match: [ hdr.e.first(10..15) ]
+    match_group_map: [ [ 0, 1, 2, 3, 4 ] ]
+    hit: [  END ]
+    miss:  END
+    instruction: tbl_read_a_0($DEFAULT, $DEFAULT)
+    actions:
+      ingress.set_b_w_a(0, 1):
+      - hit_allowed: { allowed: true }
+      - default_action: { allowed: true }
+      - handle: 0x20000005
+      - next_table: 0
+      - set hdr.b.first, hdr.a.first
+      NoAction(-1, 0):
+      - hit_allowed: { allowed: false, reason: user_indicated_default_only }
+      - default_only_action: { allowed: true }
+      - handle: 0x20000006
+      - next_table: 0
+    default_only_action: NoAction
+
+
+primitives: "raw-action.prim.json"
+dynhash: "raw-action.dynhash.json"

@@ -1,0 +1,21 @@
+{
+    "build_date": "Wed Oct  8 01:15:28 2025",
+    "program_name": "raw-action.p4",
+    "run_id": "779caf4ffcc44557",
+    "schema_version": "1.12.4",
+    "compiler_version": "9.13.4",
+    "target": "tofino",
+    "tables": [],
+    "phv_allocation": [],
+    "parser": {
+        "ingress": [],
+        "egress": []
+    },
+    "learn_quanta": [],
+    "mau_stage_characteristics": [],
+    "dynamic_hash_calculations": [],
+    "configuration_cache": [],
+    "driver_options": {
+        "hash_parity_enabled": false
+    }
+}

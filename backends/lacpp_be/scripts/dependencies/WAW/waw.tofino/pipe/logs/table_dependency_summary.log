@@ -1,0 +1,14 @@
+#pipeline pipe
+#stage 0
+^ - tbl_set_b_w_c_0(0,10) : ingress
+#stage 1
+A ^ tbl_set_b_0(1,11) : ingress
+#dependencies
+A :  OUTPUT ANTI_NEXT_TABLE_DATA
+
+Looking for Table dependency chains wih minimum length of 8
+  Map table tbl_set_b_w_c_0 to stage 0
+  Map table tbl_set_b_0 to stage 1
+  table: tbl_set_b_0 min_stage: 1 dep_stages: 0
+  	 STOPPING SEARCH ...
+  *** Table dependency chains (of minimum length 8) ***

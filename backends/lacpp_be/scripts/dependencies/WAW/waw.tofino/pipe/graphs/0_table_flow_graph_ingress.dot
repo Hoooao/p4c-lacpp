@@ -1,0 +1,19 @@
+digraph ingress {
+tbl_set_b_w_c_0 [ shape=record, style="filled", fillcolor=cornsilk, label="tbl_set_b_w_c_0\l\l
+M:\l
+ hdr.a.first\l
+\lR:\l
+ hdr.c.first\l
+\lW:\l
+ hdr.b.first\l
+ "];
+tbl_set_b_0 [ shape=record, style="filled", fillcolor=cornsilk, label="tbl_set_b_0\l\l
+M:\l
+ hdr.a.first\l
+\lW:\l
+ hdr.b.first\l
+ "];
+    PARSER -> tbl_set_b_w_c_0
+    tbl_set_b_w_c_0 -> tbl_set_b_0
+    tbl_set_b_0 -> DEPARSER
+}

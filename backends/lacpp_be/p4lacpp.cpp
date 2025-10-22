@@ -9,6 +9,7 @@
 
 #include "backends/lacpp_be/p4lacpp.h"
 #include "backends/lacpp_be/p4feature_extractor.h"
+#include "backends/lacpp_be/rewriter.h"
 
 
 namespace P4::P4LACPP{
@@ -58,6 +59,18 @@ std::optional<std::pair<const IR::P4Program *, const Util::InputSources *>> pars
     return result;
 }
 
+int rewrite(const P4LACPPOptions &options, const IR::P4Program *program){
+    // output_file is inputfile remove suffix and add rewrite.p4
+    std::filesystem::path output_file = options.file;
+    output_file.replace_extension("rewrite.p4");
+    std::ostream *ppStream = openFile(output_file, true);
+
+    auto rewriter = P4::P4LACPP::Rewriter();
+    auto program = program->apply(rewriter);
+    P4::ToP4 top4(ppStream, false);
+    (void)program->apply(top4);
+    return EXIT_SUCCESS;
+}
 
 int getFeatures(P4LACPPOptions& options, const IR::P4Program *program){
     auto extractor = P4FeatureExtractor();

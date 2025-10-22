@@ -17,10 +17,12 @@ class P4LACPPOptions : public CompilerOptions {
 
     const std::filesystem::path &getFeatureOutFile() const;
     const std::filesystem::path &getDumpOptimizedFile() const;
+    bool getRewriteMode() const;
 
  private:
     std::filesystem::path featureOutFile;
     std::filesystem::path dumpOptimizedFile;
+    bool rewrite_mode = false;
 };
 
 using P4LACPPContext = P4CContextWithOptions<P4LACPPOptions>;

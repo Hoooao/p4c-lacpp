@@ -634,13 +634,13 @@ void DependencyGraph::to_json(Util::JsonObject *dgsJson, const FlowGraph &fg, cs
                 auto mdf = md->field();
                 if (mdf) edge.add_dep_field(md->field());
             }
-        } else if ((edge.label == DependencyGraph::OUTPUT) ||
+        } else if ((edge.label == DependencyGraph::OUTPUT) || (edge.label == DependencyGraph::ACTION_READ) ||
                    (edge.label == DependencyGraph::IXBAR_READ) || is_anti_edge(edge.label)) {
             auto deps = get_data_dependency_info(*edges);
             if (deps) {
                 auto local_data = deps.value();
                 for (const auto &kv : local_data) {
-                    edge.add_dep_field(kv.first);
+                    edge.add_dep_field_w_action(kv.first, kv.second);
                 }
             }
         } else if (is_ctrl_edge(edge.label)) {

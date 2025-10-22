@@ -1,0 +1,9 @@
+digraph ingress {
+0 [label="$root" shape=box color="black"];
+1 [label="tbl_init_0" shape=box color="black"];
+3 [label="tbl_read_a_0" shape=box color="black"];
+2 [label="tbl_write_a_0" shape=box color="black"];
+0-> 1 [label="$start" color="black"];
+1-> 2 [label="set_a" color="black"];
+2-> 3 [label="set_a" color="black"];
+}

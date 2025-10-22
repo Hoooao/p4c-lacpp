@@ -1,0 +1,1175 @@
+FindDependencyGraph : After Instruction Selection :  NA 
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+ingress: [3] 0
+  tbl_set_b_w_c_0
+  tbl_set_b_0
+egress: [4]
+
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+Printing alias map
+	 TableSeq (2)   front: tbl_set_b_w_c_0 back: tbl_set_b_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_set_b_w_c_0
+	 TableKey for table tbl_set_b_w_c_0
+		update_access read ingress::hdr.a.first
+	 Action for table tbl_set_b_w_c_0
+		update_access write ingress::hdr.b.first
+		update_access read ingress::hdr.c.first
+	 Action for table tbl_set_b_w_c_0
+	FindDep table tbl_set_b_0
+		add_dependency(ingress::hdr.a.first) 
+		add_dependency(ingress::hdr.b.first) 
+DST tbl_set_b_0 has dep OUTPUT to SRC tbl_set_b_w_c_0
+	Add OUTPUT dependency from tbl_set_b_w_c_0 to tbl_set_b_0 because of field ingress::hdr.b.first for actions ingress.set_b_w_c/set_b_w_c - set_b
+	 TableKey for table tbl_set_b_0
+		update_access read ingress::hdr.a.first
+	 Action for table tbl_set_b_0
+		update_access write ingress::hdr.b.first
+	 Action for table tbl_set_b_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_set_b_w_c_0
+DepStagesThruDomFrontier postorder : tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_set_b_w_c_0-tbl_set_b_0 due to original dependency on tbl_set_b_w_c_0->tbl_set_b_0 of type OUTPUT
+DST tbl_set_b_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_set_b_w_c_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table:  1, tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Dep stages of 0 for table tbl_set_b_0
+Dep stages control of 0 for table tbl_set_b_0
+Dep stages of 1 for table tbl_set_b_w_c_0
+Dep stages control of 1 for table tbl_set_b_w_c_0
+Table tbl_set_b_0 has priors of tbl_set_b_w_c_0, 
+
+Initial table tbl_set_b_w_c_0 with later table tbl_set_b_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table: 1, tbl_set_b_0
+Table tbl_set_b_w_c_0 has priors of tbl_set_b_0, 
+Table tbl_set_b_0 has priors of 
+
+	min_stage for tbl_set_b_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_set_b_w_c_0 -- OUTPUT --> tbl_set_b_0
+    tbl_set_b_w_c_0 -- ANTI_NEXT_TABLE_DATA --> tbl_set_b_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_set_b_w_c_0 (ingress.tbl_set_b_w_c) 1 1
+ Stage #1
+     tbl_set_b_0 (ingress.tbl_set_b) 0 0
+	- Edge OUTPUT tbl_set_b_w_c_0 ( ingress.tbl_set_b_w_c )
+
+Data dependency edge not found
+Data dependency edge not found
+FindDependencyGraph : Just Before PHV allocation :  NA 
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+ingress: [3] 0
+  tbl_set_b_w_c_0
+  tbl_set_b_0
+egress: [4]
+
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+Printing alias map
+	 TableSeq (2)   front: tbl_set_b_w_c_0 back: tbl_set_b_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_set_b_w_c_0
+	 TableKey for table tbl_set_b_w_c_0
+		update_access read ingress::hdr.a.first
+	 Action for table tbl_set_b_w_c_0
+		update_access write ingress::hdr.b.first
+		update_access read ingress::hdr.c.first
+	 Action for table tbl_set_b_w_c_0
+	FindDep table tbl_set_b_0
+		add_dependency(ingress::hdr.a.first) 
+		add_dependency(ingress::hdr.b.first) 
+DST tbl_set_b_0 has dep OUTPUT to SRC tbl_set_b_w_c_0
+	Add OUTPUT dependency from tbl_set_b_w_c_0 to tbl_set_b_0 because of field ingress::hdr.b.first for actions ingress.set_b_w_c/set_b_w_c - set_b
+	 TableKey for table tbl_set_b_0
+		update_access read ingress::hdr.a.first
+	 Action for table tbl_set_b_0
+		update_access write ingress::hdr.b.first
+	 Action for table tbl_set_b_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_set_b_w_c_0
+DepStagesThruDomFrontier postorder : tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_set_b_w_c_0-tbl_set_b_0 due to original dependency on tbl_set_b_w_c_0->tbl_set_b_0 of type OUTPUT
+DST tbl_set_b_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_set_b_w_c_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table:  1, tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Dep stages of 0 for table tbl_set_b_0
+Dep stages control of 0 for table tbl_set_b_0
+Dep stages of 1 for table tbl_set_b_w_c_0
+Dep stages control of 1 for table tbl_set_b_w_c_0
+Table tbl_set_b_0 has priors of tbl_set_b_w_c_0, 
+
+Initial table tbl_set_b_w_c_0 with later table tbl_set_b_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table: 1, tbl_set_b_0
+Table tbl_set_b_w_c_0 has priors of tbl_set_b_0, 
+Table tbl_set_b_0 has priors of 
+
+	min_stage for tbl_set_b_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_set_b_w_c_0 -- OUTPUT --> tbl_set_b_0
+    tbl_set_b_w_c_0 -- ANTI_NEXT_TABLE_DATA --> tbl_set_b_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_set_b_w_c_0 (ingress.tbl_set_b_w_c) 1 1
+ Stage #1
+     tbl_set_b_0 (ingress.tbl_set_b) 0 0
+	- Edge OUTPUT tbl_set_b_w_c_0 ( ingress.tbl_set_b_w_c )
+
+FindDependencyGraph : Before Uninitialized Read Check :  NA 
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+ingress: [3] 0
+  tbl_set_b_w_c_0
+  tbl_set_b_0
+egress: [4]
+
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+Printing alias map
+	 TableSeq (2)   front: tbl_set_b_w_c_0 back: tbl_set_b_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_set_b_w_c_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_set_b_w_c_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	 Action for table tbl_set_b_w_c_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+		update_access read ingress::hdr.c.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+	 Action for table tbl_set_b_w_c_0
+	FindDep table tbl_set_b_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		add_dependency(ingress::hdr.b.first[15:0]) 
+DST tbl_set_b_0 has dep OUTPUT to SRC tbl_set_b_w_c_0
+	Add OUTPUT dependency from tbl_set_b_w_c_0 to tbl_set_b_0 because of field ingress::hdr.b.first for actions ingress.set_b_w_c/set_b_w_c - set_b
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+		Table: tbl_set_b_w_c_0
+			ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	Checking Mutex Fields
+		( 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2 , 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2 ) = FeldMutex 0, MetdataMutex 0
+-------------------------------------------------------------
+	Add container conflict between table tbl_set_b_w_c_0 and table tbl_set_b_0 because of container H2
+	 TableKey for table tbl_set_b_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	 Action for table tbl_set_b_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	 Action for table tbl_set_b_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_set_b_w_c_0
+DepStagesThruDomFrontier postorder : tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_set_b_w_c_0-tbl_set_b_0 due to original dependency on tbl_set_b_w_c_0->tbl_set_b_0 of type OUTPUT
+DST tbl_set_b_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_set_b_w_c_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table:  1, tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Dep stages of 0 for table tbl_set_b_0
+Dep stages control of 0 for table tbl_set_b_0
+Dep stages of 1 for table tbl_set_b_w_c_0
+Dep stages control of 1 for table tbl_set_b_w_c_0
+Table tbl_set_b_0 has priors of tbl_set_b_w_c_0, 
+
+Initial table tbl_set_b_w_c_0 with later table tbl_set_b_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table: 1, tbl_set_b_0
+Table tbl_set_b_w_c_0 has priors of tbl_set_b_0, 
+Table tbl_set_b_0 has priors of 
+
+	min_stage for tbl_set_b_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_set_b_w_c_0 -- OUTPUT --> tbl_set_b_0
+    tbl_set_b_w_c_0 -- ANTI_NEXT_TABLE_DATA --> tbl_set_b_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_set_b_w_c_0 (ingress.tbl_set_b_w_c) 1 1
+ Stage #1
+     tbl_set_b_0 (ingress.tbl_set_b) 0 0
+	- Edge OUTPUT tbl_set_b_w_c_0 ( ingress.tbl_set_b_w_c )
+
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+ingress: [3] 1
+  tbl_set_b_w_c_0{ E 6+0, 0 0K }
+  tbl_set_b_0{ E 6+0, 2 0K }
+egress: [4]
+
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+Printing alias map
+  egress::hdr.min_parse_depth_padding_0[0].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[1].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[2].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[3].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+	 TableSeq (2)   front: tbl_set_b_w_c_0 back: tbl_set_b_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_set_b_w_c_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_set_b_w_c_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	 Action for table tbl_set_b_w_c_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+		update_access read ingress::hdr.c.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+	 Action for table tbl_set_b_w_c_0
+	FindDep table tbl_set_b_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		add_dependency(ingress::hdr.b.first[15:0]) 
+DST tbl_set_b_0 has dep OUTPUT to SRC tbl_set_b_w_c_0
+	Add OUTPUT dependency from tbl_set_b_w_c_0 to tbl_set_b_0 because of field ingress::hdr.b.first for actions ingress.set_b_w_c/set_b_w_c - set_b
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+		Table: tbl_set_b_w_c_0
+			ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	Checking Mutex Fields
+		( 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2 , 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2 ) = FeldMutex 0, MetdataMutex 0
+-------------------------------------------------------------
+	Add container conflict between table tbl_set_b_w_c_0 and table tbl_set_b_0 because of container H2
+	 TableKey for table tbl_set_b_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	 Action for table tbl_set_b_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	 Action for table tbl_set_b_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_set_b_w_c_0
+DepStagesThruDomFrontier postorder : tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_set_b_w_c_0-tbl_set_b_0 due to original dependency on tbl_set_b_w_c_0->tbl_set_b_0 of type OUTPUT
+DST tbl_set_b_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_set_b_w_c_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table:  1, tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Dep stages of 0 for table tbl_set_b_0
+Dep stages control of 0 for table tbl_set_b_0
+Dep stages of 1 for table tbl_set_b_w_c_0
+Dep stages control of 1 for table tbl_set_b_w_c_0
+Table tbl_set_b_0 has priors of tbl_set_b_w_c_0, 
+
+Initial table tbl_set_b_w_c_0 with later table tbl_set_b_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table: 1, tbl_set_b_0
+Table tbl_set_b_w_c_0 has priors of tbl_set_b_0, 
+Table tbl_set_b_0 has priors of 
+
+	min_stage for tbl_set_b_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_set_b_w_c_0 -- OUTPUT --> tbl_set_b_0
+    tbl_set_b_w_c_0 -- ANTI_NEXT_TABLE_DATA --> tbl_set_b_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_set_b_w_c_0 (ingress.tbl_set_b_w_c) 1 1
+ Stage #1
+     tbl_set_b_0 (ingress.tbl_set_b) 0 0
+	- Edge OUTPUT tbl_set_b_w_c_0 ( ingress.tbl_set_b_w_c )
+
+FindDependencyGraph : Before Table Placement : INITIAL
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+ingress: [3] 1
+  tbl_set_b_w_c_0{ E 6+0, 0 0K }
+  tbl_set_b_0{ E 6+0, 2 0K }
+egress: [4]
+
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+Printing alias map
+  egress::hdr.min_parse_depth_padding_0[0].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[1].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[2].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[3].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+	 TableSeq (2)   front: tbl_set_b_w_c_0 back: tbl_set_b_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_set_b_w_c_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_set_b_w_c_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	 Action for table tbl_set_b_w_c_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+		update_access read ingress::hdr.c.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+	 Action for table tbl_set_b_w_c_0
+	FindDep table tbl_set_b_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		add_dependency(ingress::hdr.b.first[15:0]) 
+DST tbl_set_b_0 has dep OUTPUT to SRC tbl_set_b_w_c_0
+	Add OUTPUT dependency from tbl_set_b_w_c_0 to tbl_set_b_0 because of field ingress::hdr.b.first for actions ingress.set_b_w_c/set_b_w_c - set_b
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+		Table: tbl_set_b_w_c_0
+			ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	Checking Mutex Fields
+		( 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2 , 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2 ) = FeldMutex 0, MetdataMutex 0
+-------------------------------------------------------------
+	Add container conflict between table tbl_set_b_w_c_0 and table tbl_set_b_0 because of container H2
+	 TableKey for table tbl_set_b_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	 Action for table tbl_set_b_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	 Action for table tbl_set_b_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_set_b_w_c_0
+DepStagesThruDomFrontier postorder : tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_set_b_w_c_0-tbl_set_b_0 due to original dependency on tbl_set_b_w_c_0->tbl_set_b_0 of type OUTPUT
+DST tbl_set_b_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_set_b_w_c_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table:  1, tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Dep stages of 0 for table tbl_set_b_0
+Dep stages control of 0 for table tbl_set_b_0
+Dep stages of 1 for table tbl_set_b_w_c_0
+Dep stages control of 1 for table tbl_set_b_w_c_0
+Table tbl_set_b_0 has priors of tbl_set_b_w_c_0, 
+
+Initial table tbl_set_b_w_c_0 with later table tbl_set_b_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table: 1, tbl_set_b_0
+Table tbl_set_b_w_c_0 has priors of tbl_set_b_0, 
+Table tbl_set_b_0 has priors of 
+
+	min_stage for tbl_set_b_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_set_b_w_c_0 -- OUTPUT --> tbl_set_b_0
+    tbl_set_b_w_c_0 -- ANTI_NEXT_TABLE_DATA --> tbl_set_b_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_set_b_w_c_0 (ingress.tbl_set_b_w_c) 1 1
+ Stage #1
+     tbl_set_b_0 (ingress.tbl_set_b) 0 0
+	- Edge OUTPUT tbl_set_b_w_c_0 ( ingress.tbl_set_b_w_c )
+
+FindDependencyGraph : After Table Placement : INITIAL
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+ingress: [3] 0
+  0: tbl_set_b_w_c_0{ E 6+0, 0 [1x5 5K 5K 5K 5K] }
+  10: tbl_set_b_0{ E 6+16, 2 [1x3 3K 3K 3K 3K] }
+egress: [4]
+
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+Printing alias map
+  egress::hdr.min_parse_depth_padding_0[0].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[1].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[2].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[3].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+	 TableSeq (2)   front: tbl_set_b_w_c_0 back: tbl_set_b_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_set_b_w_c_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_set_b_w_c_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	 Action for table tbl_set_b_w_c_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+		update_access read ingress::hdr.c.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+	 Action for table tbl_set_b_w_c_0
+	FindDep table tbl_set_b_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		add_dependency(ingress::hdr.b.first[15:0]) 
+DST tbl_set_b_0 has dep OUTPUT to SRC tbl_set_b_w_c_0
+	Add OUTPUT dependency from tbl_set_b_w_c_0 to tbl_set_b_0 because of field ingress::hdr.b.first for actions ingress.set_b_w_c/set_b_w_c - set_b
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+		Table: tbl_set_b_w_c_0
+			ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	Checking Mutex Fields
+		( 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2 , 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2 ) = FeldMutex 0, MetdataMutex 0
+-------------------------------------------------------------
+	Add container conflict between table tbl_set_b_w_c_0 and table tbl_set_b_0 because of container H2
+	 TableKey for table tbl_set_b_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	 Action for table tbl_set_b_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	 Action for table tbl_set_b_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_set_b_w_c_0
+DepStagesThruDomFrontier postorder : tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_set_b_w_c_0-tbl_set_b_0 due to original dependency on tbl_set_b_w_c_0->tbl_set_b_0 of type OUTPUT
+DST tbl_set_b_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_set_b_w_c_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table:  1, tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Dep stages of 0 for table tbl_set_b_0
+Dep stages control of 0 for table tbl_set_b_0
+Dep stages of 1 for table tbl_set_b_w_c_0
+Dep stages control of 1 for table tbl_set_b_w_c_0
+Table tbl_set_b_0 has priors of tbl_set_b_w_c_0, 
+
+Initial table tbl_set_b_w_c_0 with later table tbl_set_b_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table: 1, tbl_set_b_0
+Table tbl_set_b_w_c_0 has priors of tbl_set_b_0, 
+Table tbl_set_b_0 has priors of 
+
+	min_stage for tbl_set_b_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_set_b_w_c_0 -- OUTPUT --> tbl_set_b_0
+    tbl_set_b_w_c_0 -- ANTI_NEXT_TABLE_DATA --> tbl_set_b_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_set_b_w_c_0 (ingress.tbl_set_b_w_c) 1 1
+ Stage #1
+     tbl_set_b_0 (ingress.tbl_set_b) 0 0
+	- Edge OUTPUT tbl_set_b_w_c_0 ( ingress.tbl_set_b_w_c )
+
+FindDependencyGraph : After Table Placement :  NA 
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+ingress: [3] 1
+  0: tbl_set_b_w_c_0{ E 6+0, 0 [1x5 5K 5K 5K 5K] }
+  10: tbl_set_b_0{ E 6+16, 2 [1x3 3K 3K 3K 3K] }
+egress: [4]
+
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+Printing alias map
+  egress::hdr.min_parse_depth_padding_0[0].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[1].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[2].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[3].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+	 TableSeq (2)   front: tbl_set_b_w_c_0 back: tbl_set_b_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_set_b_w_c_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_set_b_w_c_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	 Action for table tbl_set_b_w_c_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+		update_access read ingress::hdr.c.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+	 Action for table tbl_set_b_w_c_0
+	FindDep table tbl_set_b_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		add_dependency(ingress::hdr.b.first[15:0]) 
+DST tbl_set_b_0 has dep OUTPUT to SRC tbl_set_b_w_c_0
+	Add OUTPUT dependency from tbl_set_b_w_c_0 to tbl_set_b_0 because of field ingress::hdr.b.first for actions ingress.set_b_w_c/set_b_w_c - set_b
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+		Table: tbl_set_b_w_c_0
+			ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	Checking Mutex Fields
+		( 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2 , 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2 ) = FeldMutex 0, MetdataMutex 0
+-------------------------------------------------------------
+	Add container conflict between table tbl_set_b_w_c_0 and table tbl_set_b_0 because of container H2
+	 TableKey for table tbl_set_b_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	 Action for table tbl_set_b_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	 Action for table tbl_set_b_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_set_b_w_c_0
+DepStagesThruDomFrontier postorder : tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_set_b_w_c_0-tbl_set_b_0 due to original dependency on tbl_set_b_w_c_0->tbl_set_b_0 of type OUTPUT
+DST tbl_set_b_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_set_b_w_c_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table:  1, tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Dep stages of 0 for table tbl_set_b_0
+Dep stages control of 0 for table tbl_set_b_0
+Dep stages of 1 for table tbl_set_b_w_c_0
+Dep stages control of 1 for table tbl_set_b_w_c_0
+Table tbl_set_b_0 has priors of tbl_set_b_w_c_0, 
+
+Initial table tbl_set_b_w_c_0 with later table tbl_set_b_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table: 1, tbl_set_b_0
+Table tbl_set_b_w_c_0 has priors of tbl_set_b_0, 
+Table tbl_set_b_0 has priors of 
+
+	min_stage for tbl_set_b_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_set_b_w_c_0 -- OUTPUT --> tbl_set_b_0
+    tbl_set_b_w_c_0 -- ANTI_NEXT_TABLE_DATA --> tbl_set_b_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_set_b_w_c_0 (ingress.tbl_set_b_w_c) 1 1
+ Stage #1
+     tbl_set_b_0 (ingress.tbl_set_b) 0 0
+	- Edge OUTPUT tbl_set_b_w_c_0 ( ingress.tbl_set_b_w_c )
+
+Data dependency edge not found
+Data dependency edge not found
+FindDependencyGraph : Power Calculation :  NA 
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+ingress: [3] 1
+  0: tbl_set_b_w_c_0{ E 6+0, 0 [1x5 5K 5K 5K 5K] }
+  10: tbl_set_b_0{ E 6+16, 2 [1x3 3K 3K 3K 3K] }
+egress: [4]
+
+ NTP : For table : tbl_set_b_w_c_0
+ NTP : For table : tbl_set_b_0
+Printing alias map
+  egress::hdr.min_parse_depth_padding_0[0].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[1].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[2].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[3].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+	 TableSeq (2)   front: tbl_set_b_w_c_0 back: tbl_set_b_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_set_b_w_c_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_set_b_w_c_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	 Action for table tbl_set_b_w_c_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+		update_access read ingress::hdr.c.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_set_b_w_c_0 (r); }
+	 Action for table tbl_set_b_w_c_0
+	FindDep table tbl_set_b_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		add_dependency(ingress::hdr.b.first[15:0]) 
+DST tbl_set_b_0 has dep OUTPUT to SRC tbl_set_b_w_c_0
+	Add OUTPUT dependency from tbl_set_b_w_c_0 to tbl_set_b_0 because of field ingress::hdr.b.first for actions ingress.set_b_w_c/set_b_w_c - set_b
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+		Table: tbl_set_b_w_c_0
+			ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	Checking Mutex Fields
+		( 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2 , 4:ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers H2 ) = FeldMutex 0, MetdataMutex 0
+-------------------------------------------------------------
+	Add container conflict between table tbl_set_b_w_c_0 and table tbl_set_b_0 because of container H2
+	 TableKey for table tbl_set_b_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (r); tbl_set_b_0 (r); }
+	 Action for table tbl_set_b_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 2 units {tbl_set_b_w_c_0 (w); tbl_set_b_0 (w); }
+	 Action for table tbl_set_b_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_set_b_w_c_0
+DepStagesThruDomFrontier postorder : tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_set_b_w_c_0-tbl_set_b_0 due to original dependency on tbl_set_b_w_c_0->tbl_set_b_0 of type OUTPUT
+DST tbl_set_b_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_set_b_w_c_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table:  1, tbl_set_b_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Dep stages of 0 for table tbl_set_b_0
+Dep stages control of 0 for table tbl_set_b_0
+Dep stages of 1 for table tbl_set_b_w_c_0
+Dep stages control of 1 for table tbl_set_b_w_c_0
+Table tbl_set_b_0 has priors of tbl_set_b_w_c_0, 
+
+Initial table tbl_set_b_w_c_0 with later table tbl_set_b_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_set_b_w_c_0
+>>> Stage#1:
+Table: 1, tbl_set_b_0
+Table tbl_set_b_w_c_0 has priors of tbl_set_b_0, 
+Table tbl_set_b_0 has priors of 
+
+	min_stage for tbl_set_b_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 2
+		 Non processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 2
+		 Processed vertex: tbl_set_b_w_c_0 with 0 incoming deps
+		 Non processed vertex: tbl_set_b_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_set_b_w_c_0 -- OUTPUT --> tbl_set_b_0
+    tbl_set_b_w_c_0 -- ANTI_NEXT_TABLE_DATA --> tbl_set_b_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_set_b_w_c_0 (ingress.tbl_set_b_w_c) 1 1
+ Stage #1
+     tbl_set_b_0 (ingress.tbl_set_b) 0 0
+	- Edge OUTPUT tbl_set_b_w_c_0 ( ingress.tbl_set_b_w_c )
+
+Data dependency edge not found
+Data dependency edge not found

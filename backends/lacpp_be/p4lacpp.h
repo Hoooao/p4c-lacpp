@@ -10,6 +10,7 @@ std::optional<std::pair<const IR::P4Program *, const Util::InputSources *>> pars
     const ParserOptions &options);
     
 int getFeatures(P4LACPPOptions& options, const IR::P4Program *program);
+int rewrite(const P4LACPPOptions &options, const IR::P4Program *program);
 int dumpAfterFrontend(P4LACPPOptions& options, const IR::P4Program *program);
 } // namespace P4::P4LACPP
 

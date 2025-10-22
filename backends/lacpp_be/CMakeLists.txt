@@ -3,6 +3,7 @@ set(P4LACPP_BE_SRCS
     options.cpp
     main.cpp
     p4feature_extractor.cpp
+    rewriter.cpp
 )
 
 

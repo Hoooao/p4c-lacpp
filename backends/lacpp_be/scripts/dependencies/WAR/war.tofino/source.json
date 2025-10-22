@@ -1,0 +1,605 @@
+{
+    "schema_version": "1.0.0",
+    "symbols": [
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 132,
+                    "column": 101
+                }
+            ],
+            "symbol_name": "pipe",
+            "declaration": {
+                "file": "war.p4",
+                "line": 131,
+                "column": 188
+            },
+            "symbol_type": "Declaration_Instance_Type_Specialized"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 68,
+                    "column": 9,
+                    "end_line": 74
+                },
+                {
+                    "file": "war.p4",
+                    "line": 71,
+                    "column": 20,
+                    "end_line": 72
+                },
+                {
+                    "file": "war.p4",
+                    "line": 79,
+                    "column": 9,
+                    "end_line": 85
+                },
+                {
+                    "file": "war.p4",
+                    "line": 82,
+                    "column": 20,
+                    "end_line": 83
+                },
+                {
+                    "file": "war.p4",
+                    "line": 90,
+                    "column": 9,
+                    "end_line": 96
+                },
+                {
+                    "file": "war.p4",
+                    "line": 93,
+                    "column": 20,
+                    "end_line": 94
+                }
+            ],
+            "symbol_name": "NoAction",
+            "declaration": {
+                "file": "/home/hao/Desktop/p4/p4c/p4c-lacpp/build/backends/tofino/bf-p4c/p4include/core.p4",
+                "line": 70,
+                "column": 8
+            },
+            "symbol_type": "P4Action"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 72,
+                    "column": 13
+                },
+                {
+                    "file": "war.p4",
+                    "line": 94,
+                    "column": 13
+                }
+            ],
+            "symbol_name": "ingress.set_a",
+            "declaration": {
+                "file": "war.p4",
+                "line": 54,
+                "column": 12
+            },
+            "symbol_type": "P4Action"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 83,
+                    "column": 13
+                }
+            ],
+            "symbol_name": "ingress.set_b",
+            "declaration": {
+                "file": "war.p4",
+                "line": 57,
+                "column": 12
+            },
+            "symbol_type": "P4Action"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 101,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "ingress.tbl_init",
+            "declaration": {
+                "file": "war.p4",
+                "line": 67,
+                "column": 11
+            },
+            "symbol_type": "P4Table"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 102,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "ingress.tbl_match_a",
+            "declaration": {
+                "file": "war.p4",
+                "line": 78,
+                "column": 11
+            },
+            "symbol_type": "P4Table"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 103,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "ingress.tbl_write_a",
+            "declaration": {
+                "file": "war.p4",
+                "line": 89,
+                "column": 11
+            },
+            "symbol_type": "P4Table"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 127,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchEgressDeparser.h.a",
+            "declaration": {
+                "file": "war.p4",
+                "line": 125,
+                "column": 60
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 127,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchEgressDeparser.h.b",
+            "declaration": {
+                "file": "war.p4",
+                "line": 125,
+                "column": 60
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 127,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchEgressDeparser.h.c",
+            "declaration": {
+                "file": "war.p4",
+                "line": 125,
+                "column": 60
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 127,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchEgressDeparser.h.d",
+            "declaration": {
+                "file": "war.p4",
+                "line": 125,
+                "column": 60
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 127,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchEgressDeparser.h.eth_hdr",
+            "declaration": {
+                "file": "war.p4",
+                "line": 125,
+                "column": 60
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 127,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "SwitchEgressDeparser.pkt",
+            "declaration": {
+                "file": "war.p4",
+                "line": 125,
+                "column": 41
+            },
+            "symbol_type": "Parameter_Type_Extern"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 115,
+                    "column": 50
+                }
+            ],
+            "symbol_name": "SwitchEgressParser.eg_intr_md",
+            "declaration": {
+                "file": "war.p4",
+                "line": 113,
+                "column": 118
+            },
+            "symbol_type": "Parameter_Type_Header"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 115,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "SwitchEgressParser.pkt",
+            "declaration": {
+                "file": "war.p4",
+                "line": 113,
+                "column": 37
+            },
+            "symbol_type": "Parameter_Type_Extern"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 109,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchIngressDeparser.h.a",
+            "declaration": {
+                "file": "war.p4",
+                "line": 107,
+                "column": 61
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 109,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchIngressDeparser.h.b",
+            "declaration": {
+                "file": "war.p4",
+                "line": 107,
+                "column": 61
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 109,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchIngressDeparser.h.c",
+            "declaration": {
+                "file": "war.p4",
+                "line": 107,
+                "column": 61
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 109,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchIngressDeparser.h.d",
+            "declaration": {
+                "file": "war.p4",
+                "line": 107,
+                "column": 61
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 109,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchIngressDeparser.h.eth_hdr",
+            "declaration": {
+                "file": "war.p4",
+                "line": 107,
+                "column": 61
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [],
+            "symbol_name": "SwitchIngressDeparser.ig_dprsr_md.mirror_type",
+            "declaration": {
+                "file": "war.p4",
+                "line": 107,
+                "column": 138
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 109,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "SwitchIngressDeparser.pkt",
+            "declaration": {
+                "file": "war.p4",
+                "line": 107,
+                "column": 42
+            },
+            "symbol_type": "Parameter_Type_Extern"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 43,
+                    "column": 24
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.hdr.a",
+            "declaration": {
+                "file": "war.p4",
+                "line": 39,
+                "column": 55
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 44,
+                    "column": 24
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.hdr.b",
+            "declaration": {
+                "file": "war.p4",
+                "line": 39,
+                "column": 55
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 45,
+                    "column": 24
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.hdr.c",
+            "declaration": {
+                "file": "war.p4",
+                "line": 39,
+                "column": 55
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 42,
+                    "column": 33
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.hdr.eth_hdr",
+            "declaration": {
+                "file": "war.p4",
+                "line": 39,
+                "column": 55
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 41,
+                    "column": 51
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.ig_intr_md",
+            "declaration": {
+                "file": "war.p4",
+                "line": 39,
+                "column": 123
+            },
+            "symbol_type": "Parameter_Type_Header"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 41,
+                    "column": 9
+                },
+                {
+                    "file": "war.p4",
+                    "line": 42,
+                    "column": 9
+                },
+                {
+                    "file": "war.p4",
+                    "line": 43,
+                    "column": 9
+                },
+                {
+                    "file": "war.p4",
+                    "line": 44,
+                    "column": 9
+                },
+                {
+                    "file": "war.p4",
+                    "line": 45,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.pkt",
+            "declaration": {
+                "file": "war.p4",
+                "line": 39,
+                "column": 38
+            },
+            "symbol_type": "Parameter_Type_Extern"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 55,
+                    "column": 9
+                },
+                {
+                    "file": "war.p4",
+                    "line": 80,
+                    "column": 13
+                }
+            ],
+            "symbol_name": "ingress.h.a.first",
+            "declaration": {
+                "file": "war.p4",
+                "line": 50,
+                "column": 31
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 58,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "ingress.h.b.first",
+            "declaration": {
+                "file": "war.p4",
+                "line": 50,
+                "column": 31
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 69,
+                    "column": 13
+                }
+            ],
+            "symbol_name": "ingress.h.c.first",
+            "declaration": {
+                "file": "war.p4",
+                "line": 50,
+                "column": 31
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 91,
+                    "column": 13
+                }
+            ],
+            "symbol_name": "ingress.h.d.first",
+            "declaration": {
+                "file": "war.p4",
+                "line": 50,
+                "column": 31
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 55,
+                    "column": 21
+                }
+            ],
+            "symbol_name": "ingress.set_a.val",
+            "declaration": {
+                "file": "war.p4",
+                "line": 54,
+                "column": 26
+            },
+            "symbol_type": "Parameter_Type_Bits"
+        },
+        {
+            "references": [
+                {
+                    "file": "war.p4",
+                    "line": 58,
+                    "column": 21
+                }
+            ],
+            "symbol_name": "ingress.set_b.val",
+            "declaration": {
+                "file": "war.p4",
+                "line": 57,
+                "column": 26
+            },
+            "symbol_type": "Parameter_Type_Bits"
+        }
+    ],
+    "source_root": "."
+}

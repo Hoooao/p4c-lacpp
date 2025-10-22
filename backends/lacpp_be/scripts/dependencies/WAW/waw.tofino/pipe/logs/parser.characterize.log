@@ -1,0 +1,56 @@
+Parser Characterization Report:
+Number of states on ingress: 2
+
+Number of matches on ingress: 2
+
+Longest path (2 states) on ingress:
+    $entry_point.start
+    $entry_point.start.$split_0
+
+Shortest path (2 states) on ingress:
+    $entry_point.start
+    $entry_point.start.$split_0
+
+Timing is met for min-sized packet (73 B) running at 100 Gbps
+
+Extractor usage:
++-----------------------------+-------+-------+--------+--------+------------------+-------+
+|State                        |Match  |8-bit  |16-bit  |32-bit  |Total Extractors  |Other  |
++-----------------------------+-------+-------+--------+--------+------------------+-------+
+|$entry_point.start           |*      |1      |4       |2       |7                 |       |
+|$entry_point.start.$split_0  |*      |0      |2       |0       |2                 |       |
++-----------------------------+-------+-------+--------+--------+------------------+-------+
+Number of states on egress: 6
+
+Number of matches on egress: 10
+
+Longest path (6 states) on egress:
+    $entry_point.start.min_parse_depth_accept_initial
+    $entry_point.start.min_parse_depth_accept_initial.$ctr_stall0
+    $entry_point.start.min_parse_depth_accept_initial.$split_0
+    min_parse_depth_accept_loop.$split_0
+    min_parse_depth_accept_loop.$it1.$split_0
+    min_parse_depth_accept_loop.$it2.$split_0
+
+Shortest path (3 states) on egress:
+    $entry_point.start.min_parse_depth_accept_initial
+    $entry_point.start.min_parse_depth_accept_initial.$ctr_stall0
+    $entry_point.start.min_parse_depth_accept_initial.$split_0
+
+Timing is met for min-sized packet (73 B) running at 100 Gbps
+
+Extractor usage:
++---------------------------------------------------------------+-------+-------+--------+--------+------------------+-------+
+|State                                                          |Match  |8-bit  |16-bit  |32-bit  |Total Extractors  |Other  |
++---------------------------------------------------------------+-------+-------+--------+--------+------------------+-------+
+|$entry_point.start.min_parse_depth_accept_initial              |*      |0      |1       |0       |1                 |       |
+|$entry_point.start.min_parse_depth_accept_initial.$ctr_stall0  |*      |0      |0       |0       |0                 |       |
+|$entry_point.start.min_parse_depth_accept_initial.$split_0     |0x0    |2      |1       |2       |5                 |       |
+|-                                                              |0b**   |0      |0       |0       |0                 |       |
+|min_parse_depth_accept_loop.$split_0                           |0x0    |2      |1       |2       |5                 |       |
+|-                                                              |0b**   |0      |0       |0       |0                 |       |
+|min_parse_depth_accept_loop.$it1.$split_0                      |0x0    |2      |4       |0       |6                 |       |
+|-                                                              |0b**   |0      |0       |0       |0                 |       |
+|min_parse_depth_accept_loop.$it2.$split_0                      |0x0    |2      |4       |1       |7                 |       |
+|-                                                              |0b**   |0      |1       |0       |1                 |       |
++---------------------------------------------------------------+-------+-------+--------+--------+------------------+-------+

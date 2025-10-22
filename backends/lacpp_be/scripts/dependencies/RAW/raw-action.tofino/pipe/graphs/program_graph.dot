@@ -1,0 +1,34 @@
+digraph table_deps {
+  splines=ortho; rankdir=LR;
+  label="Program: raw-action
+RunId: 779caf4ffcc44557
+";
+  labelloc=t; labeljust=l;
+  { "ingress.tbl_init"; }
+  { rank = same; "ingress.tbl_write_a"; }
+  { rank = same; "ingress.tbl_read_a"; }
+   "ingress.tbl_init" -> "ingress.tbl_write_a" [ label= "",color=red ];
+   "ingress.tbl_write_a" -> "ingress.tbl_read_a" [ label= "",color=blue ];
+   "ingress.tbl_init" -> "ingress.tbl_read_a" [ label= "",color=blue ];
+   "ingress.tbl_write_a" -> "ingress.tbl_read_a" [ label= "",color=pink ];
+   "ingress.tbl_init" -> "ingress.tbl_write_a" [ label= "",color=pink ];
+   "ingress.tbl_init" -> "ingress.tbl_read_a" [ label= "",color=pink ];
+  { rank=max;
+    subgraph cluster_legend { node [ shape=record; fontsize=10];
+      empty [label=<<table border="0" cellborder="0"><tr><td colspan="8">Edge colors</td></tr><tr><td><font color="gold">ixbar_read</font></td><td><font color="blue">action_read</font></td><td><font color="red">output</font></td><td><font color="navy">cont_conflict</font></td><td><font color="cyan">reduction_or_read</font></td><td><font color="cyan">reduction_or_output</font></td><td><font color="pink">anti_table_read</font></td><td><font color="pink">anti_next_action_read</font></td><td><font color="pink">anti_next_table_data</font></td><td><font color="pink">anti_next_table_control</font></td><td><font color="pink">anti_next_table_metadata</font></td><td><font color="black">exit</font></td><td><font color="green">control_action</font></td><td><font color="green">control_condition_true</font></td><td><font color="green">control_condition_false</font></td><td><font color="green">control_table_hit</font></td><td><font color="green">control_table_miss</font></td><td><font color="green">control_default_next_table</font></td><td><font color="green">control_exit</font></td></tr></table>>;]
+    }
+  }
+}
+digraph table_deps_merged {
+    "ingress.tbl_init" -> "ingress.tbl_write_a" [ label= "OUTPUT,
+ANTI_NEXT_TABLE_DATA" ];
+    "ingress.tbl_write_a" -> "ingress.tbl_read_a" [ label= "ACTION_READ,
+ANTI_NEXT_TABLE_DATA" ];
+    "ingress.tbl_init" -> "ingress.tbl_read_a" [ label= "ACTION_READ,
+ANTI_NEXT_TABLE_DATA" ];
+}
+digraph table_deps_simple {
+    "ingress.tbl_init" -> "ingress.tbl_write_a" [ label= "DATA",color=red ];
+    "ingress.tbl_write_a" -> "ingress.tbl_read_a" [ label= "DATA",color=red ];
+    "ingress.tbl_init" -> "ingress.tbl_read_a" [ label= "DATA",color=red ];
+}

@@ -1,0 +1,64 @@
+{
+  "tables" : [
+    {
+      "name" : "ingress.tbl_set_b_w_c",
+      "actions" : [
+        {
+          "name" : "ingress.set_b_w_c",
+          "primitives" : [
+            {
+              "name" : "ModifyFieldPrimitive",
+              "operation" : "set",
+              "dst" : {
+                "type" : "phv",
+                "name" : "hdr.b.first"
+              },
+              "dst_mask" : {
+                "type" : "immediate",
+                "name" : "65535"
+              },
+              "src1" : {
+                "type" : "phv",
+                "name" : "hdr.c.first"
+              }
+            }
+          ]
+        },
+        {
+          "name" : "NoAction",
+          "primitives" : []
+        }
+      ]
+    },
+    {
+      "name" : "ingress.tbl_set_b",
+      "actions" : [
+        {
+          "name" : "ingress.set_b",
+          "primitives" : [
+            {
+              "name" : "ModifyFieldPrimitive",
+              "operation" : "set",
+              "dst" : {
+                "type" : "phv",
+                "name" : "hdr.b.first"
+              },
+              "dst_mask" : {
+                "type" : "immediate",
+                "name" : "65535"
+              },
+              "src1" : {
+                "type" : "action_param",
+                "name" : "val"
+              }
+            }
+          ]
+        },
+        {
+          "name" : "NoAction",
+          "primitives" : []
+        }
+      ]
+    }
+  ]
+}

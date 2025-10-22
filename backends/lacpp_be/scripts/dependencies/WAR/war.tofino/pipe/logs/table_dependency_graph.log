@@ -1,0 +1,1963 @@
+FindDependencyGraph : After Instruction Selection :  NA 
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+ingress: [3] 0 00
+  tbl_init_0
+  tbl_match_a_0
+  tbl_write_a_0
+egress: [4]
+
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+Printing alias map
+	 TableSeq (3)   front: tbl_init_0 back: tbl_write_a_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_init_0
+	 TableKey for table tbl_init_0
+		update_access read ingress::hdr.c.first
+	 Action for table tbl_init_0
+		update_access write ingress::hdr.a.first
+	 Action for table tbl_init_0
+	FindDep table tbl_match_a_0
+		add_dependency(ingress::hdr.a.first) 
+DST tbl_match_a_0 has dep IXBAR_READ to SRC tbl_init_0
+	Add IXBAR_READ dependency from tbl_init_0 to tbl_match_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - nullptr
+	 TableKey for table tbl_match_a_0
+		update_access read ingress::hdr.a.first
+	 Action for table tbl_match_a_0
+		update_access write ingress::hdr.b.first
+	 Action for table tbl_match_a_0
+	FindDep table tbl_write_a_0
+		add_dependency(ingress::hdr.a.first) 
+DST tbl_write_a_0 has dep ANTI_ACTION_READ to SRC tbl_match_a_0
+	Add ANTI_TABLE_READ dependency from tbl_match_a_0 to tbl_write_a_0 because of field ingress::hdr.a.first
+DST tbl_write_a_0 has dep OUTPUT to SRC tbl_init_0
+	Add OUTPUT dependency from tbl_init_0 to tbl_write_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - set_a
+	 TableKey for table tbl_write_a_0
+		update_access read ingress::hdr.d.first
+	 Action for table tbl_write_a_0
+		update_access write ingress::hdr.a.first
+	 Action for table tbl_write_a_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_init_0
+DepStagesThruDomFrontier postorder : tbl_match_a_0
+DepStagesThruDomFrontier postorder : tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_match_a_0-tbl_write_a_0 due to original dependency on tbl_match_a_0->tbl_write_a_0 of type ANTI_ACTION_READ
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_match_a_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_match_a_0 due to original dependency on tbl_init_0->tbl_match_a_0 of type IXBAR_READ
+DST tbl_match_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_write_a_0 due to original dependency on tbl_init_0->tbl_write_a_0 of type OUTPUT
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_init_0
+>>> Stage#1:
+Table:  1, tbl_match_a_0
+Table:  2, tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Dep stages of 0 for table tbl_match_a_0
+Dep stages control of 0 for table tbl_match_a_0
+Dep stages of 0 for table tbl_write_a_0
+Dep stages control of 0 for table tbl_write_a_0
+Dep stages of 1 for table tbl_init_0
+Dep stages control of 1 for table tbl_init_0
+Table tbl_match_a_0 has priors of tbl_init_0, 
+Table tbl_write_a_0 has priors of tbl_init_0, 
+
+Initial table tbl_init_0 with later table tbl_match_a_0 and value IXBAR_READ
+Initial table tbl_init_0 with later table tbl_write_a_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_init_0
+>>> Stage#1:
+Table: 1, tbl_match_a_0
+>>> Stage#2:
+Table: 2, tbl_write_a_0
+Table tbl_init_0 has priors of tbl_match_a_0, tbl_write_a_0, 
+Table tbl_match_a_0 has priors of tbl_write_a_0, 
+Table tbl_write_a_0 has priors of 
+
+	min_stage for tbl_match_a_0 : 1
+	min_stage for tbl_write_a_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_init_0 -- IXBAR_READ --> tbl_match_a_0
+    tbl_match_a_0 -- ANTI_ACTION_READ --> tbl_write_a_0
+    tbl_init_0 -- OUTPUT --> tbl_write_a_0
+    tbl_match_a_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_match_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_init_0 (ingress.tbl_init) 1 1
+ Stage #1
+     tbl_match_a_0 (ingress.tbl_match_a) 0 0
+	- Edge IXBAR_READ tbl_init_0 ( ingress.tbl_init )
+     tbl_write_a_0 (ingress.tbl_write_a) 0 0
+	- Edge ANTI_ACTION_READ tbl_match_a_0 ( ingress.tbl_match_a )
+	- Edge OUTPUT tbl_init_0 ( ingress.tbl_init )
+	- Edge ANTI_NEXT_TABLE_DATA tbl_match_a_0 ( ingress.tbl_match_a )
+
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+FindDependencyGraph : Just Before PHV allocation :  NA 
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+ingress: [3] 0 00
+  tbl_init_0
+  tbl_match_a_0
+  tbl_write_a_0
+egress: [4]
+
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+Printing alias map
+	 TableSeq (3)   front: tbl_init_0 back: tbl_write_a_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_init_0
+	 TableKey for table tbl_init_0
+		update_access read ingress::hdr.c.first
+	 Action for table tbl_init_0
+		update_access write ingress::hdr.a.first
+	 Action for table tbl_init_0
+	FindDep table tbl_match_a_0
+		add_dependency(ingress::hdr.a.first) 
+DST tbl_match_a_0 has dep IXBAR_READ to SRC tbl_init_0
+	Add IXBAR_READ dependency from tbl_init_0 to tbl_match_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - nullptr
+	 TableKey for table tbl_match_a_0
+		update_access read ingress::hdr.a.first
+	 Action for table tbl_match_a_0
+		update_access write ingress::hdr.b.first
+	 Action for table tbl_match_a_0
+	FindDep table tbl_write_a_0
+		add_dependency(ingress::hdr.a.first) 
+DST tbl_write_a_0 has dep ANTI_ACTION_READ to SRC tbl_match_a_0
+	Add ANTI_TABLE_READ dependency from tbl_match_a_0 to tbl_write_a_0 because of field ingress::hdr.a.first
+DST tbl_write_a_0 has dep OUTPUT to SRC tbl_init_0
+	Add OUTPUT dependency from tbl_init_0 to tbl_write_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - set_a
+	 TableKey for table tbl_write_a_0
+		update_access read ingress::hdr.d.first
+	 Action for table tbl_write_a_0
+		update_access write ingress::hdr.a.first
+	 Action for table tbl_write_a_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_init_0
+DepStagesThruDomFrontier postorder : tbl_match_a_0
+DepStagesThruDomFrontier postorder : tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_match_a_0-tbl_write_a_0 due to original dependency on tbl_match_a_0->tbl_write_a_0 of type ANTI_ACTION_READ
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_match_a_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_match_a_0 due to original dependency on tbl_init_0->tbl_match_a_0 of type IXBAR_READ
+DST tbl_match_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_write_a_0 due to original dependency on tbl_init_0->tbl_write_a_0 of type OUTPUT
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_init_0
+>>> Stage#1:
+Table:  1, tbl_match_a_0
+Table:  2, tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Dep stages of 0 for table tbl_match_a_0
+Dep stages control of 0 for table tbl_match_a_0
+Dep stages of 0 for table tbl_write_a_0
+Dep stages control of 0 for table tbl_write_a_0
+Dep stages of 1 for table tbl_init_0
+Dep stages control of 1 for table tbl_init_0
+Table tbl_match_a_0 has priors of tbl_init_0, 
+Table tbl_write_a_0 has priors of tbl_init_0, 
+
+Initial table tbl_init_0 with later table tbl_match_a_0 and value IXBAR_READ
+Initial table tbl_init_0 with later table tbl_write_a_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_init_0
+>>> Stage#1:
+Table: 1, tbl_match_a_0
+>>> Stage#2:
+Table: 2, tbl_write_a_0
+Table tbl_init_0 has priors of tbl_match_a_0, tbl_write_a_0, 
+Table tbl_match_a_0 has priors of tbl_write_a_0, 
+Table tbl_write_a_0 has priors of 
+
+	min_stage for tbl_match_a_0 : 1
+	min_stage for tbl_write_a_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_init_0 -- IXBAR_READ --> tbl_match_a_0
+    tbl_match_a_0 -- ANTI_ACTION_READ --> tbl_write_a_0
+    tbl_init_0 -- OUTPUT --> tbl_write_a_0
+    tbl_match_a_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_match_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_init_0 (ingress.tbl_init) 1 1
+ Stage #1
+     tbl_match_a_0 (ingress.tbl_match_a) 0 0
+	- Edge IXBAR_READ tbl_init_0 ( ingress.tbl_init )
+     tbl_write_a_0 (ingress.tbl_write_a) 0 0
+	- Edge ANTI_ACTION_READ tbl_match_a_0 ( ingress.tbl_match_a )
+	- Edge OUTPUT tbl_init_0 ( ingress.tbl_init )
+	- Edge ANTI_NEXT_TABLE_DATA tbl_match_a_0 ( ingress.tbl_match_a )
+
+FindDependencyGraph : Before Uninitialized Read Check :  NA 
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+ingress: [3] 0 00
+  tbl_init_0
+  tbl_match_a_0
+  tbl_write_a_0
+egress: [4]
+
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+Printing alias map
+	 TableSeq (3)   front: tbl_init_0 back: tbl_write_a_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_init_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+Adding container write: H1 = Field: ingress::hdr.a.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H1
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_init_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+		update_access read ingress::hdr.c.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+	 Action for table tbl_init_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access write ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_init_0
+	FindDep table tbl_match_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+DST tbl_match_a_0 has dep IXBAR_READ to SRC tbl_init_0
+	Add IXBAR_READ dependency from tbl_init_0 to tbl_match_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - nullptr
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_match_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_match_a_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+	 Action for table tbl_match_a_0
+	FindDep table tbl_write_a_0
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+DST tbl_write_a_0 has dep ANTI_ACTION_READ to SRC tbl_match_a_0
+	Add ANTI_TABLE_READ dependency from tbl_match_a_0 to tbl_write_a_0 because of field ingress::hdr.a.first
+DST tbl_write_a_0 has dep OUTPUT to SRC tbl_init_0
+	Add OUTPUT dependency from tbl_init_0 to tbl_write_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - set_a
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+Adding container write: H1 = Field: ingress::hdr.a.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H1
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+		Table: tbl_init_0
+			ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	Checking Mutex Fields
+		( 3:ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers H1 , 3:ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers H1 ) = FeldMutex 0, MetdataMutex 0
+-------------------------------------------------------------
+	Add container conflict between table tbl_init_0 and table tbl_write_a_0 because of container H1
+	 TableKey for table tbl_write_a_0
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+		update_access read ingress::hdr.d.first[15:0]
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+	 Action for table tbl_write_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access write ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_write_a_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_init_0
+DepStagesThruDomFrontier postorder : tbl_match_a_0
+DepStagesThruDomFrontier postorder : tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_match_a_0-tbl_write_a_0 due to original dependency on tbl_match_a_0->tbl_write_a_0 of type ANTI_ACTION_READ
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_match_a_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_match_a_0 due to original dependency on tbl_init_0->tbl_match_a_0 of type IXBAR_READ
+DST tbl_match_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_write_a_0 due to original dependency on tbl_init_0->tbl_write_a_0 of type OUTPUT
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_init_0
+>>> Stage#1:
+Table:  1, tbl_match_a_0
+Table:  2, tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Dep stages of 0 for table tbl_match_a_0
+Dep stages control of 0 for table tbl_match_a_0
+Dep stages of 0 for table tbl_write_a_0
+Dep stages control of 0 for table tbl_write_a_0
+Dep stages of 1 for table tbl_init_0
+Dep stages control of 1 for table tbl_init_0
+Table tbl_match_a_0 has priors of tbl_init_0, 
+Table tbl_write_a_0 has priors of tbl_init_0, 
+
+Initial table tbl_init_0 with later table tbl_match_a_0 and value IXBAR_READ
+Initial table tbl_init_0 with later table tbl_write_a_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_init_0
+>>> Stage#1:
+Table: 1, tbl_match_a_0
+>>> Stage#2:
+Table: 2, tbl_write_a_0
+Table tbl_init_0 has priors of tbl_match_a_0, tbl_write_a_0, 
+Table tbl_match_a_0 has priors of tbl_write_a_0, 
+Table tbl_write_a_0 has priors of 
+
+	min_stage for tbl_match_a_0 : 1
+	min_stage for tbl_write_a_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_init_0 -- IXBAR_READ --> tbl_match_a_0
+    tbl_match_a_0 -- ANTI_ACTION_READ --> tbl_write_a_0
+    tbl_init_0 -- OUTPUT --> tbl_write_a_0
+    tbl_match_a_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_match_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_init_0 (ingress.tbl_init) 1 1
+ Stage #1
+     tbl_match_a_0 (ingress.tbl_match_a) 0 0
+	- Edge IXBAR_READ tbl_init_0 ( ingress.tbl_init )
+     tbl_write_a_0 (ingress.tbl_write_a) 0 0
+	- Edge ANTI_ACTION_READ tbl_match_a_0 ( ingress.tbl_match_a )
+	- Edge OUTPUT tbl_init_0 ( ingress.tbl_init )
+	- Edge ANTI_NEXT_TABLE_DATA tbl_match_a_0 ( ingress.tbl_match_a )
+
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+ingress: [3] 1 11
+  tbl_init_0{ E 6+0, 2 0K }
+  tbl_match_a_0{ E 6+0, 2 0K }
+  tbl_write_a_0{ E 6+0, 2 0K }
+egress: [4]
+
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+Printing alias map
+  egress::hdr.min_parse_depth_padding_0[0].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[1].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[2].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[3].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+	 TableSeq (3)   front: tbl_init_0 back: tbl_write_a_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_init_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+Adding container write: H1 = Field: ingress::hdr.a.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H1
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_init_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+		update_access read ingress::hdr.c.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+	 Action for table tbl_init_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access write ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_init_0
+	FindDep table tbl_match_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+DST tbl_match_a_0 has dep IXBAR_READ to SRC tbl_init_0
+	Add IXBAR_READ dependency from tbl_init_0 to tbl_match_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - nullptr
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_match_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_match_a_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+	 Action for table tbl_match_a_0
+	FindDep table tbl_write_a_0
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+DST tbl_write_a_0 has dep ANTI_ACTION_READ to SRC tbl_match_a_0
+	Add ANTI_TABLE_READ dependency from tbl_match_a_0 to tbl_write_a_0 because of field ingress::hdr.a.first
+DST tbl_write_a_0 has dep OUTPUT to SRC tbl_init_0
+	Add OUTPUT dependency from tbl_init_0 to tbl_write_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - set_a
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+Adding container write: H1 = Field: ingress::hdr.a.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H1
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+		Table: tbl_init_0
+			ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	Checking Mutex Fields
+		( 3:ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers H1 , 3:ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers H1 ) = FeldMutex 0, MetdataMutex 0
+-------------------------------------------------------------
+	Add container conflict between table tbl_init_0 and table tbl_write_a_0 because of container H1
+	 TableKey for table tbl_write_a_0
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+		update_access read ingress::hdr.d.first[15:0]
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+	 Action for table tbl_write_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access write ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_write_a_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_init_0
+DepStagesThruDomFrontier postorder : tbl_match_a_0
+DepStagesThruDomFrontier postorder : tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_match_a_0-tbl_write_a_0 due to original dependency on tbl_match_a_0->tbl_write_a_0 of type ANTI_ACTION_READ
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_match_a_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_match_a_0 due to original dependency on tbl_init_0->tbl_match_a_0 of type IXBAR_READ
+DST tbl_match_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_write_a_0 due to original dependency on tbl_init_0->tbl_write_a_0 of type OUTPUT
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_init_0
+>>> Stage#1:
+Table:  1, tbl_match_a_0
+Table:  2, tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Dep stages of 0 for table tbl_match_a_0
+Dep stages control of 0 for table tbl_match_a_0
+Dep stages of 0 for table tbl_write_a_0
+Dep stages control of 0 for table tbl_write_a_0
+Dep stages of 1 for table tbl_init_0
+Dep stages control of 1 for table tbl_init_0
+Table tbl_match_a_0 has priors of tbl_init_0, 
+Table tbl_write_a_0 has priors of tbl_init_0, 
+
+Initial table tbl_init_0 with later table tbl_match_a_0 and value IXBAR_READ
+Initial table tbl_init_0 with later table tbl_write_a_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_init_0
+>>> Stage#1:
+Table: 1, tbl_match_a_0
+>>> Stage#2:
+Table: 2, tbl_write_a_0
+Table tbl_init_0 has priors of tbl_match_a_0, tbl_write_a_0, 
+Table tbl_match_a_0 has priors of tbl_write_a_0, 
+Table tbl_write_a_0 has priors of 
+
+	min_stage for tbl_match_a_0 : 1
+	min_stage for tbl_write_a_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_init_0 -- IXBAR_READ --> tbl_match_a_0
+    tbl_match_a_0 -- ANTI_ACTION_READ --> tbl_write_a_0
+    tbl_init_0 -- OUTPUT --> tbl_write_a_0
+    tbl_match_a_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_match_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_init_0 (ingress.tbl_init) 1 1
+ Stage #1
+     tbl_match_a_0 (ingress.tbl_match_a) 0 0
+	- Edge IXBAR_READ tbl_init_0 ( ingress.tbl_init )
+     tbl_write_a_0 (ingress.tbl_write_a) 0 0
+	- Edge ANTI_ACTION_READ tbl_match_a_0 ( ingress.tbl_match_a )
+	- Edge OUTPUT tbl_init_0 ( ingress.tbl_init )
+	- Edge ANTI_NEXT_TABLE_DATA tbl_match_a_0 ( ingress.tbl_match_a )
+
+FindDependencyGraph : Before Table Placement : INITIAL
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+ingress: [3] 1 11
+  tbl_init_0{ E 6+0, 2 0K }
+  tbl_match_a_0{ E 6+0, 2 0K }
+  tbl_write_a_0{ E 6+0, 2 0K }
+egress: [4]
+
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+Printing alias map
+  egress::hdr.min_parse_depth_padding_0[0].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[1].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[2].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[3].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+	 TableSeq (3)   front: tbl_init_0 back: tbl_write_a_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_init_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+Adding container write: H1 = Field: ingress::hdr.a.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H1
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_init_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+		update_access read ingress::hdr.c.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+	 Action for table tbl_init_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access write ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_init_0
+	FindDep table tbl_match_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+DST tbl_match_a_0 has dep IXBAR_READ to SRC tbl_init_0
+	Add IXBAR_READ dependency from tbl_init_0 to tbl_match_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - nullptr
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_match_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_match_a_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+	 Action for table tbl_match_a_0
+	FindDep table tbl_write_a_0
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+DST tbl_write_a_0 has dep ANTI_ACTION_READ to SRC tbl_match_a_0
+	Add ANTI_TABLE_READ dependency from tbl_match_a_0 to tbl_write_a_0 because of field ingress::hdr.a.first
+DST tbl_write_a_0 has dep OUTPUT to SRC tbl_init_0
+	Add OUTPUT dependency from tbl_init_0 to tbl_write_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - set_a
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+Adding container write: H1 = Field: ingress::hdr.a.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H1
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+		Table: tbl_init_0
+			ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	Checking Mutex Fields
+		( 3:ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers H1 , 3:ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers H1 ) = FeldMutex 0, MetdataMutex 0
+-------------------------------------------------------------
+	Add container conflict between table tbl_init_0 and table tbl_write_a_0 because of container H1
+	 TableKey for table tbl_write_a_0
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+		update_access read ingress::hdr.d.first[15:0]
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+	 Action for table tbl_write_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access write ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_write_a_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_init_0
+DepStagesThruDomFrontier postorder : tbl_match_a_0
+DepStagesThruDomFrontier postorder : tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_match_a_0-tbl_write_a_0 due to original dependency on tbl_match_a_0->tbl_write_a_0 of type ANTI_ACTION_READ
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_match_a_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_match_a_0 due to original dependency on tbl_init_0->tbl_match_a_0 of type IXBAR_READ
+DST tbl_match_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_write_a_0 due to original dependency on tbl_init_0->tbl_write_a_0 of type OUTPUT
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_init_0
+>>> Stage#1:
+Table:  1, tbl_match_a_0
+Table:  2, tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Dep stages of 0 for table tbl_match_a_0
+Dep stages control of 0 for table tbl_match_a_0
+Dep stages of 0 for table tbl_write_a_0
+Dep stages control of 0 for table tbl_write_a_0
+Dep stages of 1 for table tbl_init_0
+Dep stages control of 1 for table tbl_init_0
+Table tbl_match_a_0 has priors of tbl_init_0, 
+Table tbl_write_a_0 has priors of tbl_init_0, 
+
+Initial table tbl_init_0 with later table tbl_match_a_0 and value IXBAR_READ
+Initial table tbl_init_0 with later table tbl_write_a_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_init_0
+>>> Stage#1:
+Table: 1, tbl_match_a_0
+>>> Stage#2:
+Table: 2, tbl_write_a_0
+Table tbl_init_0 has priors of tbl_match_a_0, tbl_write_a_0, 
+Table tbl_match_a_0 has priors of tbl_write_a_0, 
+Table tbl_write_a_0 has priors of 
+
+	min_stage for tbl_match_a_0 : 1
+	min_stage for tbl_write_a_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_init_0 -- IXBAR_READ --> tbl_match_a_0
+    tbl_match_a_0 -- ANTI_ACTION_READ --> tbl_write_a_0
+    tbl_init_0 -- OUTPUT --> tbl_write_a_0
+    tbl_match_a_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_match_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_init_0 (ingress.tbl_init) 1 1
+ Stage #1
+     tbl_match_a_0 (ingress.tbl_match_a) 0 0
+	- Edge IXBAR_READ tbl_init_0 ( ingress.tbl_init )
+     tbl_write_a_0 (ingress.tbl_write_a) 0 0
+	- Edge ANTI_ACTION_READ tbl_match_a_0 ( ingress.tbl_match_a )
+	- Edge OUTPUT tbl_init_0 ( ingress.tbl_init )
+	- Edge ANTI_NEXT_TABLE_DATA tbl_match_a_0 ( ingress.tbl_match_a )
+
+FindDependencyGraph : After Table Placement : INITIAL
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+ingress: [3] 0 00
+  0: tbl_init_0{ E 6+16, 2 [1x3 3K 3K 3K 3K] }
+  10: tbl_match_a_0{ E 6+16, 2 [1x3 3K 3K 3K 3K] }
+  11: tbl_write_a_0{ E 6+16, 2 [1x3 3K 3K 3K 3K] }
+egress: [4]
+
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+Printing alias map
+  egress::hdr.min_parse_depth_padding_0[0].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[1].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[2].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[3].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+	 TableSeq (3)   front: tbl_init_0 back: tbl_write_a_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_init_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+Adding container write: H1 = Field: ingress::hdr.a.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H1
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_init_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+		update_access read ingress::hdr.c.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+	 Action for table tbl_init_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access write ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_init_0
+	FindDep table tbl_match_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+DST tbl_match_a_0 has dep IXBAR_READ to SRC tbl_init_0
+	Add IXBAR_READ dependency from tbl_init_0 to tbl_match_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - nullptr
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_match_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_match_a_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+	 Action for table tbl_match_a_0
+	FindDep table tbl_write_a_0
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+DST tbl_write_a_0 has dep ANTI_ACTION_READ to SRC tbl_match_a_0
+	Add ANTI_TABLE_READ dependency from tbl_match_a_0 to tbl_write_a_0 because of field ingress::hdr.a.first
+DST tbl_write_a_0 has dep OUTPUT to SRC tbl_init_0
+	Add OUTPUT dependency from tbl_init_0 to tbl_write_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - set_a
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+Adding container write: H1 = Field: ingress::hdr.a.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H1
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+		Table: tbl_init_0
+			ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	Checking Mutex Fields
+		( 3:ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers H1 , 3:ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers H1 ) = FeldMutex 0, MetdataMutex 0
+-------------------------------------------------------------
+	Add container conflict between table tbl_init_0 and table tbl_write_a_0 because of container H1
+	 TableKey for table tbl_write_a_0
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+		update_access read ingress::hdr.d.first[15:0]
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+	 Action for table tbl_write_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access write ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_write_a_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_init_0
+DepStagesThruDomFrontier postorder : tbl_match_a_0
+DepStagesThruDomFrontier postorder : tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_match_a_0-tbl_write_a_0 due to original dependency on tbl_match_a_0->tbl_write_a_0 of type ANTI_ACTION_READ
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_match_a_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_match_a_0 due to original dependency on tbl_init_0->tbl_match_a_0 of type IXBAR_READ
+DST tbl_match_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_write_a_0 due to original dependency on tbl_init_0->tbl_write_a_0 of type OUTPUT
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_init_0
+>>> Stage#1:
+Table:  1, tbl_match_a_0
+Table:  2, tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Dep stages of 0 for table tbl_match_a_0
+Dep stages control of 0 for table tbl_match_a_0
+Dep stages of 0 for table tbl_write_a_0
+Dep stages control of 0 for table tbl_write_a_0
+Dep stages of 1 for table tbl_init_0
+Dep stages control of 1 for table tbl_init_0
+Table tbl_match_a_0 has priors of tbl_init_0, 
+Table tbl_write_a_0 has priors of tbl_init_0, 
+
+Initial table tbl_init_0 with later table tbl_match_a_0 and value IXBAR_READ
+Initial table tbl_init_0 with later table tbl_write_a_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_init_0
+>>> Stage#1:
+Table: 1, tbl_match_a_0
+>>> Stage#2:
+Table: 2, tbl_write_a_0
+Table tbl_init_0 has priors of tbl_match_a_0, tbl_write_a_0, 
+Table tbl_match_a_0 has priors of tbl_write_a_0, 
+Table tbl_write_a_0 has priors of 
+
+	min_stage for tbl_match_a_0 : 1
+	min_stage for tbl_write_a_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_init_0 -- IXBAR_READ --> tbl_match_a_0
+    tbl_match_a_0 -- ANTI_ACTION_READ --> tbl_write_a_0
+    tbl_init_0 -- OUTPUT --> tbl_write_a_0
+    tbl_match_a_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_match_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_init_0 (ingress.tbl_init) 1 1
+ Stage #1
+     tbl_match_a_0 (ingress.tbl_match_a) 0 0
+	- Edge IXBAR_READ tbl_init_0 ( ingress.tbl_init )
+     tbl_write_a_0 (ingress.tbl_write_a) 0 0
+	- Edge ANTI_ACTION_READ tbl_match_a_0 ( ingress.tbl_match_a )
+	- Edge OUTPUT tbl_init_0 ( ingress.tbl_init )
+	- Edge ANTI_NEXT_TABLE_DATA tbl_match_a_0 ( ingress.tbl_match_a )
+
+FindDependencyGraph : After Table Placement :  NA 
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+ingress: [3] 1 11
+  0: tbl_init_0{ E 6+16, 2 [1x3 3K 3K 3K 3K] }
+  10: tbl_match_a_0{ E 6+16, 2 [1x3 3K 3K 3K 3K] }
+  11: tbl_write_a_0{ E 6+16, 2 [1x3 3K 3K 3K 3K] }
+egress: [4]
+
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+Printing alias map
+  egress::hdr.min_parse_depth_padding_0[0].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[1].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[2].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[3].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+	 TableSeq (3)   front: tbl_init_0 back: tbl_write_a_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_init_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+Adding container write: H1 = Field: ingress::hdr.a.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H1
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_init_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+		update_access read ingress::hdr.c.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+	 Action for table tbl_init_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access write ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_init_0
+	FindDep table tbl_match_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+DST tbl_match_a_0 has dep IXBAR_READ to SRC tbl_init_0
+	Add IXBAR_READ dependency from tbl_init_0 to tbl_match_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - nullptr
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_match_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_match_a_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+	 Action for table tbl_match_a_0
+	FindDep table tbl_write_a_0
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+DST tbl_write_a_0 has dep ANTI_ACTION_READ to SRC tbl_match_a_0
+	Add ANTI_TABLE_READ dependency from tbl_match_a_0 to tbl_write_a_0 because of field ingress::hdr.a.first
+DST tbl_write_a_0 has dep OUTPUT to SRC tbl_init_0
+	Add OUTPUT dependency from tbl_init_0 to tbl_write_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - set_a
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+Adding container write: H1 = Field: ingress::hdr.a.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H1
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+		Table: tbl_init_0
+			ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	Checking Mutex Fields
+		( 3:ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers H1 , 3:ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers H1 ) = FeldMutex 0, MetdataMutex 0
+-------------------------------------------------------------
+	Add container conflict between table tbl_init_0 and table tbl_write_a_0 because of container H1
+	 TableKey for table tbl_write_a_0
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+		update_access read ingress::hdr.d.first[15:0]
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+	 Action for table tbl_write_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access write ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_write_a_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_init_0
+DepStagesThruDomFrontier postorder : tbl_match_a_0
+DepStagesThruDomFrontier postorder : tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_match_a_0-tbl_write_a_0 due to original dependency on tbl_match_a_0->tbl_write_a_0 of type ANTI_ACTION_READ
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_match_a_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_match_a_0 due to original dependency on tbl_init_0->tbl_match_a_0 of type IXBAR_READ
+DST tbl_match_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_write_a_0 due to original dependency on tbl_init_0->tbl_write_a_0 of type OUTPUT
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_init_0
+>>> Stage#1:
+Table:  1, tbl_match_a_0
+Table:  2, tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Dep stages of 0 for table tbl_match_a_0
+Dep stages control of 0 for table tbl_match_a_0
+Dep stages of 0 for table tbl_write_a_0
+Dep stages control of 0 for table tbl_write_a_0
+Dep stages of 1 for table tbl_init_0
+Dep stages control of 1 for table tbl_init_0
+Table tbl_match_a_0 has priors of tbl_init_0, 
+Table tbl_write_a_0 has priors of tbl_init_0, 
+
+Initial table tbl_init_0 with later table tbl_match_a_0 and value IXBAR_READ
+Initial table tbl_init_0 with later table tbl_write_a_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_init_0
+>>> Stage#1:
+Table: 1, tbl_match_a_0
+>>> Stage#2:
+Table: 2, tbl_write_a_0
+Table tbl_init_0 has priors of tbl_match_a_0, tbl_write_a_0, 
+Table tbl_match_a_0 has priors of tbl_write_a_0, 
+Table tbl_write_a_0 has priors of 
+
+	min_stage for tbl_match_a_0 : 1
+	min_stage for tbl_write_a_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_init_0 -- IXBAR_READ --> tbl_match_a_0
+    tbl_match_a_0 -- ANTI_ACTION_READ --> tbl_write_a_0
+    tbl_init_0 -- OUTPUT --> tbl_write_a_0
+    tbl_match_a_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_match_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_init_0 (ingress.tbl_init) 1 1
+ Stage #1
+     tbl_match_a_0 (ingress.tbl_match_a) 0 0
+	- Edge IXBAR_READ tbl_init_0 ( ingress.tbl_init )
+     tbl_write_a_0 (ingress.tbl_write_a) 0 0
+	- Edge ANTI_ACTION_READ tbl_match_a_0 ( ingress.tbl_match_a )
+	- Edge OUTPUT tbl_init_0 ( ingress.tbl_init )
+	- Edge ANTI_NEXT_TABLE_DATA tbl_match_a_0 ( ingress.tbl_match_a )
+
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+FindDependencyGraph : Power Calculation :  NA 
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+ingress: [3] 1 11
+  0: tbl_init_0{ E 6+16, 2 [1x3 3K 3K 3K 3K] }
+  10: tbl_match_a_0{ E 6+16, 2 [1x3 3K 3K 3K 3K] }
+  11: tbl_write_a_0{ E 6+16, 2 [1x3 3K 3K 3K 3K] }
+egress: [4]
+
+ NTP : For table : tbl_init_0
+ NTP : For table : tbl_match_a_0
+ NTP : For table : tbl_write_a_0
+Printing alias map
+  egress::hdr.min_parse_depth_padding_0[0].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[1].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[2].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+  egress::hdr.min_parse_depth_padding_0[3].$valid aliases with egress::hdr.min_parse_depth_padding_0.$stkvalid
+	 TableSeq (3)   front: tbl_init_0 back: tbl_write_a_0
+	 Hit Top of pipe - clearing access
+	FindDep table tbl_init_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+Adding container write: H1 = Field: ingress::hdr.a.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H1
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_init_0
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+		update_access read ingress::hdr.c.first[15:0]
+	foreach_alloc slice: H3 bit[15..0] <-- ingress::hdr.c.first<16> ^0 ^bit[0..223] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_init_0 (r); }
+	 Action for table tbl_init_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access write ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_init_0
+	FindDep table tbl_match_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+DST tbl_match_a_0 has dep IXBAR_READ to SRC tbl_init_0
+	Add IXBAR_READ dependency from tbl_init_0 to tbl_match_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - nullptr
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+Adding container write: H2 = Field: ingress::hdr.b.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H2
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+	Checking Mutex Fields
+-------------------------------------------------------------
+	 TableKey for table tbl_match_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access read ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_match_a_0
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+		update_access write ingress::hdr.b.first[15:0]
+	foreach_alloc slice: H2 bit[15..0] <-- ingress::hdr.b.first<16> ^0 ^bit[0..207] deparsed exact_containers [0:15] live at [-1r, 2w] } 1 units {tbl_match_a_0 (w); }
+	 Action for table tbl_match_a_0
+	FindDep table tbl_write_a_0
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		add_dependency(ingress::hdr.a.first[15:0]) 
+DST tbl_write_a_0 has dep ANTI_ACTION_READ to SRC tbl_match_a_0
+	Add ANTI_TABLE_READ dependency from tbl_match_a_0 to tbl_write_a_0 because of field ingress::hdr.a.first
+DST tbl_write_a_0 has dep OUTPUT to SRC tbl_init_0
+	Add OUTPUT dependency from tbl_init_0 to tbl_write_a_0 because of field ingress::hdr.a.first for actions ingress.set_a/set_a - set_a
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+Adding container write: H1 = Field: ingress::hdr.a.first, slice: bit[15..0], range: ffff
+Add container dependencies for entry H1
+-------------------------------------------------------------
+	Current Table Writes
+		ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	All Table Writes: 
+		Table: tbl_init_0
+			ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] , ffff
+	Checking Mutex Fields
+		( 3:ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers H1 , 3:ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers H1 ) = FeldMutex 0, MetdataMutex 0
+-------------------------------------------------------------
+	Add container conflict between table tbl_init_0 and table tbl_write_a_0 because of container H1
+	 TableKey for table tbl_write_a_0
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+		update_access read ingress::hdr.d.first[15:0]
+	foreach_alloc slice: H4 bit[15..0] <-- ingress::hdr.d.first<16> [0:15] live at [-1r, 2w] } 1 units {tbl_write_a_0 (r); }
+	 Action for table tbl_write_a_0
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+		update_access write ingress::hdr.a.first[15:0]
+	foreach_alloc slice: H1 bit[15..0] <-- ingress::hdr.a.first<16> ^0 ^bit[0..191] deparsed exact_containers [0:15] live at [-1r, 2w] } 3 units {tbl_init_0 (w); tbl_write_a_0 (w); tbl_match_a_0 (r); }
+	 Action for table tbl_write_a_0
+	 TableSeq (0)   front: null back: null
+	 Hit Top of pipe - clearing access
+DepStagesThruDomFrontier postorder : tbl_init_0
+DepStagesThruDomFrontier postorder : tbl_match_a_0
+DepStagesThruDomFrontier postorder : tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 2
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_match_a_0-tbl_write_a_0 due to original dependency on tbl_match_a_0->tbl_write_a_0 of type ANTI_ACTION_READ
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_match_a_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_match_a_0 due to original dependency on tbl_init_0->tbl_match_a_0 of type IXBAR_READ
+DST tbl_match_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 3 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+		add_dependency ANTI_NEXT_TABLE_DATA tbl_init_0-tbl_write_a_0 due to original dependency on tbl_init_0->tbl_write_a_0 of type OUTPUT
+DST tbl_write_a_0 has dep ANTI_NEXT_TABLE_DATA to SRC tbl_init_0
+CALC_TOPOLOGICAL_STAGE 3
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+CALC_TOPOLOGICAL_STAGE 4
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+>>> Stage#0:
+Table:  0, tbl_init_0
+>>> Stage#1:
+Table:  1, tbl_match_a_0
+Table:  2, tbl_write_a_0
+CALC_TOPOLOGICAL_STAGE 5
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Dep stages of 0 for table tbl_match_a_0
+Dep stages control of 0 for table tbl_match_a_0
+Dep stages of 0 for table tbl_write_a_0
+Dep stages control of 0 for table tbl_write_a_0
+Dep stages of 1 for table tbl_init_0
+Dep stages control of 1 for table tbl_init_0
+Table tbl_match_a_0 has priors of tbl_init_0, 
+Table tbl_write_a_0 has priors of tbl_init_0, 
+
+Initial table tbl_init_0 with later table tbl_match_a_0 and value IXBAR_READ
+Initial table tbl_init_0 with later table tbl_write_a_0 and value OUTPUT
+CALC_TOPOLOGICAL_STAGE 6
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 2 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 4 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 2 incoming deps
+	 New while iteration over num_vertices - processed size: 2   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Printing results of topological sorting with control and anti dependences included. This is a topological sort with respect to logical placement
+>>> Stage#0:
+Table: 0, tbl_init_0
+>>> Stage#1:
+Table: 1, tbl_match_a_0
+>>> Stage#2:
+Table: 2, tbl_write_a_0
+Table tbl_init_0 has priors of tbl_match_a_0, tbl_write_a_0, 
+Table tbl_match_a_0 has priors of tbl_write_a_0, 
+Table tbl_write_a_0 has priors of 
+
+	min_stage for tbl_match_a_0 : 1
+	min_stage for tbl_write_a_0 : 1
+CALC_TOPOLOGICAL_STAGE 7
+	 New while iteration over num_vertices - processed size: 0   graph vertices: 3
+		 Non processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 1 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 1 incoming deps
+	 New while iteration over num_vertices - processed size: 1   graph vertices: 3
+		 Processed vertex: tbl_init_0 with 0 incoming deps
+		 Non processed vertex: tbl_match_a_0 with 0 incoming deps
+		 Non processed vertex: tbl_write_a_0 with 0 incoming deps
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+    Maximum stage number according to dependences: 
+      INGRESS: 1
+      EGRESS: -1
+GRAPH
+    tbl_init_0 -- IXBAR_READ --> tbl_match_a_0
+    tbl_match_a_0 -- ANTI_ACTION_READ --> tbl_write_a_0
+    tbl_init_0 -- OUTPUT --> tbl_write_a_0
+    tbl_match_a_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_match_a_0
+    tbl_init_0 -- ANTI_NEXT_TABLE_DATA --> tbl_write_a_0
+MIN STAGE INFO
+    Each table also indicates its dependency chain length
+    First number refers to a dependency chain from which each tables are not split
+    Second number refers to a dependency chain from which each tables are split as on  last allocation pass
+ Stage #0
+     tbl_init_0 (ingress.tbl_init) 1 1
+ Stage #1
+     tbl_match_a_0 (ingress.tbl_match_a) 0 0
+	- Edge IXBAR_READ tbl_init_0 ( ingress.tbl_init )
+     tbl_write_a_0 (ingress.tbl_write_a) 0 0
+	- Edge ANTI_ACTION_READ tbl_match_a_0 ( ingress.tbl_match_a )
+	- Edge OUTPUT tbl_init_0 ( ingress.tbl_init )
+	- Edge ANTI_NEXT_TABLE_DATA tbl_match_a_0 ( ingress.tbl_match_a )
+
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found
+Data dependency edge not found

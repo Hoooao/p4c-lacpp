@@ -1,0 +1,679 @@
+{
+    "schema_version": "1.0.0",
+    "symbols": [
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 128,
+                    "column": 101
+                }
+            ],
+            "symbol_name": "pipe",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 127,
+                "column": 188
+            },
+            "symbol_type": "Declaration_Instance_Type_Specialized"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 66,
+                    "column": 9,
+                    "end_line": 72
+                },
+                {
+                    "file": "raw-action.p4",
+                    "line": 69,
+                    "column": 20,
+                    "end_line": 70
+                },
+                {
+                    "file": "raw-action.p4",
+                    "line": 76,
+                    "column": 9,
+                    "end_line": 82
+                },
+                {
+                    "file": "raw-action.p4",
+                    "line": 79,
+                    "column": 20,
+                    "end_line": 80
+                },
+                {
+                    "file": "raw-action.p4",
+                    "line": 86,
+                    "column": 9,
+                    "end_line": 92
+                },
+                {
+                    "file": "raw-action.p4",
+                    "line": 89,
+                    "column": 20,
+                    "end_line": 90
+                }
+            ],
+            "symbol_name": "NoAction",
+            "declaration": {
+                "file": "/home/hao/Desktop/p4/p4c/p4c-lacpp/build/backends/tofino/bf-p4c/p4include/core.p4",
+                "line": 70,
+                "column": 8
+            },
+            "symbol_type": "P4Action"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 70,
+                    "column": 13
+                },
+                {
+                    "file": "raw-action.p4",
+                    "line": 80,
+                    "column": 13
+                }
+            ],
+            "symbol_name": "ingress.set_a",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 58,
+                "column": 12
+            },
+            "symbol_type": "P4Action"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 90,
+                    "column": 13
+                }
+            ],
+            "symbol_name": "ingress.set_b_w_a",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 61,
+                "column": 12
+            },
+            "symbol_type": "P4Action"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 97,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "ingress.tbl_init",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 65,
+                "column": 11
+            },
+            "symbol_type": "P4Table"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 99,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "ingress.tbl_read_a",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 85,
+                "column": 11
+            },
+            "symbol_type": "P4Table"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 98,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "ingress.tbl_write_a",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 75,
+                "column": 11
+            },
+            "symbol_type": "P4Table"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 123,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchEgressDeparser.h.a",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 121,
+                "column": 60
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 123,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchEgressDeparser.h.b",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 121,
+                "column": 60
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 123,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchEgressDeparser.h.c",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 121,
+                "column": 60
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 123,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchEgressDeparser.h.d",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 121,
+                "column": 60
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 123,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchEgressDeparser.h.e",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 121,
+                "column": 60
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 123,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchEgressDeparser.h.eth_hdr",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 121,
+                "column": 60
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 123,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "SwitchEgressDeparser.pkt",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 121,
+                "column": 41
+            },
+            "symbol_type": "Parameter_Type_Extern"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 111,
+                    "column": 50
+                }
+            ],
+            "symbol_name": "SwitchEgressParser.eg_intr_md",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 109,
+                "column": 118
+            },
+            "symbol_type": "Parameter_Type_Header"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 111,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "SwitchEgressParser.pkt",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 109,
+                "column": 37
+            },
+            "symbol_type": "Parameter_Type_Extern"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 105,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchIngressDeparser.h.a",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 103,
+                "column": 61
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 105,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchIngressDeparser.h.b",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 103,
+                "column": 61
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 105,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchIngressDeparser.h.c",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 103,
+                "column": 61
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 105,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchIngressDeparser.h.d",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 103,
+                "column": 61
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 105,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchIngressDeparser.h.e",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 103,
+                "column": 61
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 105,
+                    "column": 27
+                }
+            ],
+            "symbol_name": "SwitchIngressDeparser.h.eth_hdr",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 103,
+                "column": 61
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [],
+            "symbol_name": "SwitchIngressDeparser.ig_dprsr_md.mirror_type",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 103,
+                "column": 138
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 105,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "SwitchIngressDeparser.pkt",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 103,
+                "column": 42
+            },
+            "symbol_type": "Parameter_Type_Extern"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 47,
+                    "column": 24
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.hdr.a",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 43,
+                "column": 55
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 48,
+                    "column": 24
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.hdr.b",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 43,
+                "column": 55
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 49,
+                    "column": 24
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.hdr.c",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 43,
+                "column": 55
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 50,
+                    "column": 24
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.hdr.d",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 43,
+                "column": 55
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 51,
+                    "column": 24
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.hdr.e",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 43,
+                "column": 55
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 46,
+                    "column": 33
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.hdr.eth_hdr",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 43,
+                "column": 55
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 45,
+                    "column": 51
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.ig_intr_md",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 43,
+                "column": 123
+            },
+            "symbol_type": "Parameter_Type_Header"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 45,
+                    "column": 9
+                },
+                {
+                    "file": "raw-action.p4",
+                    "line": 46,
+                    "column": 9
+                },
+                {
+                    "file": "raw-action.p4",
+                    "line": 47,
+                    "column": 9
+                },
+                {
+                    "file": "raw-action.p4",
+                    "line": 48,
+                    "column": 9
+                },
+                {
+                    "file": "raw-action.p4",
+                    "line": 49,
+                    "column": 9
+                },
+                {
+                    "file": "raw-action.p4",
+                    "line": 50,
+                    "column": 9
+                },
+                {
+                    "file": "raw-action.p4",
+                    "line": 51,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "SwitchIngressParser.pkt",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 43,
+                "column": 38
+            },
+            "symbol_type": "Parameter_Type_Extern"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 59,
+                    "column": 9
+                },
+                {
+                    "file": "raw-action.p4",
+                    "line": 62,
+                    "column": 21
+                }
+            ],
+            "symbol_name": "ingress.h.a.first",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 56,
+                "column": 31
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 62,
+                    "column": 9
+                }
+            ],
+            "symbol_name": "ingress.h.b.first",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 56,
+                "column": 31
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 77,
+                    "column": 13
+                }
+            ],
+            "symbol_name": "ingress.h.c.first",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 56,
+                "column": 31
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 67,
+                    "column": 13
+                }
+            ],
+            "symbol_name": "ingress.h.d.first",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 56,
+                "column": 31
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 87,
+                    "column": 13
+                }
+            ],
+            "symbol_name": "ingress.h.e.first",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 56,
+                "column": 31
+            },
+            "symbol_type": "Parameter_Type_Struct"
+        },
+        {
+            "references": [
+                {
+                    "file": "raw-action.p4",
+                    "line": 59,
+                    "column": 21
+                }
+            ],
+            "symbol_name": "ingress.set_a.val",
+            "declaration": {
+                "file": "raw-action.p4",
+                "line": 58,
+                "column": 26
+            },
+            "symbol_type": "Parameter_Type_Bits"
+        }
+    ],
+    "source_root": "."
+}

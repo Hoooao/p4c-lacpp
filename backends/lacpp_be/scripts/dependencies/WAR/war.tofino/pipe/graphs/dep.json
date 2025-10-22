@@ -1,0 +1,447 @@
+{
+  "graphs" : [
+    {
+      "metadata" : {
+        "gress" : "ingress",
+        "description" : "Before Table Placement Round 1",
+        "placement_complete" : false
+      },
+      "nodes" : [
+        {
+          "id" : "0",
+          "metadata" : {
+            "tables" : [
+              {
+                "name" : "ingress.tbl_init",
+                "table_type" : "match",
+                "match_type" : "exact"
+              }
+            ],
+            "min_stage" : 0,
+            "dep_chain" : 1
+          }
+        },
+        {
+          "id" : "1",
+          "metadata" : {
+            "tables" : [
+              {
+                "name" : "ingress.tbl_match_a",
+                "table_type" : "match",
+                "match_type" : "exact"
+              }
+            ],
+            "min_stage" : 1,
+            "dep_chain" : 0
+          }
+        },
+        {
+          "id" : "2",
+          "metadata" : {
+            "tables" : [
+              {
+                "name" : "ingress.tbl_write_a",
+                "table_type" : "match",
+                "match_type" : "exact"
+              }
+            ],
+            "min_stage" : 1,
+            "dep_chain" : 0
+          }
+        },
+        {
+          "id" : "3",
+          "metadata" : {
+            "tables" : [
+              {
+                "name" : "SINK",
+                "table_type" : "condition",
+                "condition" : "<null>"
+              }
+            ],
+            "min_stage" : -1,
+            "dep_chain" : -1
+          }
+        }
+      ],
+      "edges" : [
+        {
+          "id" : "0",
+          "source" : "0",
+          "target" : "1",
+          "metadata" : {
+            "type" : "match",
+            "sub_type" : "ixbar_read",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.a.first",
+                "start_bit" : 0,
+                "width" : 16
+              }
+            ],
+            "is_critical" : true,
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "1",
+          "source" : "1",
+          "target" : "2",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "anti",
+            "anti_type" : "action_read",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.a.first",
+                "start_bit" : 0,
+                "width" : 16
+              }
+            ],
+            "is_critical" : true,
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "2",
+          "source" : "0",
+          "target" : "2",
+          "metadata" : {
+            "type" : "action",
+            "sub_type" : "output",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.a.first",
+                "start_bit" : 0,
+                "width" : 16
+              }
+            ],
+            "is_critical" : true,
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "3",
+          "source" : "1",
+          "target" : "2",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "anti",
+            "anti_type" : "next_table_data",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.a.first",
+                "start_bit" : 0,
+                "width" : 16
+              }
+            ],
+            "is_critical" : true,
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "4",
+          "source" : "0",
+          "target" : "1",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "anti",
+            "anti_type" : "next_table_data",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.a.first",
+                "start_bit" : 0,
+                "width" : 16
+              }
+            ],
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "5",
+          "source" : "0",
+          "target" : "2",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "anti",
+            "anti_type" : "next_table_data",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.a.first",
+                "start_bit" : 0,
+                "width" : 16
+              }
+            ],
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "6",
+          "source" : "0",
+          "target" : "1",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "default_next_table",
+            "is_critical" : true,
+            "tags" : ["flow"]
+          }
+        },
+        {
+          "id" : "7",
+          "source" : "1",
+          "target" : "2",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "default_next_table",
+            "is_critical" : true,
+            "tags" : ["flow"]
+          }
+        },
+        {
+          "id" : "8",
+          "source" : "2",
+          "target" : "3",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "default_next_table",
+            "tags" : ["flow"]
+          }
+        }
+      ]
+    },
+    {
+      "metadata" : {
+        "gress" : "ingress",
+        "description" : "After Table Placement Round 1",
+        "placement_complete" : true
+      },
+      "nodes" : [
+        {
+          "id" : "0",
+          "metadata" : {
+            "placement" : {
+              "logical_table_id" : 0,
+              "stage_number" : 0
+            },
+            "tables" : [
+              {
+                "name" : "ingress.tbl_init",
+                "table_type" : "match",
+                "match_type" : "exact"
+              }
+            ],
+            "min_stage" : 0,
+            "dep_chain" : 1
+          }
+        },
+        {
+          "id" : "1",
+          "metadata" : {
+            "placement" : {
+              "logical_table_id" : 0,
+              "stage_number" : 1
+            },
+            "tables" : [
+              {
+                "name" : "ingress.tbl_match_a",
+                "table_type" : "match",
+                "match_type" : "exact"
+              }
+            ],
+            "min_stage" : 1,
+            "dep_chain" : 0
+          }
+        },
+        {
+          "id" : "2",
+          "metadata" : {
+            "placement" : {
+              "logical_table_id" : 1,
+              "stage_number" : 1
+            },
+            "tables" : [
+              {
+                "name" : "ingress.tbl_write_a",
+                "table_type" : "match",
+                "match_type" : "exact"
+              }
+            ],
+            "min_stage" : 1,
+            "dep_chain" : 0
+          }
+        },
+        {
+          "id" : "3",
+          "metadata" : {
+            "tables" : [
+              {
+                "name" : "SINK",
+                "table_type" : "condition",
+                "condition" : "<null>"
+              }
+            ],
+            "min_stage" : -1,
+            "dep_chain" : -1
+          }
+        }
+      ],
+      "edges" : [
+        {
+          "id" : "0",
+          "source" : "0",
+          "target" : "1",
+          "metadata" : {
+            "type" : "match",
+            "sub_type" : "ixbar_read",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.a.first",
+                "start_bit" : 0,
+                "width" : 16
+              }
+            ],
+            "is_critical" : true,
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "1",
+          "source" : "1",
+          "target" : "2",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "anti",
+            "anti_type" : "action_read",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.a.first",
+                "start_bit" : 0,
+                "width" : 16
+              }
+            ],
+            "is_critical" : true,
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "2",
+          "source" : "0",
+          "target" : "2",
+          "metadata" : {
+            "type" : "action",
+            "sub_type" : "output",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.a.first",
+                "start_bit" : 0,
+                "width" : 16
+              }
+            ],
+            "is_critical" : true,
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "3",
+          "source" : "1",
+          "target" : "2",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "anti",
+            "anti_type" : "next_table_data",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.a.first",
+                "start_bit" : 0,
+                "width" : 16
+              }
+            ],
+            "is_critical" : true,
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "4",
+          "source" : "0",
+          "target" : "1",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "anti",
+            "anti_type" : "next_table_data",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.a.first",
+                "start_bit" : 0,
+                "width" : 16
+              }
+            ],
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "5",
+          "source" : "0",
+          "target" : "2",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "anti",
+            "anti_type" : "next_table_data",
+            "dep_fields" : [
+              {
+                "gress" : "ingress",
+                "field_name" : "hdr.a.first",
+                "start_bit" : 0,
+                "width" : 16
+              }
+            ],
+            "tags" : ["dependency"]
+          }
+        },
+        {
+          "id" : "6",
+          "source" : "0",
+          "target" : "1",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "default_next_table",
+            "is_critical" : true,
+            "tags" : ["flow"]
+          }
+        },
+        {
+          "id" : "7",
+          "source" : "1",
+          "target" : "2",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "default_next_table",
+            "is_critical" : true,
+            "tags" : ["flow"]
+          }
+        },
+        {
+          "id" : "8",
+          "source" : "2",
+          "target" : "3",
+          "metadata" : {
+            "type" : "control",
+            "sub_type" : "default_next_table",
+            "tags" : ["flow"]
+          }
+        }
+      ]
+    }
+  ],
+  "schema_version" : "1.0.1"
+}

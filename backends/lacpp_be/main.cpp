@@ -26,9 +26,16 @@ int main(int argc, char *const argv[]) {
     }
     const auto &[program, _] = *parseResult;
 
-
-    dumpAfterFrontend(options, program);
-    // TODO: add options for either get feature or annotate
-    getFeatures(options, program);
+    if (options.getRewriteMode()) {
+        // invoke the rewrite pass
+        rewrite(options, program);
+        return EXIT_SUCCESS;
+    }
+    if (!options.getFeatureOutFile().empty()) {
+        //dumpAfterFrontend(options, program);
+        getFeatures(options, program);
+        return EXIT_SUCCESS;
+    }
+   
 
 }
